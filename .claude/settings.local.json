@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /tmp)",
+      "Bash(curl -sL -o gradle.zip https://services.gradle.org/distributions/gradle-8.10.2-bin.zip -w \"HTTP %{http_code} size %{size_download}\\\\n\" --max-time 120)",
+      "Bash(rm -f gradle.zip)",
+      "Bash(curl -sL -o mvn.zip https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.zip -w \"HTTP %{http_code} size %{size_download}\\\\n\" --max-time 120)",
+      "Bash(unzip -q -o mvn.zip -d 'C:\\\\Users\\\\Kamil Bura/tools')",
+      "Bash('C:\\\\Users\\\\Kamil Bura/tools/apache-maven-3.9.9/bin/mvn' -v)",
+      "Bash(curl -sL -o mvn.zip https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.zip -w \"HTTP %{http_code} size %{size_download}\\\\n\" --max-time 180)"
+    ]
+  }
+}

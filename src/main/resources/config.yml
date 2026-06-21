@@ -1,0 +1,274 @@
+# ============================================================================
+#  yourShika Backpack's – Konfiguration
+#  Datenordner: plugins/yourShika Backpack's/
+#  Standardsprache: Deutsch (de)
+# ============================================================================
+
+# Sprache der messages_<sprache>.yml (Standard: de).
+language: de
+
+# Debug-Ausgaben in der Server-Konsole.
+debug: false
+
+# ---------------------------------------------------------------------------
+#  Speicherung
+# ---------------------------------------------------------------------------
+storage:
+  # SQLITE (empfohlen) oder YAML.
+  type: SQLITE
+  autosave:
+    enabled: true
+    interval-minutes: 5
+
+# ---------------------------------------------------------------------------
+#  Öffnen
+# ---------------------------------------------------------------------------
+open:
+  right-click: true   # Rechtsklick mit Backpack in der Hand
+  offhand: true       # auch aus der Nebenhand
+
+# ---------------------------------------------------------------------------
+#  Crafting (global). Einzelne Tier-Rezepte werden unten je Tier aktiviert.
+# ---------------------------------------------------------------------------
+crafting:
+  enabled: true
+
+# ---------------------------------------------------------------------------
+#  Sicherheit
+# ---------------------------------------------------------------------------
+security:
+  # Backpacks in Backpacks. Für 0.0.1 dringend auf false lassen (Dupe-Schutz).
+  # Später optional über das geplante "Inception Upgrade".
+  allow-nesting: false
+
+# ---------------------------------------------------------------------------
+#  Welten-Filter
+#  Ist eine Whitelist gesetzt, gelten NUR diese Welten. Sonst greift die
+#  Blacklist. Beide leer = überall erlaubt.
+# ---------------------------------------------------------------------------
+worlds:
+  whitelist: []
+  blacklist: []
+
+# ---------------------------------------------------------------------------
+#  Platzierbare Backpacks (Roadmap)
+#  In 0.0.1 deaktiviert. Vorbereitet für eine spätere BlockDisplay-/Barrel-
+#  basierte Umsetzung. Siehe README -> Roadmap.
+# ---------------------------------------------------------------------------
+placeable:
+  enabled: false
+  hopper:
+    allow-insert: false
+    allow-extract: false
+    owner-only: true
+  protect-from-explosions: true
+
+# ---------------------------------------------------------------------------
+#  Backpack-Tiers
+#  - material:          Basis-Item (ohne Resourcepack sichtbar)
+#  - custom-model-data: für spätere Custom-Texturen / Resourcepacks
+#  - storage-rows:      Lager-Reihen (1-5) -> nutzbare Slots = Reihen * 9
+#  - upgrade-slots:     vorbereitete Upgrade-Slots (in 0.0.1 gesperrt)
+#  - default-*-color:   DyeColor (z.B. RED, BLUE, BROWN, ORANGE ...)
+#  - recipe:            optionales, eigenes Crafting-Rezept
+#
+#  Lore-/Name-Platzhalter: <storage> <upgrades> <id> <main_color> <accent_color>
+# ---------------------------------------------------------------------------
+tiers:
+  leather:
+    display-name: "<#A0703C>Leder-Rucksack</#A0703C>"
+    material: CHEST
+    custom-model-data: 1001
+    storage-rows: 1
+    upgrade-slots: 1
+    default-main-color: BROWN
+    default-accent-color: ORANGE
+    permission: ""
+    price: 0.0
+    lore:
+      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - ""
+      - "<yellow>Rechtsklick zum Öffnen"
+      - "<dark_gray>ID: <id>"
+    recipe:
+      enabled: true
+      shape:
+        - "LLL"
+        - "LCL"
+        - "LLL"
+      ingredients:
+        L: LEATHER
+        C: CHEST
+
+  copper:
+    display-name: "<#C87B53>Kupfer-Rucksack</#C87B53>"
+    material: CHEST
+    custom-model-data: 1002
+    storage-rows: 2
+    upgrade-slots: 2
+    default-main-color: ORANGE
+    default-accent-color: BROWN
+    permission: ""
+    price: 0.0
+    lore:
+      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - ""
+      - "<yellow>Rechtsklick zum Öffnen"
+      - "<dark_gray>ID: <id>"
+    recipe:
+      enabled: true
+      shape:
+        - "CCC"
+        - "CHC"
+        - "CCC"
+      ingredients:
+        C: COPPER_INGOT
+        H: CHEST
+
+  iron:
+    display-name: "<#D8D8D8>Eisen-Rucksack</#D8D8D8>"
+    material: CHEST
+    custom-model-data: 1003
+    storage-rows: 3
+    upgrade-slots: 3
+    default-main-color: LIGHT_GRAY
+    default-accent-color: GRAY
+    permission: ""
+    price: 0.0
+    lore:
+      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - ""
+      - "<yellow>Rechtsklick zum Öffnen"
+      - "<dark_gray>ID: <id>"
+    recipe:
+      enabled: true
+      shape:
+        - "III"
+        - "IHI"
+        - "III"
+      ingredients:
+        I: IRON_INGOT
+        H: CHEST
+
+  gold:
+    display-name: "<#F2D14E>Gold-Rucksack</#F2D14E>"
+    material: CHEST
+    custom-model-data: 1004
+    storage-rows: 4
+    upgrade-slots: 4
+    default-main-color: YELLOW
+    default-accent-color: ORANGE
+    permission: ""
+    price: 0.0
+    lore:
+      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - ""
+      - "<yellow>Rechtsklick zum Öffnen"
+      - "<dark_gray>ID: <id>"
+    recipe:
+      enabled: true
+      shape:
+        - "GGG"
+        - "GHG"
+        - "GGG"
+      ingredients:
+        G: GOLD_INGOT
+        H: CHEST
+
+  diamond:
+    display-name: "<#5BE8D4>Diamant-Rucksack</#5BE8D4>"
+    material: CHEST
+    custom-model-data: 1005
+    storage-rows: 5
+    upgrade-slots: 5
+    default-main-color: CYAN
+    default-accent-color: LIGHT_BLUE
+    permission: ""
+    price: 0.0
+    lore:
+      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - ""
+      - "<yellow>Rechtsklick zum Öffnen"
+      - "<dark_gray>ID: <id>"
+    recipe:
+      enabled: true
+      shape:
+        - "DDD"
+        - "DHD"
+        - "DDD"
+      ingredients:
+        D: DIAMOND
+        H: CHEST
+
+  netherite:
+    display-name: "<#6E5BC8>Netherite-Rucksack</#6E5BC8>"
+    material: CHEST
+    custom-model-data: 1006
+    storage-rows: 5
+    upgrade-slots: 6
+    default-main-color: PURPLE
+    default-accent-color: BLACK
+    permission: ""
+    price: 0.0
+    lore:
+      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - ""
+      - "<yellow>Rechtsklick zum Öffnen"
+      - "<dark_gray>ID: <id>"
+    recipe:
+      enabled: true
+      shape:
+        - "NNN"
+        - "NHN"
+        - "NNN"
+      ingredients:
+        N: NETHERITE_INGOT
+        H: CHEST
+
+# ---------------------------------------------------------------------------
+#  Upgrades (Roadmap / vorbereitet)
+#  In 0.0.1 noch nicht funktionsfähig. Dieser Abschnitt dient als Grundlage
+#  für spätere Versionen. Siehe README -> Upgrade-Roadmap.
+# ---------------------------------------------------------------------------
+upgrades:
+  enabled: false
+  definitions:
+    pickup:
+      enabled: false
+      permission: "yourshika.backpack.upgrade.pickup"
+      custom-model-data: 2001
+    magnet:
+      enabled: false
+      permission: "yourshika.backpack.upgrade.magnet"
+      custom-model-data: 2002
+    void:
+      enabled: false
+      permission: "yourshika.backpack.upgrade.void"
+      custom-model-data: 2003
+    refill:
+      enabled: false
+      permission: "yourshika.backpack.upgrade.refill"
+      custom-model-data: 2004
+    # ... weitere Upgrades folgen (Filter, Compacting, Smelting, Stack, ...).
+
+# ---------------------------------------------------------------------------
+#  Externe Hooks (alle optional – fehlt die Library, läuft das Plugin normal).
+# ---------------------------------------------------------------------------
+hooks:
+  placeholderapi: true
+  vault: false        # Economy-Anbindung (Roadmap)
+  protocollib: false  # Fake-Blocks für platzierte Backpacks (Roadmap)
+  itemsadder: false   # Custom-Modelle (Roadmap)
+  oraxen: false       # Custom-Modelle (Roadmap)

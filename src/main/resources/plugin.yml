@@ -1,0 +1,89 @@
+name: yourShikaBackpacks
+version: '${project.version}'
+main: de.yourshika.backpacks.YourShikaBackpacks
+api-version: '1.21'
+author: yourShika
+description: Eigenständiges, serverseitiges Backpack-System (inspiriert von Sophisticated Backpacks).
+website: https://github.com/yourShika/yourShika-Backpacks
+folia-supported: false
+
+# Optionale Hooks – brechen das Plugin nicht, wenn nicht vorhanden.
+softdepend:
+  - PlaceholderAPI
+  - Vault
+  - ProtocolLib
+  - ItemsAdder
+  - Oraxen
+
+commands:
+  backpack:
+    description: Hauptbefehl des Backpack-Plugins.
+    usage: /backpack help
+    aliases: [bp, ybackpack, ysbackpack]
+
+permissions:
+  yourshika.backpack.*:
+    description: Alle Backpack-Berechtigungen.
+    default: op
+    children:
+      yourshika.backpack.use: true
+      yourshika.backpack.open: true
+      yourshika.backpack.color: true
+      yourshika.backpack.list: true
+      yourshika.backpack.craft.*: true
+      yourshika.backpack.admin.*: true
+
+  yourshika.backpack.use:
+    description: Backpacks grundsätzlich benutzen.
+    default: true
+  yourshika.backpack.open:
+    description: Eigenes Backpack öffnen.
+    default: true
+  yourshika.backpack.color:
+    description: Backpack einfärben.
+    default: true
+  yourshika.backpack.list:
+    description: Eigene Backpacks auflisten.
+    default: true
+
+  yourshika.backpack.craft.*:
+    description: Alle Backpack-Tiers craften.
+    default: true
+    children:
+      yourshika.backpack.craft.leather: true
+      yourshika.backpack.craft.copper: true
+      yourshika.backpack.craft.iron: true
+      yourshika.backpack.craft.gold: true
+      yourshika.backpack.craft.diamond: true
+      yourshika.backpack.craft.netherite: true
+  yourshika.backpack.craft.leather: { default: true }
+  yourshika.backpack.craft.copper: { default: true }
+  yourshika.backpack.craft.iron: { default: true }
+  yourshika.backpack.craft.gold: { default: true }
+  yourshika.backpack.craft.diamond: { default: true }
+  yourshika.backpack.craft.netherite: { default: true }
+
+  yourshika.backpack.admin.*:
+    description: Alle Admin-Funktionen.
+    default: op
+    children:
+      yourshika.backpack.admin.give: true
+      yourshika.backpack.admin.openid: true
+      yourshika.backpack.admin.openother: true
+      yourshika.backpack.admin.listother: true
+      yourshika.backpack.admin.reload: true
+      yourshika.backpack.admin.debug: true
+  yourshika.backpack.admin.give: { default: op }
+  yourshika.backpack.admin.openid: { default: op }
+  yourshika.backpack.admin.openother: { default: op }
+  yourshika.backpack.admin.listother: { default: op }
+  yourshika.backpack.admin.reload: { default: op }
+  yourshika.backpack.admin.debug: { default: op }
+
+  # Vorbereitet für spätere Versionen (Platzieren / Upgrades).
+  yourshika.backpack.place:
+    description: Backpacks platzieren (Roadmap).
+    default: op
+  yourshika.backpack.upgrade:
+    description: Upgrades verwenden (Roadmap).
+    default: op

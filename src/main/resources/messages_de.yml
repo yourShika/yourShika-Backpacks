@@ -1,0 +1,52 @@
+# ============================================================================
+#  yourShika Backpack's – Nachrichten (Deutsch)
+#  Unterstützt MiniMessage UND &-Farbcodes. Platzhalter: <name>
+# ============================================================================
+
+prefix: "<gradient:#6E5BC8:#5BE8D4><bold>Backpacks</bold></gradient> <dark_gray>»</dark_gray> "
+
+help:
+  header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Befehle"
+  open: "<yellow>/bp open <gray>– Backpack in der Hand öffnen"
+  color: "<yellow>/bp color <Hauptfarbe> [Akzentfarbe] <gray>– Backpack einfärben"
+  list: "<yellow>/bp list [Spieler] <gray>– Backpacks auflisten"
+  give: "<yellow>/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent] <gray>– Backpack geben"
+  openid: "<yellow>/bp openid <ID> <gray>– Backpack per ID öffnen"
+  reload: "<yellow>/bp reload <gray>– Konfiguration neu laden"
+  footer: "<dark_gray>Inspiriert von Sophisticated Backpacks – eigenständiges Server-Plugin."
+
+error:
+  no-permission: "<red>Dafür fehlt dir die Berechtigung."
+  players-only: "<red>Dieser Befehl ist nur für Spieler."
+  hold-backpack: "<red>Halte ein Backpack in der Hand."
+  invalid-backpack: "<red>Dieses Backpack ist ungültig oder beschädigt."
+  already-open: "<red>Dieses Backpack ist bereits geöffnet."
+  id-not-found: "<red>Kein Backpack mit dieser ID gefunden."
+  invalid-id: "<red>Ungültige ID: <white><input></white>"
+  world-disabled: "<red>In dieser Welt sind Backpacks deaktiviert."
+  no-nesting: "<red>Backpacks dürfen nicht in Backpacks gelegt werden."
+  unknown-subcommand: "<red>Unbekannter Befehl: <white><input></white> <gray>– /bp help"
+  color-usage: "<red>Verwendung: /bp color <Hauptfarbe> [Akzentfarbe]"
+  give-usage: "<red>Verwendung: /bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent]"
+  openid-usage: "<red>Verwendung: /bp openid <ID>"
+  invalid-color: "<red>Unbekannte Farbe: <white><input></white>"
+  invalid-tier: "<red>Unbekannter Tier: <white><input></white>"
+  invalid-number: "<red>Keine gültige Zahl: <white><input></white>"
+  player-not-found: "<red>Spieler nicht gefunden: <white><input></white>"
+
+color:
+  success: "<green>Backpack eingefärbt: <white><main></white> <gray>/</gray> <white><accent></white>"
+
+list:
+  header: "<gold>Backpacks von <white><player></white>: <yellow><count></yellow>"
+  entry: "<dark_gray>• <gray>ID <white><id></white> <dark_gray>– <gray>Tier <white><tier></white>"
+
+give:
+  success: "<green><amount>x <white><tier></white> Backpack an <white><player></white> gegeben."
+  received: "<green>Du hast <white><amount>x <tier></white> Backpack erhalten."
+
+reload:
+  success: "<green>Konfiguration neu geladen."
+
+version:
+  info: "<gray>yourShika Backpack's <white>v<version></white> <dark_gray>| <gray>Tiers: <white><tiers></white> <dark_gray>| <gray>gespeichert: <white><count></white>"

@@ -1,0 +1,331 @@
+package de.yourshika.backpacks.command;
+
+import de.yourshika.backpacks.BackpackManager;
+import de.yourshika.backpacks.YourShikaBackpacks;
+import de.yourshika.backpacks.config.MessageManager;
+import de.yourshika.backpacks.item.BackpackItemFactory;
+import de.yourshika.backpacks.storage.BackpackData;
+import de.yourshika.backpacks.tier.BackpackTier;
+import de.yourshika.backpacks.tier.TierRegistry;
+import de.yourshika.backpacks.util.ColorUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static de.yourshika.backpacks.config.MessageManager.ph;
+
+/**
+ * Verarbeitet /backpack (Aliase: /bp, /ybackpack, /ysbackpack) inkl. Tab-Completion.
+ */
+public final class BackpackCommand implements CommandExecutor, TabCompleter {
+
+    private final YourShikaBackpacks plugin;
+    private final BackpackManager manager;
+    private final TierRegistry tiers;
+    private final BackpackItemFactory items;
+    private final MessageManager msg;
+
+    public BackpackCommand(YourShikaBackpacks plugin, BackpackManager manager, TierRegistry tiers) {
+        this.plugin = plugin;
+        this.manager = manager;
+        this.tiers = tiers;
+        this.items = manager.items();
+        this.msg = plugin.messages();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) {
+            help(sender);
+            return true;
+        }
+        switch (args[0].toLowerCase()) {
+            case "help" -> help(sender);
+            case "open" -> open(sender);
+            case "color", "farbe" -> color(sender, args);
+            case "list" -> list(sender, args);
+            case "give" -> give(sender, args);
+            case "openid" -> openId(sender, args);
+            case "reload" -> reload(sender);
+            case "version", "ver" -> version(sender);
+            default -> msg.send(sender, "error.unknown-subcommand", ph("input", args[0]));
+        }
+        return true;
+    }
+
+    private void help(CommandSender sender) {
+        msg.sendRaw(sender, "help.header");
+        msg.sendRaw(sender, "help.open");
+        msg.sendRaw(sender, "help.color");
+        msg.sendRaw(sender, "help.list");
+        if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
+        if (sender.hasPermission("yourshika.backpack.admin.openid")) msg.sendRaw(sender, "help.openid");
+        if (sender.hasPermission("yourshika.backpack.admin.reload")) msg.sendRaw(sender, "help.reload");
+        msg.sendRaw(sender, "help.footer");
+    }
+
+    private void open(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        if (!player.hasPermission("yourshika.backpack.open")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (!items.isBackpack(item)) {
+            msg.send(sender, "error.hold-backpack");
+            return;
+        }
+        String error = manager.openFromItem(player, item);
+        if (error != null) {
+            msg.send(sender, error);
+            return;
+        }
+        player.getInventory().setItemInMainHand(item);
+    }
+
+    private void color(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        if (!player.hasPermission("yourshika.backpack.color")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        if (args.length < 2) {
+            msg.send(sender, "error.color-usage");
+            return;
+        }
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (!items.isBackpack(item)) {
+            msg.send(sender, "error.hold-backpack");
+            return;
+        }
+        DyeColor main = parseDyeOrNull(args[1]);
+        if (main == null) {
+            msg.send(sender, "error.invalid-color", ph("input", args[1]));
+            return;
+        }
+        DyeColor accent = main;
+        if (args.length >= 3) {
+            accent = parseDyeOrNull(args[2]);
+            if (accent == null) {
+                msg.send(sender, "error.invalid-color", ph("input", args[2]));
+                return;
+            }
+        }
+
+        String tierKey = items.getTierKey(item);
+        BackpackTier tier = tiers.get(tierKey);
+        if (tier == null) {
+            msg.send(sender, "error.invalid-backpack");
+            return;
+        }
+
+        // ID sicherstellen, Farben im Item und in der Persistenz aktualisieren.
+        UUID id = items.getId(item);
+        if (id == null) {
+            id = UUID.randomUUID();
+            items.writeId(item, id);
+        }
+        items.writeColors(item, main, accent);
+        items.applyDisplay(item, tier, id, main, accent);
+        player.getInventory().setItemInMainHand(item);
+
+        BackpackData data = manager.storage().load(id);
+        if (data == null) {
+            data = new BackpackData(id);
+            data.owner(player.getUniqueId());
+            data.tier(tier.key());
+            data.contents(new ItemStack[tier.storageSlots()]);
+        }
+        data.mainColor(main.name());
+        data.accentColor(accent.name());
+        manager.storage().save(data);
+
+        msg.send(sender, "color.success",
+                ph("main", ColorUtil.pretty(main)), ph("accent", ColorUtil.pretty(accent)));
+    }
+
+    private void list(CommandSender sender, String[] args) {
+        OfflinePlayer target;
+        if (args.length >= 2) {
+            if (!sender.hasPermission("yourshika.backpack.admin.listother")) {
+                msg.send(sender, "error.no-permission");
+                return;
+            }
+            target = Bukkit.getOfflinePlayer(args[1]);
+        } else {
+            if (!(sender instanceof Player p)) {
+                msg.send(sender, "error.players-only");
+                return;
+            }
+            if (!sender.hasPermission("yourshika.backpack.list")) {
+                msg.send(sender, "error.no-permission");
+                return;
+            }
+            target = p;
+        }
+
+        List<UUID> ids = manager.storage().listByOwner(target.getUniqueId());
+        msg.send(sender, "list.header",
+                ph("player", target.getName() == null ? args.length >= 2 ? args[1] : "?" : target.getName()),
+                ph("count", String.valueOf(ids.size())));
+        for (UUID id : ids) {
+            BackpackData data = manager.storage().load(id);
+            String tierKey = data == null ? "?" : data.tier();
+            msg.sendRaw(sender, "list.entry",
+                    ph("id", id.toString().substring(0, 8)), ph("tier", tierKey));
+        }
+    }
+
+    private void give(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("yourshika.backpack.admin.give")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        if (args.length < 3) {
+            msg.send(sender, "error.give-usage");
+            return;
+        }
+        Player target = Bukkit.getPlayerExact(args[1]);
+        if (target == null) {
+            msg.send(sender, "error.player-not-found", ph("input", args[1]));
+            return;
+        }
+        BackpackTier tier = tiers.get(args[2]);
+        if (tier == null) {
+            msg.send(sender, "error.invalid-tier", ph("input", args[2]));
+            return;
+        }
+        int amount = 1;
+        if (args.length >= 4) {
+            try {
+                amount = Math.max(1, Math.min(36, Integer.parseInt(args[3])));
+            } catch (NumberFormatException ex) {
+                msg.send(sender, "error.invalid-number", ph("input", args[3]));
+                return;
+            }
+        }
+        DyeColor main = args.length >= 5 ? parseDyeOrDefault(args[4], tier.defaultMainColor()) : tier.defaultMainColor();
+        DyeColor accent = args.length >= 6 ? parseDyeOrDefault(args[5], tier.defaultAccentColor()) : tier.defaultAccentColor();
+
+        for (int i = 0; i < amount; i++) {
+            ItemStack item = manager.createNew(tier, target.getUniqueId(), main, accent);
+            var leftover = target.getInventory().addItem(item);
+            leftover.values().forEach(rest -> target.getWorld().dropItemNaturally(target.getLocation(), rest));
+        }
+        msg.send(sender, "give.success",
+                ph("amount", String.valueOf(amount)), ph("tier", tier.key()), ph("player", target.getName()));
+        msg.send(target, "give.received",
+                ph("amount", String.valueOf(amount)), ph("tier", tier.key()));
+    }
+
+    private void openId(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        if (!sender.hasPermission("yourshika.backpack.admin.openid")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        if (args.length < 2) {
+            msg.send(sender, "error.openid-usage");
+            return;
+        }
+        UUID id;
+        try {
+            id = UUID.fromString(args[1]);
+        } catch (IllegalArgumentException ex) {
+            msg.send(sender, "error.invalid-id", ph("input", args[1]));
+            return;
+        }
+        String error = manager.openById(player, id);
+        if (error != null) {
+            msg.send(sender, error);
+        }
+    }
+
+    private void reload(CommandSender sender) {
+        if (!sender.hasPermission("yourshika.backpack.admin.reload")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        plugin.reloadAll();
+        msg.send(sender, "reload.success");
+    }
+
+    private void version(CommandSender sender) {
+        msg.send(sender, "version.info",
+                ph("version", plugin.getPluginMeta().getVersion()),
+                ph("tiers", String.valueOf(tiers.all().size())),
+                ph("count", String.valueOf(manager.storage().count())));
+    }
+
+    private DyeColor parseDyeOrNull(String s) {
+        try {
+            return DyeColor.valueOf(s.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
+    private DyeColor parseDyeOrDefault(String s, DyeColor def) {
+        DyeColor c = parseDyeOrNull(s);
+        return c == null ? def : c;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "color", "list", "version"));
+            if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
+            if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
+            if (sender.hasPermission("yourshika.backpack.admin.reload")) subs.add("reload");
+            return filter(subs, args[0]);
+        }
+        String sub = args[0].toLowerCase();
+        if (sub.equals("give")) {
+            if (args.length == 2) return filter(onlinePlayers(), args[1]);
+            if (args.length == 3) return filter(tiers.keys(), args[2]);
+            if (args.length == 4) return filter(List.of("1", "8", "16"), args[3]);
+            if (args.length == 5 || args.length == 6) return filter(dyeNames(), args[args.length - 1]);
+        }
+        if ((sub.equals("color") || sub.equals("farbe")) && (args.length == 2 || args.length == 3)) {
+            return filter(dyeNames(), args[args.length - 1]);
+        }
+        if (sub.equals("list") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.listother")) {
+            return filter(onlinePlayers(), args[1]);
+        }
+        return List.of();
+    }
+
+    private List<String> onlinePlayers() {
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+    }
+
+    private List<String> dyeNames() {
+        return Arrays.stream(DyeColor.values()).map(d -> d.name().toLowerCase()).collect(Collectors.toList());
+    }
+
+    private List<String> filter(List<String> options, String prefix) {
+        String p = prefix.toLowerCase();
+        return options.stream().filter(o -> o.toLowerCase().startsWith(p)).collect(Collectors.toList());
+    }
+}
