@@ -25,3 +25,6 @@ Thumbs.db
 # Logs / Runtime
 *.log
 run/
+
+# Claude Code local settings
+.claude/
