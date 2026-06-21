@@ -44,6 +44,15 @@ public final class BackpackInteractListener implements Listener {
 
         Player player = event.getPlayer();
 
+        // Beim Rechtsklick auf einen interaktiven Block (Truhe, Tür, Ofen ...) ohne
+        // Sneaken die normale Block-Interaktion zulassen – Backpack öffnet man dann
+        // per Sneak-Rechtsklick oder Rechtsklick in die Luft.
+        if (action == Action.RIGHT_CLICK_BLOCK && !player.isSneaking()
+                && event.getClickedBlock() != null
+                && event.getClickedBlock().getType().isInteractable()) {
+            return;
+        }
+
         // Block-Platzierung des Item-Materials unterbinden.
         event.setCancelled(true);
 
