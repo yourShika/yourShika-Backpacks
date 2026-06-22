@@ -14,9 +14,7 @@ folia-supported: false
 softdepend:
   - PlaceholderAPI
   - ProtocolLib
-  - ItemsAdder
   - Oraxen
-  - Nexo
 
 commands:
   backpack:
@@ -31,8 +29,8 @@ permissions:
     children:
       yourshika.backpack.use: true
       yourshika.backpack.open: true
-      yourshika.backpack.color: true
       yourshika.backpack.list: true
+      yourshika.backpack.place: true
       yourshika.backpack.craft.*: true
       yourshika.backpack.admin.*: true
 
@@ -41,9 +39,6 @@ permissions:
     default: true
   yourshika.backpack.open:
     description: Eigenes Backpack öffnen.
-    default: true
-  yourshika.backpack.color:
-    description: Backpack einfärben.
     default: true
   yourshika.backpack.list:
     description: Eigene Backpacks auflisten.
@@ -58,12 +53,14 @@ permissions:
       yourshika.backpack.craft.iron: true
       yourshika.backpack.craft.gold: true
       yourshika.backpack.craft.diamond: true
+      yourshika.backpack.craft.emerald: true
       yourshika.backpack.craft.netherite: true
   yourshika.backpack.craft.leather: { default: true }
   yourshika.backpack.craft.copper: { default: true }
   yourshika.backpack.craft.iron: { default: true }
   yourshika.backpack.craft.gold: { default: true }
   yourshika.backpack.craft.diamond: { default: true }
+  yourshika.backpack.craft.emerald: { default: true }
   yourshika.backpack.craft.netherite: { default: true }
 
   yourshika.backpack.admin.*:
@@ -71,24 +68,29 @@ permissions:
     default: op
     children:
       yourshika.backpack.admin.give: true
+      yourshika.backpack.admin.color: true
       yourshika.backpack.admin.openid: true
       yourshika.backpack.admin.openother: true
       yourshika.backpack.admin.listother: true
       yourshika.backpack.admin.reload: true
       yourshika.backpack.admin.modules: true
+      yourshika.backpack.admin.update: true
       yourshika.backpack.admin.debug: true
   yourshika.backpack.admin.give: { default: op }
+  yourshika.backpack.admin.color: { default: op }
   yourshika.backpack.admin.openid: { default: op }
   yourshika.backpack.admin.openother: { default: op }
   yourshika.backpack.admin.listother: { default: op }
   yourshika.backpack.admin.reload: { default: op }
   yourshika.backpack.admin.modules: { default: op }
+  yourshika.backpack.admin.update: { default: op }
   yourshika.backpack.admin.debug: { default: op }
 
-  # Vorbereitet für spätere Versionen (Platzieren / Upgrades).
+  # Backpacks platzieren (Shift-Rechtsklick auf den Boden).
   yourshika.backpack.place:
-    description: Backpacks platzieren (Roadmap).
-    default: op
+    description: Backpacks platzieren.
+    default: true
+  # Upgrade-Items in Backpacks legen.
   yourshika.backpack.upgrade:
-    description: Upgrades verwenden (Roadmap).
-    default: op
+    description: Upgrade-Slots eines Backpacks nutzen.
+    default: true

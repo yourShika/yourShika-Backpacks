@@ -27,8 +27,8 @@ public final class ModuleManager {
         this.plugin = plugin;
         register(new PlaceholderModule(plugin));
         register(new ProtocolLibModule(plugin));
-        register(new NexoModule(plugin));
-        register(new ItemsAdderModule(plugin));
+        // Custom-Item-Anbindung: bewusst nur Oraxen (frei nutzbar, reife API).
+        // Nexo (kostenpflichtig) und ItemsAdder (Premium) wurden entfernt.
         register(new OraxenModule(plugin));
     }
 

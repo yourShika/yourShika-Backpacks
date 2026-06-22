@@ -55,6 +55,7 @@ public final class RecipeManager implements Listener {
                 for (Map.Entry<Character, org.bukkit.Material> e : def.ingredients().entrySet()) {
                     recipe.setIngredient(e.getKey(), e.getValue());
                 }
+                recipe.setGroup("yourshika_backpacks");
                 Bukkit.addRecipe(recipe);
                 registered.add(key);
                 count++;
@@ -73,6 +74,11 @@ public final class RecipeManager implements Listener {
             }
         }
         registered.clear();
+    }
+
+    /** Alle registrierten Rezept-Schlüssel (für die Recipe-Book-Freischaltung). */
+    public List<NamespacedKey> keys() {
+        return List.copyOf(registered);
     }
 
     /** Erzwingt Tier-Permissions: ohne Berechtigung verschwindet das Ergebnis. */

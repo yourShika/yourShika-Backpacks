@@ -64,16 +64,14 @@ worlds:
   blacklist: []
 
 # ---------------------------------------------------------------------------
-#  Platzierbare Backpacks (Roadmap)
-#  Deaktiviert. Vorbereitet für eine spätere BlockDisplay-/Barrel-basierte
-#  Umsetzung. Siehe README -> Roadmap.
+#  Platzierbare Backpacks
+#  Per Shift-Rechtsklick auf den Boden platzieren (ItemDisplay + Interaction).
+#  Rechtsklick öffnet, Schlagen hebt auf. Persistent über Neustarts, geschützt
+#  vor Explosionen. Hopper können platzierte Backpacks nicht auslesen
+#  (sie sind keine Container).
 # ---------------------------------------------------------------------------
 placeable:
-  enabled: false
-  hopper:
-    allow-insert: false
-    allow-extract: false
-    owner-only: true
+  enabled: true
   protect-from-explosions: true
 
 # ---------------------------------------------------------------------------
@@ -239,10 +237,38 @@ tiers:
         D: DIAMOND
         H: CHEST
 
+  emerald:
+    display-name: "<#3BD16F>Smaragd-Rucksack</#3BD16F>"
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 1006
+    item-model: ""
+    provider-id: ""
+    storage-slots: 81
+    upgrade-slots: 6
+    default-main-color: "#3BD16F"
+    default-accent-color: "#1E7A3C"
+    permission: ""
+    lore:
+      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
+      - "<gray>Upgrade-Slots: <white><upgrades>"
+      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - ""
+      - "<yellow>Rechtsklick zum Öffnen"
+      - "<dark_gray>ID: <id>"
+    recipe:
+      enabled: true
+      shape:
+        - "EEE"
+        - "EHE"
+        - "EEE"
+      ingredients:
+        E: EMERALD
+        H: CHEST
+
   netherite:
     display-name: "<#6E5BC8>Netherite-Rucksack</#6E5BC8>"
     material: LEATHER_HORSE_ARMOR
-    custom-model-data: 1006
+    custom-model-data: 1007
     item-model: ""
     provider-id: ""
     storage-slots: 108
@@ -268,26 +294,28 @@ tiers:
         H: CHEST
 
 # ---------------------------------------------------------------------------
-#  Upgrades (Roadmap / vorbereitet)
-#  Noch nicht funktionsfähig. Dieser Abschnitt dient als Grundlage für spätere
-#  Versionen. Siehe README -> Upgrade-Roadmap.
+#  Upgrade-System (Tier-Kette)
+#  Leder → Copper → Eisen → Gold → Diamant → Smaragd → Netherite
+#
+#  - "Upgrade-Leder": Leder + Faden (Crafting Table).
+#  - Tier-Upgrade (copper…emerald): Upgrade-Leder + 8× Tier-Material.
+#    Netherite-Upgrade: Upgrade-Leder + 1 Netherite-Ingot (günstig, Crafting
+#    Table – im Smithing Table sind technisch nur 3 Slots möglich).
+#  - Backpack-Veredelung im Smithing Table:
+#    Leder (Template) + vorheriges Backpack (Basis) + Tier-Upgrade (Zugabe)
+#    → nächstes Backpack, UNTER ERHALT von ID, Inhalt und Farbe.
+#
+#  Über "materials" lässt sich das je Tier benötigte Material anpassen.
 # ---------------------------------------------------------------------------
 upgrades:
-  enabled: false
-  definitions:
-    pickup:
-      enabled: false
-      permission: "yourshika.backpack.upgrade.pickup"
-      custom-model-data: 2001
-    magnet:
-      enabled: false
-      permission: "yourshika.backpack.upgrade.magnet"
-      custom-model-data: 2002
-    void:
-      enabled: false
-      permission: "yourshika.backpack.upgrade.void"
-      custom-model-data: 2003
-    # ... weitere Upgrades folgen (Filter, Compacting, Smelting, Stack, ...).
+  enabled: true
+  materials:
+    copper: COPPER_INGOT
+    iron: IRON_INGOT
+    gold: GOLD_INGOT
+    diamond: DIAMOND
+    emerald: EMERALD
+    netherite: NETHERITE_INGOT
 
 # ---------------------------------------------------------------------------
 #  Externe Module / Hooks (EXPERIMENTELL)
@@ -306,6 +334,4 @@ hooks:
   modules:
     placeholderapi: false   # Platzhalter (%ysbp_*%)
     protocollib: false      # Fake-Blocks für platzierte Backpacks (Roadmap)
-    nexo: false             # Custom-Modelle/Texturen (empfohlener Oraxen-Nachfolger)
-    itemsadder: false       # Custom-Modelle/Texturen
-    oraxen: false           # Custom-Modelle/Texturen (Legacy)
+    oraxen: false           # Custom-Modelle/Texturen (einziger Item-Hook)

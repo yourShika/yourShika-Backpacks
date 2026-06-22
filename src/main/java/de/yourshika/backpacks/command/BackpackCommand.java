@@ -59,6 +59,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "give" -> give(sender, args);
             case "openid" -> openId(sender, args);
             case "modules", "module" -> modules(sender);
+            case "update" -> update(sender);
             case "reload" -> reload(sender);
             case "version", "ver" -> version(sender);
             default -> msg.send(sender, "error.unknown-subcommand", ph("input", args[0]));
@@ -69,11 +70,12 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     private void help(CommandSender sender) {
         msg.sendRaw(sender, "help.header");
         msg.sendRaw(sender, "help.open");
-        msg.sendRaw(sender, "help.color");
         msg.sendRaw(sender, "help.list");
+        if (sender.hasPermission("yourshika.backpack.admin.color")) msg.sendRaw(sender, "help.color");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
         if (sender.hasPermission("yourshika.backpack.admin.openid")) msg.sendRaw(sender, "help.openid");
         if (sender.hasPermission("yourshika.backpack.admin.modules")) msg.sendRaw(sender, "help.modules");
+        if (sender.hasPermission("yourshika.backpack.admin.update")) msg.sendRaw(sender, "help.update");
         if (sender.hasPermission("yourshika.backpack.admin.reload")) msg.sendRaw(sender, "help.reload");
         msg.sendRaw(sender, "help.footer");
     }
@@ -117,7 +119,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             msg.send(sender, "error.players-only");
             return;
         }
-        if (!player.hasPermission("yourshika.backpack.color")) {
+        if (!player.hasPermission("yourshika.backpack.admin.color")) {
             msg.send(sender, "error.no-permission");
             return;
         }
@@ -276,6 +278,14 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    private void update(CommandSender sender) {
+        if (!sender.hasPermission("yourshika.backpack.admin.update")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        new de.yourshika.backpacks.update.GitHubUpdater(plugin).checkAndUpdate(sender);
+    }
+
     private void reload(CommandSender sender) {
         if (!sender.hasPermission("yourshika.backpack.admin.reload")) {
             msg.send(sender, "error.no-permission");
@@ -303,6 +313,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
             if (sender.hasPermission("yourshika.backpack.admin.modules")) subs.add("modules");
+            if (sender.hasPermission("yourshika.backpack.admin.update")) subs.add("update");
             if (sender.hasPermission("yourshika.backpack.admin.reload")) subs.add("reload");
             return filter(subs, args[0]);
         }
@@ -313,7 +324,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             if (args.length == 4) return filter(List.of("1", "8", "16"), args[3]);
             if (args.length == 5 || args.length == 6) return filter(dyeNames(), args[args.length - 1]);
         }
-        if ((sub.equals("color") || sub.equals("farbe")) && (args.length == 2 || args.length == 3)) {
+        if ((sub.equals("color") || sub.equals("farbe")) && (args.length == 2 || args.length == 3)
+                && sender.hasPermission("yourshika.backpack.admin.color")) {
             return filter(dyeNames(), args[args.length - 1]);
         }
         if (sub.equals("list") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.listother")) {

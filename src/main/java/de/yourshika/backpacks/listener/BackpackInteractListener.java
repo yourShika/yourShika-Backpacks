@@ -44,6 +44,25 @@ public final class BackpackInteractListener implements Listener {
 
         Player player = event.getPlayer();
 
+        // Shift-Rechtsklick auf einen Block platziert das Backpack (falls aktiviert).
+        if (action == Action.RIGHT_CLICK_BLOCK && player.isSneaking()
+                && plugin.pluginConfig().placeableEnabled()
+                && event.getClickedBlock() != null) {
+            event.setCancelled(true);
+            if (!player.hasPermission("yourshika.backpack.place")) {
+                plugin.messages().send(player, "error.no-place");
+                return;
+            }
+            if (!plugin.pluginConfig().isWorldAllowed(player.getWorld().getName())) {
+                plugin.messages().send(player, "error.world-disabled");
+                return;
+            }
+            String err = plugin.placeableManager().place(
+                    player, event.getClickedBlock(), event.getBlockFace(), hand);
+            plugin.messages().send(player, err != null ? err : "place.success");
+            return;
+        }
+
         // Beim Rechtsklick auf einen interaktiven Block (Truhe, Tür, Ofen ...) ohne
         // Sneaken die normale Block-Interaktion zulassen – Backpack öffnet man dann
         // per Sneak-Rechtsklick oder Rechtsklick in die Luft.

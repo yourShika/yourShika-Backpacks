@@ -27,10 +27,9 @@ public final class BackpackMenuHolder implements InventoryHolder {
 
     // Feste Plätze in der Steuerleiste.
     public static final int PREV_SLOT = 45;
+    public static final int UPGRADE_BUTTON = 47; // öffnet die separate Upgrade-GUI
     public static final int INFO_SLOT = 49;
     public static final int NEXT_SLOT = 53;
-    /** Mögliche Plätze für (gesperrte) Upgrade-Vorschau-Slots. */
-    public static final int[] UPGRADE_SLOTS = {46, 47, 48, 50, 51, 52};
 
     private final UUID backpackId;
     private final String tierKey;
@@ -88,6 +87,10 @@ public final class BackpackMenuHolder implements InventoryHolder {
     public boolean isLocked(int rawSlot) {
         if (rawSlot >= CONTROL_ROW_START) return true;
         return rawSlot >= activeCount();
+    }
+
+    public boolean isUpgradeButton(int rawSlot) {
+        return rawSlot == UPGRADE_BUTTON;
     }
 
     public boolean isPrevButton(int rawSlot) {

@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reine Anzeige-GUI für {@code /bp modules}: zeigt alle externen, experimentellen
- * Module mit ihrem Live-Status (aktiv / inaktiv, installiert, in Config
- * aktiviert). Interaktion ist nicht vorgesehen.
+ * Interaktive GUI für {@code /bp modules}: zeigt alle externen, experimentellen
+ * Module mit ihrem Live-Status und erlaubt es Admins, den Master-Schalter und
+ * jedes Modul per Klick an-/auszuschalten (mit anschließendem Live-Reload).
  */
 public final class ModulesMenu {
 
@@ -35,15 +35,30 @@ public final class ModulesMenu {
                 line("<gradient:#6E5BC8:#5BE8D4><bold>Externe Module</bold></gradient>"));
         holder.setInventory(inv);
 
-        inv.setItem(4, header(experimental));
+        inv.setItem(ModulesMenuHolder.MASTER_SLOT, header(experimental));
 
         int slot = 9;
         for (Module module : modules) {
             if (slot >= 27) break;
+            holder.mapSlot(slot, module.id());
             inv.setItem(slot++, moduleItem(module, experimental));
         }
 
         player.openInventory(inv);
+    }
+
+    /** Baut die GUI im bereits geöffneten Inventar neu auf (nach einem Toggle). */
+    public static void refresh(YourShikaBackpacks plugin, ModulesMenuHolder holder) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        boolean experimental = plugin.moduleManager().experimentalEnabled();
+        inv.setItem(ModulesMenuHolder.MASTER_SLOT, header(experimental));
+        int slot = 9;
+        for (Module module : plugin.moduleManager().modules()) {
+            if (slot >= 27) break;
+            holder.mapSlot(slot, module.id());
+            inv.setItem(slot++, moduleItem(module, experimental));
+        }
     }
 
     private static ItemStack header(boolean experimental) {
@@ -59,7 +74,7 @@ public final class ModulesMenu {
             lore.add(line("<gray>Alle externen Module sind gesperrt."));
             lore.add(line("<gray>Das Plugin läuft eigenständig."));
         }
-        lore.add(line("<dark_gray>Ändern in der config.yml, dann /bp reload."));
+        lore.add(line("<yellow>Klicken zum Umschalten"));
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
@@ -89,6 +104,8 @@ public final class ModulesMenu {
         lore.add(line("<gray>Experimentell freigegeben: " + yesNo(experimental)));
         lore.add(Component.empty());
         lore.add(line("<gray>Status: " + (module.isActive() ? "<green><bold>AKTIV" : "<red><bold>INAKTIV")));
+        lore.add(Component.empty());
+        lore.add(line("<yellow>Klicken zum Umschalten"));
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;

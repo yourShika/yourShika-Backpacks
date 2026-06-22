@@ -1,6 +1,7 @@
 package de.yourshika.backpacks;
 
 import de.yourshika.backpacks.gui.BackpackMenuHolder;
+import de.yourshika.backpacks.gui.UpgradeMenuHolder;
 import de.yourshika.backpacks.item.BackpackItemFactory;
 import de.yourshika.backpacks.storage.BackpackData;
 import de.yourshika.backpacks.storage.BackpackStorage;
@@ -96,6 +97,11 @@ public final class BackpackManager {
             data.accentColor(accent);
             data.contents(new ItemStack[tier.storageSlots()]);
             storage.save(data);
+        } else if (!tier.key().equalsIgnoreCase(data.tier())) {
+            // Selbstheilung nach Smithing-Veredelung: Tier im Item ist maßgeblich,
+            // der Inhalt bleibt über die ID erhalten.
+            data.tier(tier.key());
+            storage.save(data);
         } else if (fresh) {
             plugin.debug("Frisches Item traf bestehende Daten: " + id);
         }
@@ -185,10 +191,10 @@ public final class BackpackManager {
             inv.setItem(slot, filler);
         }
 
-        // Gesperrte Upgrade-Vorschau-Slots.
-        int upgradeCount = tier == null ? 0 : Math.min(tier.upgradeSlots(), BackpackMenuHolder.UPGRADE_SLOTS.length);
-        for (int u = 0; u < upgradeCount; u++) {
-            inv.setItem(BackpackMenuHolder.UPGRADE_SLOTS[u], upgradePlaceholder(u + 1));
+        // Upgrades-Button (öffnet die separate Upgrade-GUI), wenn der Tier
+        // Upgrade-Slots besitzt.
+        if (tier != null && tier.upgradeSlots() > 0) {
+            inv.setItem(BackpackMenuHolder.UPGRADE_BUTTON, upgradeButton(tier));
         }
 
         // Info-Item.
@@ -269,13 +275,13 @@ public final class BackpackManager {
         return item;
     }
 
-    private ItemStack upgradePlaceholder(int index) {
-        ItemStack item = new ItemStack(Material.IRON_BARS);
+    private ItemStack upgradeButton(BackpackTier tier) {
+        ItemStack item = new ItemStack(Material.ANVIL);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(line("<dark_gray>Upgrade-Slot " + index + "</dark_gray>"));
+        meta.displayName(line("<gold><bold>Upgrades</bold></gold>"));
         List<Component> lore = new ArrayList<>();
-        lore.add(line("<dark_gray>Gesperrt"));
-        lore.add(line("<gray>Upgrades folgen in einer späteren Version."));
+        lore.add(line("<gray>Upgrade-Slots: <white>" + tier.upgradeSlots()));
+        lore.add(line("<yellow>Klicken zum Öffnen"));
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
@@ -343,6 +349,70 @@ public final class BackpackManager {
                 storage.save(data);
             }
         }
+    }
+
+    // ---- Upgrade-GUI -----------------------------------------------------
+
+    /** Öffnet die separate Upgrade-GUI eines Backpacks. */
+    public void openUpgrades(Player player, UUID backpackId, String tierKey) {
+        BackpackTier tier = tiers.get(tierKey);
+        if (tier == null || tier.upgradeSlots() <= 0) return;
+        BackpackData data = storage.load(backpackId);
+        if (data == null) {
+            data = new BackpackData(backpackId);
+            data.tier(tierKey);
+        }
+        ItemStack[] up = data.upgrades();
+        ItemStack[] buffer = new ItemStack[tier.upgradeSlots()];
+        if (up != null) {
+            System.arraycopy(up, 0, buffer, 0, Math.min(up.length, buffer.length));
+        }
+        UpgradeMenuHolder holder = new UpgradeMenuHolder(backpackId, tierKey, tier.upgradeSlots(), buffer);
+        Inventory inv = Bukkit.createInventory(holder, holder.size(),
+                mini.deserialize("<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>("
+                        + tier.key() + ")").decoration(TextDecoration.ITALIC, false));
+        holder.setInventory(inv);
+        renderUpgrades(holder);
+        player.openInventory(inv);
+    }
+
+    private void renderUpgrades(UpgradeMenuHolder holder) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        ItemStack[] buffer = holder.buffer();
+        for (int i = 0; i < holder.upgradeSlots(); i++) {
+            inv.setItem(i, i < buffer.length ? buffer[i] : null);
+        }
+        ItemStack filler = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
+        for (int i = holder.upgradeSlots(); i < holder.size(); i++) {
+            inv.setItem(i, filler);
+        }
+        inv.setItem(holder.backButtonSlot(), backButton());
+    }
+
+    /** Speichert die Upgrade-Items eines Backpacks aus der Upgrade-GUI. */
+    public void saveUpgrades(UpgradeMenuHolder holder) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        BackpackData data = storage.load(holder.backpackId());
+        if (data == null) {
+            data = new BackpackData(holder.backpackId());
+            data.tier(holder.tierKey());
+        }
+        ItemStack[] up = new ItemStack[holder.upgradeSlots()];
+        for (int i = 0; i < holder.upgradeSlots(); i++) {
+            up[i] = inv.getItem(i);
+        }
+        data.upgrades(up);
+        storage.save(data);
+    }
+
+    private ItemStack backButton() {
+        ItemStack item = new ItemStack(Material.ARROW);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line("<yellow>◀ Zurück zum Backpack"));
+        item.setItemMeta(meta);
+        return item;
     }
 
     /** Erzeugt ein neues, sofort registriertes Backpack-Item mit eigener ID. */

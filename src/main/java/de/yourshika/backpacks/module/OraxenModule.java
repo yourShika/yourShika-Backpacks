@@ -4,15 +4,15 @@ import de.yourshika.backpacks.YourShikaBackpacks;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Oraxen-Anbindung (Legacy). Liefert optional Custom-Modelle/Texturen über
- * {@code provider-id} eines Tiers. Für neue Setups wird {@link NexoModule}
- * empfohlen.
+ * Oraxen-Anbindung. Liefert optional Custom-Modelle/Texturen über die
+ * {@code provider-id} eines Tiers. Einziger unterstützter Custom-Item-Hook
+ * (frei nutzbar, reife API).
  */
 public final class OraxenModule extends ExternalItemModule {
 
     public OraxenModule(YourShikaBackpacks plugin) {
         super(plugin, "oraxen", "Oraxen",
-                "Custom-Modelle/Texturen (Legacy – Nexo empfohlen)", "Oraxen");
+                "Custom-Modelle/Texturen für Backpacks", "Oraxen");
     }
 
     @Override

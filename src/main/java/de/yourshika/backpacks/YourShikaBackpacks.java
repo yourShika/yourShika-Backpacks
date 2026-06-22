@@ -37,6 +37,9 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BackpackManager manager;
     private RecipeManager recipeManager;
     private ModuleManager moduleManager;
+    private de.yourshika.backpacks.upgrade.UpgradeItemFactory upgradeItems;
+    private de.yourshika.backpacks.upgrade.UpgradeManager upgradeManager;
+    private de.yourshika.backpacks.place.PlaceableManager placeableManager;
 
     private BukkitTask autosaveTask;
 
@@ -75,11 +78,31 @@ public final class YourShikaBackpacks extends JavaPlugin {
         // Listener registrieren.
         Bukkit.getPluginManager().registerEvents(new BackpackGuiListener(this, manager), this);
         Bukkit.getPluginManager().registerEvents(new BackpackInteractListener(this, manager), this);
+        Bukkit.getPluginManager().registerEvents(
+                new de.yourshika.backpacks.listener.BackpackSecurityListener(this), this);
+        Bukkit.getPluginManager().registerEvents(
+                new de.yourshika.backpacks.listener.DyeCraftListener(this), this);
+
+        // Platzierbare Backpacks.
+        this.placeableManager = new de.yourshika.backpacks.place.PlaceableManager(this, manager);
+        Bukkit.getPluginManager().registerEvents(
+                new de.yourshika.backpacks.listener.PlaceableListener(this, manager, placeableManager), this);
+
+        // Rezepte für das Recipe Book (und JEI/REI/EMI) freischalten.
+        Bukkit.getPluginManager().registerEvents(
+                new de.yourshika.backpacks.listener.RecipeDiscoveryListener(this), this);
 
         // Rezepte.
         this.recipeManager = new RecipeManager(this, tiers, itemFactory);
         Bukkit.getPluginManager().registerEvents(recipeManager, this);
         this.recipeManager.registerAll();
+
+        // Upgrade-System (Upgrade-Items, Tier-Kette, Smithing-Veredelung).
+        this.upgradeItems = new de.yourshika.backpacks.upgrade.UpgradeItemFactory(this);
+        this.upgradeManager = new de.yourshika.backpacks.upgrade.UpgradeManager(
+                this, tiers, itemFactory, upgradeItems, manager);
+        Bukkit.getPluginManager().registerEvents(upgradeManager, this);
+        this.upgradeManager.registerAll();
 
         // Befehle.
         BackpackCommand command = new BackpackCommand(this, manager, tiers);
@@ -119,6 +142,9 @@ public final class YourShikaBackpacks extends JavaPlugin {
         if (recipeManager != null) {
             recipeManager.unregisterAll();
         }
+        if (upgradeManager != null) {
+            upgradeManager.unregisterAll();
+        }
         if (storage != null) {
             storage.close();
         }
@@ -154,6 +180,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
         messages.load(pluginConfig.language());
         tiers.load(getConfig().getConfigurationSection("tiers"));
         recipeManager.registerAll();
+        upgradeManager.registerAll();
         moduleManager.reload();
         if (autosaveTask != null) {
             autosaveTask.cancel();
@@ -169,10 +196,31 @@ public final class YourShikaBackpacks extends JavaPlugin {
         }
     }
 
+    /** Schaltet den Master-Schalter für externe Module um (persistiert + Live-Reload). */
+    public void setExperimentalHooks(boolean value) {
+        getConfig().set("hooks.experimental", value);
+        saveConfig();
+        pluginConfig.load();
+        moduleManager.reload();
+    }
+
+    /** Schaltet ein einzelnes Modul um (persistiert + Live-Reload). */
+    public void setModuleEnabled(String id, boolean value) {
+        getConfig().set("hooks.modules." + id, value);
+        saveConfig();
+        pluginConfig.load();
+        moduleManager.reload();
+    }
+
     public void debug(String message) {
         if (pluginConfig != null && pluginConfig.debug()) {
             getLogger().info("[DEBUG] " + message);
         }
+    }
+
+    /** Pfad der eigenen Plugin-JAR (für den Self-Updater). */
+    public File pluginJarFile() {
+        return getFile();
     }
 
     public PluginConfig pluginConfig() { return pluginConfig; }
@@ -181,4 +229,8 @@ public final class YourShikaBackpacks extends JavaPlugin {
     public BackpackManager manager() { return manager; }
     public BackpackItemFactory itemFactory() { return itemFactory; }
     public ModuleManager moduleManager() { return moduleManager; }
+    public RecipeManager recipeManager() { return recipeManager; }
+    public de.yourshika.backpacks.upgrade.UpgradeManager upgradeManager() { return upgradeManager; }
+    public de.yourshika.backpacks.upgrade.UpgradeItemFactory upgradeItems() { return upgradeItems; }
+    public de.yourshika.backpacks.place.PlaceableManager placeableManager() { return placeableManager; }
 }

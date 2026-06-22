@@ -12,7 +12,8 @@ help:
   list: "<yellow>/bp list [Spieler] <gray>– Backpacks auflisten"
   give: "<yellow>/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent] <gray>– Backpack geben"
   openid: "<yellow>/bp openid <ID> <gray>– Backpack per ID öffnen"
-  modules: "<yellow>/bp modules <gray>– Externe Module & Status anzeigen"
+  modules: "<yellow>/bp modules <gray>– Externe Module an/aus schalten"
+  update: "<yellow>/bp update <gray>– Neueste Version von GitHub laden"
   reload: "<yellow>/bp reload <gray>– Konfiguration neu laden"
   footer: "<dark_gray>Inspiriert von Sophisticated Backpacks – eigenständiges Server-Plugin."
 
@@ -34,9 +35,29 @@ error:
   invalid-tier: "<red>Unbekannter Tier: <white><input></white>"
   invalid-number: "<red>Keine gültige Zahl: <white><input></white>"
   player-not-found: "<red>Spieler nicht gefunden: <white><input></white>"
+  no-horse-armor: "<red>Ein Backpack kann nicht als Pferderüstung verwendet werden."
+  no-place: "<red>Hier darfst du keine Backpacks platzieren."
+  place-disabled: "<red>Platzierbare Backpacks sind deaktiviert."
+  place-occupied: "<red>Hier ist bereits ein Backpack platziert."
+  update-usage: "<red>Verwendung: /bp update <gray>(lädt die neueste Version von GitHub)"
 
 color:
   success: "<green>Backpack eingefärbt: <white><main></white> <gray>/</gray> <white><accent></white>"
+
+place:
+  success: "<green>Backpack platziert. <gray>Rechtsklick öffnet, Sneak-Rechtsklick hebt auf."
+  removed: "<green>Backpack aufgehoben."
+
+upgrades:
+  title: "<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>(<tier>)"
+  no-upgrade-item: "<red>Hier können nur Upgrade-Items abgelegt werden."
+
+update:
+  checking: "<gray>Suche nach der neuesten Version auf GitHub …"
+  up-to-date: "<green>Bereits aktuell (v<version></white>)."
+  downloading: "<gray>Lade <white><version></white> herunter …"
+  success: "<green>Update auf <white><version></white> heruntergeladen. <yellow>Server-Neustart nötig, um es zu übernehmen."
+  failed: "<red>Update fehlgeschlagen: <white><error></white>"
 
 list:
   header: "<gold>Backpacks von <white><player></white>: <yellow><count></yellow>"

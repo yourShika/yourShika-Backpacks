@@ -44,8 +44,15 @@ public final class TierRegistry {
 
     private BackpackTier parse(String key, ConfigurationSection sec) {
         String displayName = sec.getString("display-name", "<white>" + key + " Backpack</white>");
-        Material material = Material.matchMaterial(sec.getString("material", "LEATHER_HORSE_ARMOR"));
-        if (material == null) material = Material.LEATHER_HORSE_ARMOR;
+        // Material ist bewusst FEST auf LEATHER_HORSE_ARMOR verdrahtet und nicht
+        // per Config änderbar: nur so sind echte Leder-Färbung, der
+        // Pferderüstungs-Schutz und ein konsistentes Verhalten garantiert.
+        String configured = sec.getString("material", "LEATHER_HORSE_ARMOR");
+        if (configured != null && !configured.equalsIgnoreCase("LEATHER_HORSE_ARMOR")) {
+            plugin.getLogger().warning("Tier '" + key + "': material ist fest auf LEATHER_HORSE_ARMOR gesetzt; '"
+                    + configured + "' wird ignoriert.");
+        }
+        Material material = Material.LEATHER_HORSE_ARMOR;
         int cmd = sec.getInt("custom-model-data", 0);
         String itemModel = sec.getString("item-model", "");
         String providerId = sec.getString("provider-id", "");

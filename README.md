@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.1.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.2.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,36 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## 🆕 Neu in v0.2.0
+
+- 🔒 **Update-sichere Speicherung (MUSS):** Inhalte werden im versionierten
+  Paper-Byte-Format gespeichert (mit Minecraft-Datenversion + DataFixer). Items
+  – **inklusive beliebiger Custom-NBT/Components** – überstehen Server- und
+  Plugin-Updates unbeschädigt. Alte Daten werden automatisch migriert.
+- 🧵 **Upgrade-Kette:** **Leder → Copper → Eisen → Gold → Diamant → Smaragd →
+  Netherite**. Aus **Upgrade-Leder** (Leder + Faden) werden mit Tier-Material
+  **Tier-Upgrades**; die **Veredelung** läuft im **Smithing Table** und
+  **erhält ID, Inhalt und Farbe** des Backpacks.
+- 🧰 **Upgrade-GUI:** Eigenes Inventar je Backpack (Button in der Backpack-GUI),
+  in das nur Upgrade-Items passen – server-seitig gespeichert.
+- 🎨 **Dye-Färben im Crafting Table:** Backpack in die Mitte, Färbemittel in die
+  **linke Spalte = Hauptfarbe**, **rechte Spalte = Akzentfarbe** (positions-
+  unabhängig, mehrere Dyes werden zu **Hex** gemischt). Der Inhalt bleibt erhalten.
+- 📦 **Platzierbare Backpacks:** **Shift-Rechtsklick** auf den Boden platziert
+  (ItemDisplay + Interaction), **Rechtsklick öffnet**, **Sneak-Rechtsklick hebt
+  auf** – persistent über Neustarts, geschützt vor Explosionen, nicht per Hopper
+  auslesbar.
+- 🐴 **Schutz:** Backpacks lassen sich **nicht** als Pferderüstung anlegen und
+  **nicht** in Hopper/Automationen bewegen.
+- 🔁 **`/bp update`:** Lädt die neueste Release-JAR von GitHub in den
+  `plugins/update/`-Ordner (Übernahme beim Neustart; Daten bleiben erhalten).
+- 🧪 **Module-GUI:** `/bp modules` schaltet Hooks **per Klick** live an/aus.
+- 📖 **Recipe Book + JEI/REI/EMI:** Alle echten Rezepte (Backpacks, Upgrades,
+  Smithing) sind freigeschaltet und sichtbar.
+- ➖ **Custom-Item-Hooks:** nur noch **Oraxen** (Nexo & ItemsAdder entfernt).
 
 ---
 
@@ -77,13 +107,17 @@ Hauptbefehl: `/backpack` · Aliase: `/bp`, `/ybackpack`, `/ysbackpack`
 |---|---|
 | `/bp help` | Hilfe anzeigen |
 | `/bp open` | Backpack in der Hand öffnen |
-| `/bp color <Farbe> [Akzent]` | Backpack einfärben (DyeColor-Name **oder** `#RRGGBB`) |
 | `/bp list [Spieler]` | Backpacks auflisten |
+| `/bp color <Farbe> [Akzent]` | Backpack einfärben (DyeColor-Name **oder** `#RRGGBB`) — **Admin** |
 | `/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent]` | Backpack geben (Admin) |
 | `/bp openid <ID>` | Backpack per ID öffnen (Admin) |
-| `/bp modules` | Externe Module & ihren Status anzeigen (Admin) |
+| `/bp modules` | Externe Module **per GUI an/aus** schalten (Admin) |
+| `/bp update` | Neueste Version von GitHub laden (Admin, Neustart nötig) |
 | `/bp reload` | Konfiguration neu laden (Admin) |
 | `/bp version` | Plugin-Infos |
+
+> **Färben für Spieler** läuft über den **Crafting Table** (siehe unten); der
+> Befehl `/bp color` ist bewusst eine **Admin**-Funktion.
 
 ---
 
@@ -93,14 +127,16 @@ Hauptbefehl: `/backpack` · Aliase: `/bp`, `/ybackpack`, `/ysbackpack`
 |---|---|---|
 | `yourshika.backpack.use` | Backpacks benutzen | alle |
 | `yourshika.backpack.open` | Eigenes Backpack öffnen | alle |
-| `yourshika.backpack.color` | Backpack einfärben | alle |
 | `yourshika.backpack.list` | Eigene Backpacks auflisten | alle |
+| `yourshika.backpack.place` | Backpacks platzieren/aufheben | alle |
 | `yourshika.backpack.craft.<tier>` | Bestimmten Tier craften | alle |
+| `yourshika.backpack.admin.color` | Backpack per Befehl einfärben | OP |
 | `yourshika.backpack.admin.give` | Backpacks geben | OP |
 | `yourshika.backpack.admin.openid` | Per ID öffnen | OP |
 | `yourshika.backpack.admin.openother` | Fremde Backpacks öffnen | OP |
 | `yourshika.backpack.admin.listother` | Fremde Backpacks listen | OP |
-| `yourshika.backpack.admin.modules` | Modul-Übersicht öffnen | OP |
+| `yourshika.backpack.admin.modules` | Modul-GUI öffnen/umschalten | OP |
+| `yourshika.backpack.admin.update` | Self-Updater | OP |
 | `yourshika.backpack.admin.reload` | Reload | OP |
 | `yourshika.backpack.admin.debug` | Debug | OP |
 
@@ -114,17 +150,19 @@ ist die **Steuerleiste** (Blättern, Info, Upgrade-Vorschau). Von den verbleiben
 gesperrt. Tiers mit mehr als 45 Lager-Slots werden automatisch über mehrere
 **Seiten** geblättert (◀ / ▶).
 
-| Tier | Lager-Slots | Seiten* | Upgrade-Slots** | CustomModelData |
+| Tier | Lager-Slots | Seiten* | Upgrade-Slots | CustomModelData |
 |---|---|---|---|---|
 | Leder | 9 | 1 | 1 | 1001 |
 | Kupfer | 18 | 1 | 2 | 1002 |
 | Eisen | 27 | 1 | 3 | 1003 |
 | Gold | 45 | 1 | 4 | 1004 |
 | Diamant | 54 | 2 | 5 | 1005 |
-| Netherite | 108 | 3 | 6 | 1006 |
+| **Smaragd** | 81 | 2 | 6 | 1006 |
+| Netherite | 108 | 3 | 6 | 1007 |
 
 \* Bei 45 nutzbaren Slots pro Seite (`gui.storage-slots-per-page`).
-\*\* Upgrade-Slots sind **vorbereitet und gesperrt** (Roadmap).
+Die Upgrade-Slots sind über den **Upgrades-Button** in der Backpack-GUI als
+eigenes Inventar nutzbar.
 
 ### Identität & Sicherheit
 
@@ -157,11 +195,29 @@ ideal als Backpack-Basis.
 
 ---
 
-## 🧰 Crafting
+## 🧰 Crafting, Upgrade-Kette & Färben
 
-Standardmäßig craftet man jeden Tier aus 8× Tier-Material um eine **Truhe**.
-Rezepte sind je Tier in der `config.yml` frei anpassbar. Gecraftete Backpacks sind
-**Templates ohne ID**; die eindeutige ID wird **beim ersten Öffnen** vergeben.
+**Backpacks (Crafting Table):** jeder Tier aus 8× Tier-Material um eine **Truhe**.
+Rezepte sind je Tier in der `config.yml` anpassbar. Gecraftete Backpacks sind
+**Templates ohne ID**; die ID wird **beim ersten Öffnen** vergeben.
+
+**Upgrade-Kette** — Leder → Copper → Eisen → Gold → Diamant → Smaragd → Netherite:
+
+1. **Upgrade-Leder** craften: 1× Leder (Mitte) + 4× Faden (Crafting Table).
+2. **Tier-Upgrade** craften: Upgrade-Leder + 8× Tier-Material (z. B. Kupfer) →
+   *Copper-Upgrade*. **Netherite-Upgrade**: Upgrade-Leder + 1× Netherite-Ingot
+   (bewusst günstig; im Smithing Table sind technisch nur 3 Slots möglich).
+3. **Veredeln im Smithing Table:** **Leder** (Vorlage) + **vorheriges Backpack**
+   (Basis) + **Tier-Upgrade** (Zugabe) → nächstes Backpack. **ID, Inhalt und
+   Farbe bleiben erhalten.**
+
+**Färben (Crafting Table):** Backpack in die **mittlere Spalte**, Färbemittel in
+die **linke Spalte** = Hauptfarbe, **rechte Spalte** = Akzentfarbe. Innerhalb
+einer Spalte ist die Position egal; mehrere Dyes werden zu einem **Hex-Wert**
+gemischt. Der Backpack-Inhalt bleibt dabei vollständig erhalten.
+
+> Die echten Rezepte erscheinen im **Recipe Book** und in **JEI/REI/EMI**. Das
+> positionsunabhängige Färben ist kein festes Rezept und daher dort nicht gelistet.
 
 ---
 
@@ -172,6 +228,13 @@ Rezepte sind je Tier in der `config.yml` frei anpassbar. Gecraftete Backpacks si
 
 Gespeichert wird beim **Schließen**, beim **Seitenwechsel**, bei **Logout**,
 **Plugin-Deaktivierung**, **Server-Stop** und per **Autosave**.
+
+**Update-sicher (MUSS):** Inhalte werden im **versionierten Paper-Byte-Format**
+(`serializeAsBytes`) abgelegt – inkl. Minecraft-Datenversion. Beim Laden migriert
+der DataFixer automatisch auf die aktuelle Version, sodass Items mit beliebiger
+Custom-NBT/Components nach Updates **nicht verloren gehen und nicht beschädigt
+werden**. Ältere Daten im alten Format werden weiterhin gelesen und beim nächsten
+Speichern automatisch migriert.
 
 ---
 
@@ -185,19 +248,19 @@ unabhängig von den Einzel-Schaltern.
 Den Live-Status zeigt **`/bp modules`** (installiert / in Config aktiviert /
 experimentell freigegeben / **AKTIV**-**INAKTIV**).
 
+Module lassen sich zusätzlich **live per GUI** an-/ausschalten: **`/bp modules`**
+(Klick auf den Master-Schalter bzw. ein Modul schaltet es um und lädt es neu).
+
 | Modul | Zweck | Standard |
 |---|---|---|
 | **PlaceholderAPI** | `%ysbp_count%`, `%ysbp_highest_tier%`, `%ysbp_open%` | gesperrt |
 | **ProtocolLib** | Fake-Blocks für platzierte Backpacks (Roadmap) | gesperrt |
-| **Nexo** | Custom-Modelle/Texturen (**empfohlener** Oraxen-Nachfolger) | gesperrt |
-| **ItemsAdder** | Custom-Modelle/Texturen | gesperrt |
-| **Oraxen** | Custom-Modelle/Texturen (Legacy) | gesperrt |
+| **Oraxen** | Custom-Modelle/Texturen | gesperrt |
 
-> **Empfehlung Custom-Items:** Für neue Setups ist **Nexo** die zukunftssicherste
-> Wahl (offener, aktiv gepflegter Oraxen-Nachfolger). ItemsAdder bleibt eine
-> mächtige Alternative, Oraxen ist als Legacy weiter wählbar. Pro Tier kann eine
-> `provider-id` gesetzt werden, die nur greift, wenn das jeweilige Modul aktiv ist.
-> **Vault wird bewusst nicht mehr unterstützt.**
+> **Custom-Items:** Als Custom-Item-Hook wird ausschließlich **Oraxen** unterstützt
+> (frei nutzbar, reife API). **Nexo** (kostenpflichtig) und **ItemsAdder** (Premium)
+> wurden bewusst entfernt. Pro Tier kann eine `provider-id` gesetzt werden, die nur
+> greift, wenn das Oraxen-Modul aktiv ist. **Vault wird bewusst nicht unterstützt.**
 
 Aktivieren (Beispiel PlaceholderAPI):
 
@@ -212,19 +275,20 @@ hooks:
 
 ## ⚠️ Bekannte Einschränkungen
 
-- **Upgrades** sind vorbereitet/gesperrt (Roadmap).
-- **Platzierbare Backpacks** sind vorbereitet (Roadmap).
-- **Custom-Texturen/Resourcepack** liegen nicht bei (nur vorbereitet).
+- **Funktionale Upgrade-Effekte** (Pickup, Magnet, Void, Filter …) folgen noch –
+  v0.2.0 bringt die **Upgrade-Slots als Inventar** sowie die **Tier-Veredelung**.
+- **Custom-Texturen/Resourcepack** liegen nicht bei (nur vorbereitet via CustomModelData).
 - Externe Module sind **experimentell**; ihre Modell-Übernahme erfolgt best-effort.
+- Das **positionsunabhängige Dye-Färben** ist kein festes Rezept und erscheint
+  daher nicht in JEI/REI/EMI (alle echten Rezepte hingegen schon).
 
 ---
 
 ## 🗺️ Roadmap
 
-- **Upgrade-System** (Pickup, Magnet, Void, Filter, Compacting, Smelting, Stack,
-  Inception u.v.m.) – Slots & Config sind bereits vorbereitet.
-- **Platzierbare Backpacks** (BlockDisplay/Barrel-basiert, optional ProtocolLib).
-- **Eigenes Resourcepack** + tiefere Nexo-/ItemsAdder-/Oraxen-Integration.
+- **Funktionale Upgrade-Effekte** (Pickup, Magnet, Void, Filter, Compacting,
+  Smelting, Stack, Inception u.v.m.) – die Upgrade-Slots & -Items existieren bereits.
+- **Eigenes Resourcepack** + tiefere Oraxen-Integration.
 - **Backpacks-in-Backpacks** nur über das geplante **Inception Upgrade** (mit Limits & Dupe-Schutz).
 
 ---
@@ -240,7 +304,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.1.0.jar
+target/yourShika-Backpacks-0.2.0.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

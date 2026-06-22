@@ -4,7 +4,11 @@ import de.yourshika.backpacks.BackpackManager;
 import de.yourshika.backpacks.YourShikaBackpacks;
 import de.yourshika.backpacks.gui.BackpackMenuHolder;
 import de.yourshika.backpacks.gui.ModulesMenuHolder;
+import de.yourshika.backpacks.gui.UpgradeMenuHolder;
 import de.yourshika.backpacks.item.BackpackItemFactory;
+import de.yourshika.backpacks.upgrade.UpgradeItemFactory;
+
+import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,6 +60,17 @@ public final class BackpackGuiListener implements Listener {
         if (clickedTop && holder.isNextButton(raw)) {
             event.setCancelled(true);
             manager.changePage(holder, +1);
+            return;
+        }
+
+        // 0b) Upgrades-Button öffnet die separate Upgrade-GUI.
+        if (clickedTop && holder.isUpgradeButton(raw)) {
+            event.setCancelled(true);
+            UUID id = holder.backpackId();
+            String tier = holder.tierKey();
+            // Nächster Tick: das Schließen des Backpacks speichert den Inhalt,
+            // danach öffnet die Upgrade-GUI sauber.
+            plugin.getServer().getScheduler().runTask(plugin, () -> manager.openUpgrades(player, id, tier));
             return;
         }
 
@@ -125,11 +140,29 @@ public final class BackpackGuiListener implements Listener {
         }
     }
 
-    // Reine Anzeige-GUI /bp modules: jede Interaktion unterbinden.
+    // /bp modules: Klicks schalten Master-Schalter bzw. einzelne Module um.
     @EventHandler(priority = EventPriority.HIGH)
     public void onModulesClick(InventoryClickEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof ModulesMenuHolder) {
-            event.setCancelled(true);
+        if (!(event.getView().getTopInventory().getHolder() instanceof ModulesMenuHolder holder)) return;
+        event.setCancelled(true);
+        if (event.getClickedInventory() == null
+                || !(event.getClickedInventory().getHolder() instanceof ModulesMenuHolder)) {
+            return; // Klick im Spieler-Inventar – ignorieren.
+        }
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (!player.hasPermission("yourshika.backpack.admin.modules")) return;
+
+        int raw = event.getRawSlot();
+        if (holder.isMaster(raw)) {
+            plugin.setExperimentalHooks(!plugin.moduleManager().experimentalEnabled());
+            de.yourshika.backpacks.gui.ModulesMenu.refresh(plugin, holder);
+            return;
+        }
+        String moduleId = holder.moduleAt(raw);
+        if (moduleId != null) {
+            boolean now = plugin.pluginConfig().isModuleEnabled(moduleId);
+            plugin.setModuleEnabled(moduleId, !now);
+            de.yourshika.backpacks.gui.ModulesMenu.refresh(plugin, holder);
         }
     }
 
@@ -176,6 +209,109 @@ public final class BackpackGuiListener implements Listener {
             manager.saveAndRelease(holder);
             plugin.debug("Backpack " + holder.backpackId() + " gespeichert & freigegeben.");
         }
+    }
+
+    // --- Upgrade-GUI -------------------------------------------------------
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onUpgradeClick(InventoryClickEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof UpgradeMenuHolder holder)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+
+        int raw = event.getRawSlot();
+        boolean clickedTop = raw < top.getSize();
+        ClickType click = event.getClick();
+        InventoryAction action = event.getAction();
+        UpgradeItemFactory up = plugin.upgradeItems();
+
+        // Zurück-Button.
+        if (clickedTop && raw == holder.backButtonSlot()) {
+            event.setCancelled(true);
+            UUID id = holder.backpackId();
+            manager.saveUpgrades(holder);
+            plugin.getServer().getScheduler().runTask(plugin, () -> manager.openById(player, id));
+            return;
+        }
+        if (action == InventoryAction.COLLECT_TO_CURSOR) {
+            event.setCancelled(true);
+            return;
+        }
+        if (clickedTop && holder.isLocked(raw)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        // Hotbar-/Offhand-Swap: nur Upgrade-Items in Upgrade-Slots zulassen.
+        if (click == ClickType.NUMBER_KEY) {
+            ItemStack hotbar = event.getView().getBottomInventory().getItem(event.getHotbarButton());
+            if (clickedTop && notAllowedUpgrade(up, hotbar)) {
+                event.setCancelled(true);
+                denyUpgrade(player);
+                return;
+            }
+        }
+        if (click == ClickType.SWAP_OFFHAND) {
+            ItemStack off = player.getInventory().getItemInOffHand();
+            if (clickedTop && notAllowedUpgrade(up, off)) {
+                event.setCancelled(true);
+                denyUpgrade(player);
+                return;
+            }
+        }
+
+        // Cursor-Platzierung in einen Upgrade-Slot.
+        if (clickedTop && holder.isUpgradeSlot(raw) && notAllowedUpgrade(up, event.getCursor())) {
+            event.setCancelled(true);
+            denyUpgrade(player);
+            return;
+        }
+
+        // Shift-Click aus dem Spieler-Inventar: nur Upgrade-Items, kontrolliert.
+        if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY && !clickedTop) {
+            ItemStack moving = event.getCurrentItem();
+            if (moving == null || moving.getType().isAir()) return;
+            if (!up.isAnyUpgrade(moving)) {
+                event.setCancelled(true);
+                denyUpgrade(player);
+                return;
+            }
+            event.setCancelled(true);
+            ItemStack leftover = moveIntoStorage(top, holder.upgradeSlots(), moving.clone());
+            event.setCurrentItem(leftover);
+            player.updateInventory();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onUpgradeDrag(InventoryDragEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof UpgradeMenuHolder holder)) return;
+        UpgradeItemFactory up = plugin.upgradeItems();
+        boolean badItem = notAllowedUpgrade(up, event.getOldCursor());
+        for (int raw : event.getRawSlots()) {
+            if (raw >= top.getSize()) continue;
+            if (holder.isLocked(raw) || badItem) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onUpgradeClose(InventoryCloseEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof UpgradeMenuHolder holder) {
+            manager.saveUpgrades(holder);
+        }
+    }
+
+    /** true, wenn das Item nicht air und KEIN Upgrade-Item ist. */
+    private boolean notAllowedUpgrade(UpgradeItemFactory up, ItemStack item) {
+        return item != null && !item.getType().isAir() && !up.isAnyUpgrade(item);
+    }
+
+    private void denyUpgrade(Player player) {
+        plugin.messages().send(player, "upgrades.no-upgrade-item");
     }
 
     private void denyNesting(Player player) {
