@@ -39,8 +39,8 @@ public final class UpgradeItemFactory {
         this.typeKey = new NamespacedKey(plugin, "upgrade_type");
     }
 
-    /** Das Basis-Item "Upgrade-Leder". */
-    public ItemStack base() {
+    /** Das Basis-Item "Upgrade-Leder" mit konfigurierbarem Modell. */
+    public ItemStack base(int cmd, String itemModel) {
         ItemStack item = new ItemStack(Material.LEATHER);
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().set(baseMarker, PersistentDataType.BYTE, (byte) 1);
@@ -50,16 +50,17 @@ public final class UpgradeItemFactory {
                 line("<dark_gray>Im Crafting Table mit 8× Tier-Material"),
                 line("<dark_gray>zu einem Tier-Upgrade kombinieren.")
         ));
-        applyCmd(meta, BASE_CMD);
+        applyCmd(meta, cmd);
+        applyModel(meta, itemModel);
         item.setItemMeta(meta);
         return item;
     }
 
     /**
-     * Ein Tier-Upgrade für das Ziel-Tier {@code targetTier} (z.B. "copper").
-     * {@code displayName}/{@code colorHex} bestimmen nur die Optik.
+     * Ein Tier-Upgrade für das Ziel-Tier {@code targetTier} (z.B. "copper") mit
+     * konfigurierbarem CustomModelData/item_model (für spätere eigene Texturen).
      */
-    public ItemStack tierUpgrade(String targetTier, String displayName, int cmd) {
+    public ItemStack tierUpgrade(String targetTier, String displayName, int cmd, String itemModel) {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, targetTier);
@@ -70,6 +71,7 @@ public final class UpgradeItemFactory {
                 line("<dark_gray>Slots: Leder + Backpack + dieses Upgrade.")
         ));
         applyCmd(meta, cmd);
+        applyModel(meta, itemModel);
         item.setItemMeta(meta);
         return item;
     }
@@ -79,9 +81,16 @@ public final class UpgradeItemFactory {
     }
 
     private void applyCmd(ItemMeta meta, int cmd) {
+        if (cmd <= 0) return;
         CustomModelDataComponent c = meta.getCustomModelDataComponent();
         c.setFloats(List.of((float) cmd));
         meta.setCustomModelDataComponent(c);
+    }
+
+    private void applyModel(ItemMeta meta, String itemModel) {
+        if (itemModel == null || itemModel.isBlank()) return;
+        org.bukkit.NamespacedKey key = org.bukkit.NamespacedKey.fromString(itemModel);
+        if (key != null) meta.setItemModel(key);
     }
 
     public boolean isUpgradeBase(ItemStack item) {

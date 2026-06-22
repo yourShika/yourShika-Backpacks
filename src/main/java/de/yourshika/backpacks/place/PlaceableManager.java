@@ -98,10 +98,12 @@ public final class PlaceableManager {
             data = new BackpackData(id);
             data.owner(player.getUniqueId());
             data.tier(tier.key());
-            data.mainColor(main);
-            data.accentColor(accent);
             data.contents(new ItemStack[tier.storageSlots()]);
         }
+        // Farben IMMER aus dem Item übernehmen, damit ein zuvor (z.B. per Crafting)
+        // umgefärbtes Backpack beim Aufheben nicht auf die Default-Farbe zurückfällt.
+        data.mainColor(main);
+        data.accentColor(accent);
         data.placed(true);
         data.world(loc.getWorld().getName());
         data.position(loc.getX(), loc.getY(), loc.getZ());
@@ -175,6 +177,11 @@ public final class PlaceableManager {
             String main = data.mainColor() != null ? data.mainColor() : tier.defaultMainColor();
             String accent = data.accentColor() != null ? data.accentColor() : tier.defaultAccentColor();
             drop = items.create(tier, id, main, accent);
+            if (data.owner() != null) {
+                items.writeOwner(drop, data.owner(),
+                        org.bukkit.Bukkit.getOfflinePlayer(data.owner()).getName());
+                items.applyDisplay(drop, tier, id, main, accent);
+            }
             data.placed(false);
             manager.storage().save(data);
         } else {

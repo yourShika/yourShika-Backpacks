@@ -36,9 +36,8 @@ import java.util.UUID;
  * <ul>
  *   <li><b>Upgrade-Leder</b>: Leder + Faden (Crafting Table).</li>
  *   <li><b>Tier-Upgrade</b> (copper…emerald): Upgrade-Leder + 8× Tier-Material
- *       (Crafting Table). Netherite-Upgrade: Upgrade-Leder + 1 Netherite-Ingot
- *       (Crafting Table, bewusst günstig – im Smithing Table sind technisch nur
- *       3 Slots möglich).</li>
+ *       (Crafting Table). Netherite-Upgrade: Smithing Table – Upgrade-Leder
+ *       (Vorlage) + Netherite-Ingot (Basis) + Faden (Zugabe).</li>
  *   <li><b>Backpack-Veredelung</b> (Smithing Table): Leder + vorheriges Backpack
  *       + passendes Tier-Upgrade → nächstes Backpack, <b>unter Erhalt von ID,
  *       Inhalt und Farbe</b>.</li>
@@ -55,6 +54,8 @@ public final class UpgradeManager implements Listener {
     private final List<NamespacedKey> registered = new ArrayList<>();
     /** Ziel-Tier -> kanonisches Tier-Upgrade-Item (für ExactChoice & Smithing). */
     private final Map<String, ItemStack> upgradeItems = new HashMap<>();
+    /** Kanonisches Upgrade-Leder (für ExactChoice & Rezepte). */
+    private ItemStack baseItem;
 
     public UpgradeManager(YourShikaBackpacks plugin, TierRegistry tiers,
                           BackpackItemFactory backpacks, UpgradeItemFactory upgrades,
@@ -84,7 +85,7 @@ public final class UpgradeManager implements Listener {
         int count = 0;
         // a) Upgrade-Leder: Leder mittig, von Faden umgeben.
         try {
-            ShapedRecipe base = new ShapedRecipe(key("upgrade_base"), upgrades.base());
+            ShapedRecipe base = new ShapedRecipe(key("upgrade_base"), baseItem);
             base.shape(" S ", "SLS", " S ");
             base.setIngredient('S', Material.STRING);
             base.setIngredient('L', Material.LEATHER);
@@ -111,7 +112,7 @@ public final class UpgradeManager implements Listener {
                     // 1 Netherite-Ingot" bleibt im Kern erhalten).
                     SmithingTransformRecipe r = new SmithingTransformRecipe(
                             key("upgrade_" + target), result,
-                            new RecipeChoice.ExactChoice(upgrades.base()),      // Vorlage
+                            new RecipeChoice.ExactChoice(baseItem),      // Vorlage
                             new RecipeChoice.MaterialChoice(mat),               // Basis (Netherite-Ingot)
                             new RecipeChoice.MaterialChoice(Material.STRING));  // Zugabe
                     Bukkit.addRecipe(r);
@@ -121,7 +122,7 @@ public final class UpgradeManager implements Listener {
                     ShapedRecipe r = new ShapedRecipe(key("upgrade_" + target), result);
                     r.shape("MMM", "MUM", "MMM");
                     r.setIngredient('M', new RecipeChoice.MaterialChoice(mat));
-                    r.setIngredient('U', new RecipeChoice.ExactChoice(upgrades.base()));
+                    r.setIngredient('U', new RecipeChoice.ExactChoice(baseItem));
                     r.setGroup("yourshika_upgrades");
                     Bukkit.addRecipe(r);
                     registered.add(r.getKey());
@@ -159,13 +160,22 @@ public final class UpgradeManager implements Listener {
 
     private void buildUpgradeItems() {
         upgradeItems.clear();
+        // Upgrade-Leder mit konfigurierbarem Modell.
+        int baseCmd = plugin.getConfig().getInt("upgrades.models.base.custom-model-data",
+                UpgradeItemFactory.BASE_CMD);
+        String baseModel = plugin.getConfig().getString("upgrades.models.base.item-model", "");
+        this.baseItem = upgrades.base(baseCmd, baseModel);
+
         List<String> order = tiers.keys();
         for (int i = 1; i < order.size(); i++) {
             String target = order.get(i);
             BackpackTier tier = tiers.get(target);
             String hex = tier == null ? "FFFFFF" : ColorUtil.hex6(tier.defaultMainColor(), "FFFFFF");
             String name = "<#" + hex + "><bold>" + capitalize(target) + "-Upgrade</bold></#" + hex + ">";
-            upgradeItems.put(target, upgrades.tierUpgrade(target, name, UpgradeItemFactory.BASE_CMD + i));
+            int cmd = plugin.getConfig().getInt("upgrades.models." + target + ".custom-model-data",
+                    UpgradeItemFactory.BASE_CMD + i);
+            String model = plugin.getConfig().getString("upgrades.models." + target + ".item-model", "");
+            upgradeItems.put(target, upgrades.tierUpgrade(target, name, cmd, model));
         }
     }
 
@@ -236,20 +246,45 @@ public final class UpgradeManager implements Listener {
         }
 
         UUID id = backpacks.getId(base);
-        String main = backpacks.getMainColor(base, targetTier.defaultMainColor());
-        String accent = backpacks.getAccentColor(base, targetTier.defaultAccentColor());
+        BackpackTier prevTier = tiers.get(expectedFrom);
+        String prevMain = prevTier != null ? prevTier.defaultMainColor() : targetTier.defaultMainColor();
+        String prevAccent = prevTier != null ? prevTier.defaultAccentColor() : targetTier.defaultAccentColor();
+
+        String baseMain = backpacks.getMainColor(base, prevMain);
+        String baseAccent = backpacks.getAccentColor(base, prevAccent);
+
+        // Standard-Farben des Vorgänger-Tiers werden auf die Standard-Farben des
+        // neuen Tiers angehoben; individuell gefärbte Backpacks behalten ihre Farbe.
+        String main = isSameColor(baseMain, prevMain) ? targetTier.defaultMainColor() : baseMain;
+        String accent = isSameColor(baseAccent, prevAccent) ? targetTier.defaultAccentColor() : baseAccent;
+
         ItemStack result = backpacks.create(targetTier, id, main, accent);
+        // Besitzer des Ausgangs-Backpacks übernehmen.
+        UUID ownerUuid = backpacks.getOwner(base);
+        if (ownerUuid != null) {
+            backpacks.writeOwner(result, ownerUuid, backpacks.getOwnerName(base));
+            backpacks.applyDisplay(result, targetTier, id, main, accent);
+        }
         event.setResult(result);
 
-        // DB-Tier sofort nachziehen, damit /bp list konsistent bleibt
-        // (Inhalt bleibt durch die ID ohnehin erhalten).
+        // DB-Tier und -Farben sofort nachziehen, damit /bp list und platzierte
+        // Backpacks konsistent bleiben (Inhalt bleibt durch die ID ohnehin erhalten).
         if (id != null) {
             BackpackData data = manager.storage().load(id);
-            if (data != null && !target.equalsIgnoreCase(data.tier())) {
-                data.tier(target);
-                manager.storage().save(data);
+            if (data != null) {
+                boolean changed = false;
+                if (!target.equalsIgnoreCase(data.tier())) { data.tier(target); changed = true; }
+                if (!main.equals(data.mainColor())) { data.mainColor(main); changed = true; }
+                if (!accent.equals(data.accentColor())) { data.accentColor(accent); changed = true; }
+                if (changed) manager.storage().save(data);
             }
         }
+    }
+
+    /** Vergleicht zwei Farb-Tokens unabhängig von Schreibweise/Hex-Format. */
+    private boolean isSameColor(String a, String b) {
+        if (a == null || b == null) return false;
+        return ColorUtil.normalize(a, a).equalsIgnoreCase(ColorUtil.normalize(b, b));
     }
 
     private String previousTier(String target) {

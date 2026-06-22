@@ -44,7 +44,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BukkitTask autosaveTask;
 
     /** Aktuelle Struktur-Version der config.yml. */
-    private static final int CONFIG_VERSION = 2;
+    private static final int CONFIG_VERSION = 3;
 
     @Override
     public void onEnable() {
@@ -225,14 +225,6 @@ public final class YourShikaBackpacks extends JavaPlugin {
         if (!f.exists() && getResource(name) != null) {
             saveResource(name, false);
         }
-    }
-
-    /** Schaltet den Master-Schalter für externe Module um (persistiert + Live-Reload). */
-    public void setExperimentalHooks(boolean value) {
-        getConfig().set("hooks.experimental", value);
-        saveConfig();
-        pluginConfig.load();
-        moduleManager.reload();
     }
 
     /** Schaltet ein einzelnes Modul um (persistiert + Live-Reload). */

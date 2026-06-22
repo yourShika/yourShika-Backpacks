@@ -3,9 +3,8 @@ package de.yourshika.backpacks.module;
 /**
  * Ein externes, optionales und <strong>experimentelles</strong> Modul (Hook).
  *
- * <p>Module laden nur, wenn der globale Master-Schalter
- * {@code hooks.experimental} aktiv ist, das Modul einzeln in der Config
- * aktiviert wurde und das benötigte Plugin installiert ist. Fehlt etwas davon,
+ * <p>Module laden automatisch, sobald das benötigte Plugin installiert und das
+ * Modul in der Config aktiviert ist (Standard: aktiviert). Fehlt das Plugin,
  * bleibt das Modul inaktiv – das Plugin läuft vollständig eigenständig weiter.</p>
  *
  * <p>Der Live-Status aller Module ist im Spiel über {@code /bp modules}

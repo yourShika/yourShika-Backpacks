@@ -123,12 +123,14 @@ public final class BackpackItemFactory {
         TextColor mainColor = ColorUtil.toTextColor(main, TextColor.color(0xFFFFFF));
         TextColor accentColor = ColorUtil.toTextColor(accent, TextColor.color(0xFFFFFF));
 
+        String ownerName = getOwnerName(item);
         TagResolver resolvers = TagResolver.resolver(
                 Placeholder.component("main_color", Component.text(ColorUtil.pretty(main)).color(mainColor)),
                 Placeholder.component("accent_color", Component.text(ColorUtil.pretty(accent)).color(accentColor)),
                 Placeholder.unparsed("storage", String.valueOf(tier.storageSlots())),
                 Placeholder.unparsed("pages", String.valueOf(tier.pageCount(perPage))),
                 Placeholder.unparsed("upgrades", String.valueOf(tier.upgradeSlots())),
+                Placeholder.unparsed("owner", ownerName == null ? "—" : ownerName),
                 Placeholder.unparsed("id", id == null ? "—" : shortId(id))
         );
 
@@ -194,6 +196,36 @@ public final class BackpackItemFactory {
         meta.getPersistentDataContainer().set(keys.mainColor, PersistentDataType.STRING, main);
         meta.getPersistentDataContainer().set(keys.accentColor, PersistentDataType.STRING, accent);
         item.setItemMeta(meta);
+    }
+
+    /** Schreibt den Besitzer (UUID + Name) in das Item. */
+    public void writeOwner(ItemStack item, UUID owner, String name) {
+        ItemMeta meta = item.getItemMeta();
+        if (owner != null) {
+            meta.getPersistentDataContainer().set(keys.owner, PersistentDataType.STRING, owner.toString());
+        }
+        if (name != null) {
+            meta.getPersistentDataContainer().set(keys.ownerName, PersistentDataType.STRING, name);
+        }
+        item.setItemMeta(meta);
+    }
+
+    public UUID getOwner(ItemStack item) {
+        if (!isBackpack(item)) return null;
+        String raw = item.getItemMeta().getPersistentDataContainer().get(keys.owner, PersistentDataType.STRING);
+        if (raw == null) return null;
+        try {
+            return UUID.fromString(raw);
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
+    public String getOwnerName(ItemStack item) {
+        if (item == null) return null;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return null;
+        return meta.getPersistentDataContainer().get(keys.ownerName, PersistentDataType.STRING);
     }
 
     private static String shortId(UUID id) {

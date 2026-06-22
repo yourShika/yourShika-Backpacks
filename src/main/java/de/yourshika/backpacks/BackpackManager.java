@@ -62,6 +62,18 @@ public final class BackpackManager {
     }
 
     /**
+     * Darf der Spieler ein Backpack mit dem gegebenen Besitzer öffnen/aufheben?
+     * Bei {@code owner-only: false} (Standard) immer erlaubt. Ohne hinterlegten
+     * Besitzer ebenfalls erlaubt. Admins mit {@code openother} dürfen stets.
+     */
+    public boolean canAccess(Player player, UUID owner) {
+        if (!plugin.pluginConfig().ownerOnly()) return true;
+        if (owner == null) return true;
+        if (owner.equals(player.getUniqueId())) return true;
+        return player.hasPermission("yourshika.backpack.admin.openother");
+    }
+
+    /**
      * Öffnet das Backpack-Item für einen Spieler. Gibt einen Fehlermeldung-Key
      * zurück, falls etwas schiefgeht, sonst null bei Erfolg.
      */
@@ -70,6 +82,10 @@ public final class BackpackManager {
         BackpackTier tier = tiers.get(tierKey);
         if (tier == null) {
             return "error.invalid-backpack";
+        }
+
+        if (!canAccess(player, items.getOwner(item))) {
+            return "error.not-owner";
         }
 
         // Lazy-ID: gecraftete/gespawnte Backpacks erhalten beim ersten Öffnen ihre ID.
@@ -124,6 +140,9 @@ public final class BackpackManager {
         BackpackTier tier = tiers.get(data.tier());
         if (tier == null) {
             return "error.invalid-backpack";
+        }
+        if (!canAccess(player, data.owner())) {
+            return "error.not-owner";
         }
         if (openBackpacks.containsKey(id)) {
             return "error.already-open";
@@ -267,7 +286,7 @@ public final class BackpackManager {
         if (tier != null) {
             lore.add(line("<gray>Tier: <white>" + tier.key()));
             lore.add(line("<gray>Lager gesamt: <white>" + tier.storageSlots() + " Slots"));
-            lore.add(line("<gray>Upgrade-Slots: <white>" + tier.upgradeSlots() + " <dark_gray>(Roadmap)"));
+            lore.add(line("<gray>Upgrade-Slots: <white>" + tier.upgradeSlots()));
         }
         lore.add(line("<gray>ID: <white>" + holder.backpackId().toString().substring(0, 8)));
         lore.add(line("<gray>Haupt: " + ColorUtil.pretty(holder.mainColor())
@@ -424,6 +443,11 @@ public final class BackpackManager {
     public ItemStack createNew(BackpackTier tier, UUID owner, String main, String accent) {
         UUID id = UUID.randomUUID();
         ItemStack item = items.create(tier, id, main, accent);
+        if (owner != null) {
+            String name = Bukkit.getOfflinePlayer(owner).getName();
+            items.writeOwner(item, owner, name);
+            items.applyDisplay(item, tier, id, main, accent);
+        }
         BackpackData data = new BackpackData(id);
         data.owner(owner);
         data.tier(tier.key());

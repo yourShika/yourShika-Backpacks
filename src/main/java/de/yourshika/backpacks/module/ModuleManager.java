@@ -9,13 +9,13 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Verwaltet alle externen, experimentellen Module (Hooks).
+ * Verwaltet alle externen, optionalen Module (Hooks).
  *
- * <p>Zentraler Master-Schalter ist {@code hooks.experimental}. Ist er
- * {@code false} (Standard), wird <strong>kein</strong> Modul aktiviert – das
- * Plugin läuft vollständig eigenständig. Ist er {@code true}, werden nur jene
- * Module aktiviert, die zusätzlich einzeln aktiviert und deren Plugins
- * installiert sind.</p>
+ * <p>Module aktivieren sich <strong>automatisch</strong>, sobald das benötigte
+ * Plugin installiert und das Modul in der Config aktiviert ist (Standard:
+ * aktiviert). Fehlt das Plugin, bleibt das Modul still inaktiv – das Plugin läuft
+ * weiterhin vollständig eigenständig. Einzelne Module lassen sich über
+ * {@code /bp modules} live ab-/anschalten.</p>
  */
 public final class ModuleManager {
 
@@ -39,32 +39,24 @@ public final class ModuleManager {
         }
     }
 
-    /** (De-)Aktiviert alle Module gemäß aktueller Konfiguration. */
+    /** (De-)Aktiviert alle Module gemäß aktueller Konfiguration (automatisch). */
     public void reload() {
         for (Module module : modules) {
             module.disable();
         }
-        if (!plugin.pluginConfig().hooksExperimental()) {
-            plugin.getLogger().info("Externe Module gesperrt (hooks.experimental: false). Plugin läuft eigenständig.");
-            return;
-        }
         int active = 0;
         for (Module module : modules) {
-            if (!module.isEnabledInConfig()) continue;
-            if (!module.isPluginPresent()) {
-                plugin.getLogger().info("Modul '" + module.displayName() + "' aktiviert, aber Plugin '"
-                        + module.requiredPlugin() + "' fehlt – übersprungen.");
-                continue;
-            }
+            if (!module.isEnabledInConfig()) continue;     // bewusst deaktiviert
+            if (!module.isPluginPresent()) continue;        // Plugin fehlt -> still inaktiv
             try {
                 module.enable();
                 active++;
-                plugin.getLogger().info("Modul aktiv: " + module.displayName());
+                plugin.getLogger().info("Hook aktiv: " + module.displayName());
             } catch (Throwable t) {
                 plugin.getLogger().warning("Modul '" + module.displayName() + "' konnte nicht aktiviert werden: " + t.getMessage());
             }
         }
-        plugin.getLogger().info("Experimentelle Module aktiv: " + active + "/" + modules.size());
+        plugin.getLogger().info("Aktive Hooks: " + active + "/" + modules.size());
     }
 
     public void shutdown() {
@@ -75,10 +67,6 @@ public final class ModuleManager {
 
     public List<Module> modules() {
         return Collections.unmodifiableList(modules);
-    }
-
-    public boolean experimentalEnabled() {
-        return plugin.pluginConfig().hooksExperimental();
     }
 
     /** Aktuell aktiver externer Item-Anbieter (oder null = Vanilla). */

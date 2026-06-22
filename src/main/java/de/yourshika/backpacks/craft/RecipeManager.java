@@ -103,6 +103,9 @@ public final class RecipeManager implements Listener {
 
         UUID id = UUID.randomUUID();
         items.writeId(result, id);
+        if (event.getWhoClicked() instanceof org.bukkit.entity.Player crafter) {
+            items.writeOwner(result, crafter.getUniqueId(), crafter.getName());
+        }
         String main = items.getMainColor(result, tier.defaultMainColor());
         String accent = items.getAccentColor(result, tier.defaultAccentColor());
         items.applyDisplay(result, tier, id, main, accent);

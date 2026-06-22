@@ -50,6 +50,14 @@ public final class PlaceableListener implements Listener {
                 plugin.messages().send(player, "error.no-permission");
                 return;
             }
+            UUID id = placeable.backpackIdOf(entity);
+            if (id != null) {
+                var data = manager.storage().load(id);
+                if (data != null && !manager.canAccess(player, data.owner())) {
+                    plugin.messages().send(player, "error.not-owner");
+                    return;
+                }
+            }
             placeable.pickup(entity);
             plugin.messages().send(player, "place.removed");
             return;

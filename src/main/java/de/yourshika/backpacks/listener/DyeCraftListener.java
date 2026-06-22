@@ -88,6 +88,18 @@ public final class DyeCraftListener implements Listener {
         var leftover = player.getInventory().addItem(result);
         leftover.values().forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
 
+        // Farben auch server-seitig (DB) aktualisieren, damit platzierte oder per
+        // ID geöffnete Backpacks dieselbe Farbe behalten.
+        UUID id = items.getId(result);
+        if (id != null) {
+            de.yourshika.backpacks.storage.BackpackData data = plugin.manager().storage().load(id);
+            if (data != null) {
+                data.mainColor(items.getMainColor(result, data.mainColor()));
+                data.accentColor(items.getAccentColor(result, data.accentColor()));
+                plugin.manager().storage().save(data);
+            }
+        }
+
         // Zutaten verbrauchen (je ein Stück aus jedem beteiligten Slot).
         for (int i = 0; i < 9; i++) {
             ItemStack it = matrix[i];

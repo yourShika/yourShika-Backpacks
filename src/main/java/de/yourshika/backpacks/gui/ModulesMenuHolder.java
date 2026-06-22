@@ -13,8 +13,6 @@ import java.util.Map;
  */
 public final class ModulesMenuHolder implements InventoryHolder {
 
-    public static final int MASTER_SLOT = 4;
-
     /** Slot → Modul-ID. */
     private final Map<Integer, String> moduleSlots = new HashMap<>();
     private Inventory inventory;
@@ -25,10 +23,6 @@ public final class ModulesMenuHolder implements InventoryHolder {
 
     public String moduleAt(int slot) {
         return moduleSlots.get(slot);
-    }
-
-    public boolean isMaster(int slot) {
-        return slot == MASTER_SLOT;
     }
 
     public void setInventory(Inventory inventory) {

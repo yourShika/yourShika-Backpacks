@@ -27,23 +27,12 @@ public final class ModulesMenu {
     private ModulesMenu() {}
 
     public static void open(YourShikaBackpacks plugin, Player player) {
-        List<Module> modules = plugin.moduleManager().modules();
-        boolean experimental = plugin.moduleManager().experimentalEnabled();
-
         ModulesMenuHolder holder = new ModulesMenuHolder();
         Inventory inv = Bukkit.createInventory(holder, 27,
                 line("<gradient:#6E5BC8:#5BE8D4><bold>Externe Module</bold></gradient>"));
         holder.setInventory(inv);
-
-        inv.setItem(ModulesMenuHolder.MASTER_SLOT, header(experimental));
-
-        int slot = 9;
-        for (Module module : modules) {
-            if (slot >= 27) break;
-            holder.mapSlot(slot, module.id());
-            inv.setItem(slot++, moduleItem(module, experimental));
-        }
-
+        inv.setItem(4, header());
+        render(plugin, holder, inv);
         player.openInventory(inv);
     }
 
@@ -51,42 +40,38 @@ public final class ModulesMenu {
     public static void refresh(YourShikaBackpacks plugin, ModulesMenuHolder holder) {
         Inventory inv = holder.getInventory();
         if (inv == null) return;
-        boolean experimental = plugin.moduleManager().experimentalEnabled();
-        inv.setItem(ModulesMenuHolder.MASTER_SLOT, header(experimental));
+        render(plugin, holder, inv);
+    }
+
+    private static void render(YourShikaBackpacks plugin, ModulesMenuHolder holder, Inventory inv) {
         int slot = 9;
         for (Module module : plugin.moduleManager().modules()) {
             if (slot >= 27) break;
             holder.mapSlot(slot, module.id());
-            inv.setItem(slot++, moduleItem(module, experimental));
+            inv.setItem(slot++, moduleItem(module));
         }
     }
 
-    private static ItemStack header(boolean experimental) {
-        ItemStack item = new ItemStack(experimental ? Material.REDSTONE_TORCH : Material.LEVER);
+    private static ItemStack header() {
+        ItemStack item = new ItemStack(Material.COMPARATOR);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(line("<gold><bold>Master-Schalter</bold></gold>"));
+        meta.displayName(line("<gold><bold>Externe Hooks</bold></gold>"));
         List<Component> lore = new ArrayList<>();
-        lore.add(line("<gray>hooks.experimental: " + (experimental ? "<green>AN" : "<red>AUS")));
-        if (experimental) {
-            lore.add(line("<gray>Module dürfen laden, wenn einzeln"));
-            lore.add(line("<gray>aktiviert und Plugin installiert."));
-        } else {
-            lore.add(line("<gray>Alle externen Module sind gesperrt."));
-            lore.add(line("<gray>Das Plugin läuft eigenständig."));
-        }
-        lore.add(line("<yellow>Klicken zum Umschalten"));
+        lore.add(line("<gray>Hooks aktivieren sich automatisch,"));
+        lore.add(line("<gray>sobald das jeweilige Plugin installiert ist."));
+        lore.add(line("<gray>Einzelne Module hier per Klick ab-/anschalten."));
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
     }
 
-    private static ItemStack moduleItem(Module module, boolean experimental) {
+    private static ItemStack moduleItem(Module module) {
         Material material;
         if (module.isActive()) {
             material = Material.LIME_DYE;
         } else if (!module.isPluginPresent()) {
             material = Material.RED_DYE;
-        } else if (!module.isEnabledInConfig() || !experimental) {
+        } else if (!module.isEnabledInConfig()) {
             material = Material.ORANGE_DYE;
         } else {
             material = Material.GRAY_DYE;
@@ -101,7 +86,6 @@ public final class ModulesMenu {
         lore.add(line("<gray>Benötigt: <white>" + module.requiredPlugin()));
         lore.add(line("<gray>Installiert: " + yesNo(module.isPluginPresent())));
         lore.add(line("<gray>In Config aktiviert: " + yesNo(module.isEnabledInConfig())));
-        lore.add(line("<gray>Experimentell freigegeben: " + yesNo(experimental)));
         lore.add(Component.empty());
         lore.add(line("<gray>Status: " + (module.isActive() ? "<green><bold>AKTIV" : "<red><bold>INAKTIV")));
         lore.add(Component.empty());

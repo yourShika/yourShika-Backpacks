@@ -153,11 +153,6 @@ public final class BackpackGuiListener implements Listener {
         if (!player.hasPermission("yourshika.backpack.admin.modules")) return;
 
         int raw = event.getRawSlot();
-        if (holder.isMaster(raw)) {
-            plugin.setExperimentalHooks(!plugin.moduleManager().experimentalEnabled());
-            de.yourshika.backpacks.gui.ModulesMenu.refresh(plugin, holder);
-            return;
-        }
         String moduleId = holder.moduleAt(raw);
         if (moduleId != null) {
             boolean now = plugin.pluginConfig().isModuleEnabled(moduleId);

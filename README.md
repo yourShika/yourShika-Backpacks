@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.2.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.2.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,27 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## 🔧 v0.2.2
+
+- **Farb-Bug behoben:** Eingefärbte Backpacks behalten ihre Farbe jetzt auch
+  nach dem **Platzieren & Aufheben** (vorher Rücksprung auf Default).
+- **Upgrade-Farben:** Beim Veredeln werden **Standard-Farben** auf das neue Tier
+  angehoben, **individuell gefärbte** Backpacks behalten ihre Farbe.
+- **Hooks automatisch an:** Externe Hooks aktivieren sich selbst, sobald das
+  jeweilige Plugin installiert ist (kein „experimental"-Schalter mehr).
+- **Besitzer:** Jedes Backpack merkt sich, **wer es gecraftet** hat (in der Lore).
+  Optional `security.owner-only: true` → nur Besitzer (oder Admins) dürfen öffnen
+  und ein platziertes Backpack aufheben. **Standard: aus** (jeder darf).
+- **Lore aufgeräumt:** „(Roadmap)" entfernt, Besitzer-Zeile ergänzt.
+- **Upgrade-Items vorbereitet für eigene Texturen:** CustomModelData (2000–2006)
+  und optionales `item_model` je Upgrade in der Config einstellbar.
+- **Netherite-Upgrade** wird (wie gewünscht) im **Smithing Table** erstellt.
+- Hinweis bleibt: In **JEI/REI/EMI** zeigen die **Zutaten** der Smithing-
+  Veredelung das generische Item (z. B. *Horse Leather Armor* / *Paper*) – das ist
+  technisch bedingt (siehe unten), das **Ergebnis** ist korrekt benannt.
 
 ---
 
@@ -258,37 +279,33 @@ Speichern automatisch migriert.
 
 ---
 
-## 🔌 Externe Module / Hooks (experimentell, standardmäßig gesperrt)
+## 🔌 Externe Module / Hooks (automatisch)
 
 Das Plugin läuft **vollständig eigenständig**. Externe Hooks sind als **Module**
-gekapselt und stehen unter einem **Master-Schalter** `hooks.experimental`
-(Standard: `false`). Solange dieser `false` ist, lädt **kein** externes Modul –
-unabhängig von den Einzel-Schaltern.
+gekapselt und aktivieren sich **automatisch**, sobald das jeweilige Plugin
+installiert und das Modul in der Config aktiviert ist (**Standard: aktiviert**).
+Fehlt das Plugin, bleibt das Modul still inaktiv.
 
-Den Live-Status zeigt **`/bp modules`** (installiert / in Config aktiviert /
-experimentell freigegeben / **AKTIV**-**INAKTIV**).
-
-Module lassen sich zusätzlich **live per GUI** an-/ausschalten: **`/bp modules`**
-(Klick auf den Master-Schalter bzw. ein Modul schaltet es um und lädt es neu).
+Live-Status & Umschalten **per GUI**: **`/bp modules`** (Klick auf ein Modul
+schaltet es um und lädt es neu).
 
 | Modul | Zweck | Standard |
 |---|---|---|
-| **PlaceholderAPI** | `%ysbp_count%`, `%ysbp_highest_tier%`, `%ysbp_open%` | gesperrt |
-| **PacketEvents** | Packet-Darstellung platzierter Backpacks (Roadmap) | gesperrt |
-| **Oraxen** | Custom-Modelle/Texturen | gesperrt |
+| **PlaceholderAPI** | `%ysbp_count%`, `%ysbp_highest_tier%`, `%ysbp_open%` | auto |
+| **PacketEvents** | Packet-Darstellung platzierter Backpacks (Roadmap) | auto |
+| **Oraxen** | Custom-Modelle/Texturen | auto |
 
 > **Custom-Items:** Als Custom-Item-Hook wird ausschließlich **Oraxen** unterstützt
 > (frei nutzbar, reife API). **Nexo** (kostenpflichtig) und **ItemsAdder** (Premium)
 > wurden bewusst entfernt. Pro Tier kann eine `provider-id` gesetzt werden, die nur
 > greift, wenn das Oraxen-Modul aktiv ist. **Vault wird bewusst nicht unterstützt.**
 
-Aktivieren (Beispiel PlaceholderAPI):
+Einzelnes Modul deaktivieren (Beispiel):
 
 ```yaml
 hooks:
-  experimental: true
   modules:
-    placeholderapi: true
+    oraxen: false
 ```
 
 ---
@@ -301,6 +318,12 @@ hooks:
 - Externe Module sind **experimentell**; ihre Modell-Übernahme erfolgt best-effort.
 - Das **positionsunabhängige Dye-Färben** ist kein festes Rezept und erscheint
   daher nicht in JEI/REI/EMI (alle echten Rezepte hingegen schon).
+- **JEI/REI/EMI-Zutaten:** Bei der Smithing-Veredelung zeigen die Eingabe-Slots
+  das generische Item (*Horse Leather Armor* für das Backpack, *Paper* für das
+  Tier-Upgrade). Grund: Recipe-Zutaten werden nur als **Item-Typ** an den Client
+  übertragen – der individuelle Name/NBT von Custom-Items geht dabei verloren.
+  Das **Ergebnis** wird korrekt mit vollem Namen angezeigt. Server-seitig ist das
+  nicht behebbar (es bräuchte ein client-seitiges JEI-Addon).
 
 ---
 
@@ -324,7 +347,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.2.1.jar
+target/yourShika-Backpacks-0.2.2.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

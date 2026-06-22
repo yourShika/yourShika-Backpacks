@@ -22,11 +22,11 @@ public final class PluginConfig {
     private boolean recipesEnabled;
     private boolean placeableEnabled;
     private boolean allowNesting;
+    private boolean ownerOnly;
     private boolean rightClickOpen;
     private boolean offhandOpen;
     private List<String> worldWhitelist;
     private List<String> worldBlacklist;
-    private boolean hooksExperimental;
 
     public PluginConfig(YourShikaBackpacks plugin) {
         this.plugin = plugin;
@@ -43,16 +43,16 @@ public final class PluginConfig {
         recipesEnabled = c.getBoolean("crafting.enabled", true);
         placeableEnabled = c.getBoolean("placeable.enabled", false);
         allowNesting = c.getBoolean("security.allow-nesting", false);
+        ownerOnly = c.getBoolean("security.owner-only", false);
         rightClickOpen = c.getBoolean("open.right-click", true);
         offhandOpen = c.getBoolean("open.offhand", true);
         worldWhitelist = c.getStringList("worlds.whitelist");
         worldBlacklist = c.getStringList("worlds.blacklist");
-        hooksExperimental = c.getBoolean("hooks.experimental", false);
     }
 
-    /** Ist ein einzelnes externes Modul in der Config aktiviert? */
+    /** Ist ein einzelnes externes Modul in der Config aktiviert? (Standard: ja) */
     public boolean isModuleEnabled(String id) {
-        return plugin.getConfig().getBoolean("hooks.modules." + id, false);
+        return plugin.getConfig().getBoolean("hooks.modules." + id, true);
     }
 
     public boolean isWorldAllowed(String world) {
@@ -74,7 +74,7 @@ public final class PluginConfig {
     public boolean recipesEnabled() { return recipesEnabled; }
     public boolean placeableEnabled() { return placeableEnabled; }
     public boolean allowNesting() { return allowNesting; }
+    public boolean ownerOnly() { return ownerOnly; }
     public boolean rightClickOpen() { return rightClickOpen; }
     public boolean offhandOpen() { return offhandOpen; }
-    public boolean hooksExperimental() { return hooksExperimental; }
 }

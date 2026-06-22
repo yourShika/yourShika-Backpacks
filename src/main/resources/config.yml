@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 2
+config-version: 3
 
 # Sprache der messages_<sprache>.yml (Standard: de).
 language: de
@@ -58,6 +58,10 @@ security:
   # Backpacks in Backpacks. Dringend auf false lassen (Dupe-Schutz).
   # Später optional über das geplante "Inception Upgrade".
   allow-nesting: false
+  # Nur der Besitzer (wer das Backpack gecraftet/erhalten hat) darf es öffnen
+  # und ein platziertes Backpack aufheben. Standard: false (jeder darf).
+  # Admins mit 'yourshika.backpack.admin.openother' dürfen trotzdem.
+  owner-only: false
 
 # ---------------------------------------------------------------------------
 #  Welten-Filter
@@ -115,8 +119,9 @@ tiers:
     permission: ""
     lore:
       - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Upgrade-Slots: <white><upgrades>"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - "<gray>Besitzer: <white><owner>"
       - ""
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
@@ -143,8 +148,9 @@ tiers:
     permission: ""
     lore:
       - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Upgrade-Slots: <white><upgrades>"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - "<gray>Besitzer: <white><owner>"
       - ""
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
@@ -173,8 +179,9 @@ tiers:
     permission: ""
     lore:
       - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Upgrade-Slots: <white><upgrades>"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - "<gray>Besitzer: <white><owner>"
       - ""
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
@@ -201,8 +208,9 @@ tiers:
     permission: ""
     lore:
       - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Upgrade-Slots: <white><upgrades>"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - "<gray>Besitzer: <white><owner>"
       - ""
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
@@ -229,8 +237,9 @@ tiers:
     permission: ""
     lore:
       - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Upgrade-Slots: <white><upgrades>"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - "<gray>Besitzer: <white><owner>"
       - ""
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
@@ -259,6 +268,7 @@ tiers:
       - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
       - "<gray>Upgrade-Slots: <white><upgrades>"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - "<gray>Besitzer: <white><owner>"
       - ""
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
@@ -285,8 +295,9 @@ tiers:
     permission: ""
     lore:
       - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
+      - "<gray>Upgrade-Slots: <white><upgrades>"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
+      - "<gray>Besitzer: <white><owner>"
       - ""
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
@@ -323,22 +334,30 @@ upgrades:
     diamond: DIAMOND
     emerald: EMERALD
     netherite: NETHERITE_INGOT
+  # CustomModelData / item_model der Upgrade-Items – vorbereitet für eigene
+  # Texturen via Resourcepack. 'base' = Upgrade-Leder, dann je Ziel-Tier.
+  # item-model leer lassen, wenn kein modernes item_model genutzt wird.
+  models:
+    base:      { custom-model-data: 2000, item-model: "" }
+    copper:    { custom-model-data: 2001, item-model: "" }
+    iron:      { custom-model-data: 2002, item-model: "" }
+    gold:      { custom-model-data: 2003, item-model: "" }
+    diamond:   { custom-model-data: 2004, item-model: "" }
+    emerald:   { custom-model-data: 2005, item-model: "" }
+    netherite: { custom-model-data: 2006, item-model: "" }
 
 # ---------------------------------------------------------------------------
-#  Externe Module / Hooks (EXPERIMENTELL)
+#  Externe Module / Hooks
 #
-#  Master-Schalter: hooks.experimental
-#    - false (Standard): KEIN externes Modul lädt – egal, was unten steht.
-#      Das Plugin läuft vollständig eigenständig mit Vanilla-Items.
-#    - true: Module dürfen laden, sofern sie zusätzlich einzeln aktiviert
-#      sind UND das jeweilige Plugin installiert ist.
+#  Hooks aktivieren sich AUTOMATISCH, sobald das jeweilige Plugin installiert
+#  und das Modul hier aktiviert ist (Standard: aktiviert). Fehlt das Plugin,
+#  bleibt das Modul still inaktiv – das Plugin läuft weiterhin eigenständig.
 #
-#  Status & Verfügbarkeit jederzeit im Spiel sichtbar über: /bp modules
-#  Vault wird bewusst nicht mehr unterstützt.
+#  Live-Status & Umschalten im Spiel über: /bp modules
+#  Vault wird bewusst nicht unterstützt.
 # ---------------------------------------------------------------------------
 hooks:
-  experimental: false
   modules:
-    placeholderapi: false   # Platzhalter (%ysbp_*%)
-    packetevents: false     # Packet-Darstellung platzierter Backpacks (Roadmap)
-    oraxen: false           # Custom-Modelle/Texturen (einziger Item-Hook)
+    placeholderapi: true    # Platzhalter (%ysbp_*%)
+    packetevents: true      # Packet-Darstellung platzierter Backpacks (Roadmap)
+    oraxen: true            # Custom-Modelle/Texturen (einziger Item-Hook)

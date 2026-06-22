@@ -22,6 +22,10 @@ public final class BackpackKeys {
     public final NamespacedKey marker;
     /** Datenformat-Version (für spätere Migrationen). */
     public final NamespacedKey dataVersion;
+    /** Besitzer-UUID (wer das Backpack erstellt/gecraftet hat). */
+    public final NamespacedKey owner;
+    /** Besitzer-Name (für die Lore-Anzeige). */
+    public final NamespacedKey ownerName;
 
     public BackpackKeys(YourShikaBackpacks plugin) {
         this.id = new NamespacedKey(plugin, "backpack_id");
@@ -30,5 +34,7 @@ public final class BackpackKeys {
         this.accentColor = new NamespacedKey(plugin, "backpack_accent_color");
         this.marker = new NamespacedKey(plugin, "backpack_marker");
         this.dataVersion = new NamespacedKey(plugin, "backpack_data_version");
+        this.owner = new NamespacedKey(plugin, "backpack_owner");
+        this.ownerName = new NamespacedKey(plugin, "backpack_owner_name");
     }
 }

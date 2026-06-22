@@ -36,6 +36,7 @@ error:
   invalid-number: "<red>Keine gültige Zahl: <white><input></white>"
   player-not-found: "<red>Spieler nicht gefunden: <white><input></white>"
   no-horse-armor: "<red>Ein Backpack kann nicht als Pferderüstung verwendet werden."
+  not-owner: "<red>Dieses Backpack gehört dir nicht."
   no-place: "<red>Hier darfst du keine Backpacks platzieren."
   place-disabled: "<red>Platzierbare Backpacks sind deaktiviert."
   place-occupied: "<red>Hier ist bereits ein Backpack platziert."
