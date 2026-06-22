@@ -164,7 +164,8 @@ public final class UpgradeManager implements Listener {
         int baseCmd = plugin.getConfig().getInt("upgrades.models.base.custom-model-data",
                 UpgradeItemFactory.BASE_CMD);
         String baseModel = plugin.getConfig().getString("upgrades.models.base.item-model", "");
-        this.baseItem = upgrades.base(baseCmd, baseModel);
+        String baseProviderId = plugin.getConfig().getString("upgrades.models.base.provider-id", "");
+        this.baseItem = upgrades.base(baseCmd, baseModel, baseProviderId);
 
         List<String> order = tiers.keys();
         for (int i = 1; i < order.size(); i++) {
@@ -175,7 +176,8 @@ public final class UpgradeManager implements Listener {
             int cmd = plugin.getConfig().getInt("upgrades.models." + target + ".custom-model-data",
                     UpgradeItemFactory.BASE_CMD + i);
             String model = plugin.getConfig().getString("upgrades.models." + target + ".item-model", "");
-            upgradeItems.put(target, upgrades.tierUpgrade(target, name, cmd, model));
+            String providerId = plugin.getConfig().getString("upgrades.models." + target + ".provider-id", "");
+            upgradeItems.put(target, upgrades.tierUpgrade(target, name, cmd, model, providerId));
         }
     }
 
@@ -198,6 +200,28 @@ public final class UpgradeManager implements Listener {
     public ItemStack upgradeItem(String target) {
         ItemStack item = upgradeItems.get(target);
         return item == null ? null : item.clone();
+    }
+
+    /** Kanonisches Upgrade-Leder (für GUI). Baut es bei Bedarf einmalig auf. */
+    public ItemStack baseUpgradeItem() {
+        if (baseItem == null) {
+            int baseCmd = plugin.getConfig().getInt("upgrades.models.base.custom-model-data",
+                    UpgradeItemFactory.BASE_CMD);
+            String baseModel = plugin.getConfig().getString("upgrades.models.base.item-model", "");
+            String baseProvider = plugin.getConfig().getString("upgrades.models.base.provider-id", "");
+            this.baseItem = upgrades.base(baseCmd, baseModel, baseProvider);
+        }
+        return baseItem.clone();
+    }
+
+    /** Benötigtes Material eines Tier-Upgrades (für die Rezept-Anzeige). */
+    public Material materialFor(String target) {
+        return tierMaterial(target);
+    }
+
+    /** Ist {@code target} das letzte Tier (Netherite-Upgrade per Smithing)? */
+    public boolean isSmithingUpgrade(String target) {
+        return tierMaterial(target) == Material.NETHERITE_INGOT || target.equalsIgnoreCase("netherite");
     }
 
     /**

@@ -161,6 +161,31 @@ public final class BackpackGuiListener implements Listener {
         }
     }
 
+    // /bp info: reine Anzeige-/Navigations-GUI.
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInfoClick(InventoryClickEvent event) {
+        if (!(event.getView().getTopInventory().getHolder()
+                instanceof de.yourshika.backpacks.gui.InfoMenuHolder holder)) return;
+        event.setCancelled(true);
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (event.getClickedInventory() == null
+                || !(event.getClickedInventory().getHolder() instanceof de.yourshika.backpacks.gui.InfoMenuHolder)) {
+            return;
+        }
+        String action = holder.actionAt(event.getRawSlot());
+        if (action != null) {
+            de.yourshika.backpacks.gui.InfoMenu.openAction(plugin, player, action);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInfoDrag(InventoryDragEvent event) {
+        if (event.getView().getTopInventory().getHolder()
+                instanceof de.yourshika.backpacks.gui.InfoMenuHolder) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onModulesDrag(InventoryDragEvent event) {
         if (event.getView().getTopInventory().getHolder() instanceof ModulesMenuHolder) {

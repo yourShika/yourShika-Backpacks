@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.2.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.3.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,28 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## ✨ Neu in v0.3.0
+
+- 🖼️ **Oraxen-Texturen integriert:** Ist das **Oraxen**-Modul aktiv, liefert das
+  Plugin mitgelieferte Texturen & Item-Definitionen automatisch aus
+  (`plugins/yourShika Backpack's/Textures/` zum Austauschen, Kopie nach Oraxen).
+  Backpacks & Upgrade-Items erhalten so eigene Modelle – einfach `/oraxen reload`.
+- 📖 **`/bp info` – Rezept-Browser:** Eine schöne GUI mit allen Rücksäcken und
+  Upgrade-Items. Klick auf ein Item zeigt sein **Crafting-/Smithing-Rezept**
+  (visuell, inkl. Zutaten & Ergebnis).
+- 🔄 **Auto-Aktualisierung bestehender Rucksäcke:** Bei jedem Öffnen werden
+  Name, Lore und Modell auf den aktuellen Stand gebracht – **ohne** ID, Farbe,
+  Besitzer oder Inhalt zu verändern. Änderungen an Tier-Texten greifen so auch
+  rückwirkend.
+- 🔒 **Upgrade-Items missbrauchssicher:** Upgrade-Leder und Tier-Upgrades lassen
+  sich **nur** in den Backpack-Rezepten verwenden – nicht mehr als Leder/Papier
+  für Bücher, Karten o.ä.
+- 🎨 **Doppelte Farb-Anzeige entfernt** (Vanilla-Dye-Tooltip ausgeblendet),
+  Namen & Lore aufpoliert.
+- 🐞 **Dye-Färben** wieder zuverlässig entnehmbar (robuste Ergebnis-Ausgabe).
 
 ---
 
@@ -147,6 +169,7 @@ Hauptbefehl: `/backpack` · Aliase: `/bp`, `/ybackpack`, `/ysbackpack`
 |---|---|
 | `/bp help` | Hilfe anzeigen |
 | `/bp open` | Backpack in der Hand öffnen |
+| `/bp info` | Rücksäcke, Upgrades & **Rezepte** in einer GUI ansehen |
 | `/bp list [Spieler]` | Backpacks auflisten |
 | `/bp color <Farbe> [Akzent]` | Backpack einfärben (DyeColor-Name **oder** `#RRGGBB`) — **Admin** |
 | `/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent]` | Backpack geben (Admin) |
@@ -226,12 +249,27 @@ ideal als Backpack-Basis.
 
 ## 🎨 CustomModelData, item_model & Resourcepacks
 
-- Jeder Tier besitzt eine eigene **CustomModelData** (1001–1006) und kann optional
+- Jeder Tier besitzt eine eigene **CustomModelData** (1001–1007) und kann optional
   eine moderne **`item_model`-Component** setzen (`item-model: "namespace:pfad"`).
 - **Ohne Resourcepack** funktionieren Backpacks als normale (gefärbte) Leder-Items.
 - **Mit Resourcepack** sehen sie wie eigene Items aus.
 - **Externe Item-Systeme** (Nexo, ItemsAdder, Oraxen) sind **optional** und
   experimentell – siehe Hooks. Default ist immer der eingebaute Vanilla-Anbieter.
+
+### Oraxen-Assets
+
+Unter `src/main/resources/oraxen/` liegt eine fertige Oraxen-Beilage mit
+64×64-Vanilla-Style-Texturen für alle Backpack-Tiers, Tier-Upgrade-Items und
+52 vorbereitete Funktions-Upgrades (Pickup, Magnet, Filter, Void, Transfer,
+Crafting/Processing, Stack, Utility, Tank/Energy/XP). Die Backpack-Texturen
+nutzen eine dyebare Basis (`*_base.png`) plus festes Overlay für Gurte,
+Tier-Metall und Akzentdetails. Die Plugin-Config verweist per `provider-id` auf
+diese Oraxen-IDs; erzeugt werden echte Backpacks weiterhin über Plugin-Crafting,
+Smithing oder `/bp give`, damit ID, Inhalt, Besitzer und Farbe erhalten bleiben.
+
+Die Funktions-Upgrades sind als Modell-/Textur-Provider vorbereitet
+(`ysbp_upgrade_<upgrade_key>`, CustomModelData `2100-2151`); ihre Gameplay-Logik
+kann später daran angebunden werden.
 
 ---
 
@@ -314,7 +352,8 @@ hooks:
 
 - **Funktionale Upgrade-Effekte** (Pickup, Magnet, Void, Filter …) folgen noch –
   v0.2.0 bringt die **Upgrade-Slots als Inventar** sowie die **Tier-Veredelung**.
-- **Custom-Texturen/Resourcepack** liegen nicht bei (nur vorbereitet via CustomModelData).
+- Ein vollständiges Server-Resourcepack wird nicht automatisch installiert; eine
+  Oraxen-Beilage mit Texturen/YAML liegt unter `src/main/resources/oraxen/`.
 - Externe Module sind **experimentell**; ihre Modell-Übernahme erfolgt best-effort.
 - Das **positionsunabhängige Dye-Färben** ist kein festes Rezept und erscheint
   daher nicht in JEI/REI/EMI (alle echten Rezepte hingegen schon).
@@ -347,7 +386,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.2.2.jar
+target/yourShika-Backpacks-0.3.0.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

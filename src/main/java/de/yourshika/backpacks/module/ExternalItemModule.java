@@ -34,10 +34,25 @@ public abstract class ExternalItemModule extends AbstractModule implements Custo
     /** Holt ein Custom-Item per ID aus dem externen Plugin (oder null). */
     protected abstract ItemStack fetchById(String id) throws Throwable;
 
+    /**
+     * Standard-Custom-Item-ID eines Tiers, falls keine {@code provider-id} in der
+     * Config gesetzt ist. Standard: keine (Unterklassen können sie ableiten).
+     */
+    protected String defaultProviderId(BackpackTier tier) {
+        return null;
+    }
+
     @Override
     public void apply(ItemStack item, BackpackTier tier) {
         if (!isActive()) return;
         String pid = tier.providerId();
+        if (pid == null || pid.isBlank()) pid = defaultProviderId(tier);
+        apply(item, pid);
+    }
+
+    /** Übernimmt Modell-Komponenten eines externen Items anhand seiner Provider-ID. */
+    public void apply(ItemStack item, String pid) {
+        if (!isActive()) return;
         if (pid == null || pid.isBlank()) return;
         try {
             ItemStack ext = fetchById(pid);

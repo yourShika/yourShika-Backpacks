@@ -112,6 +112,28 @@ public final class RecipeManager implements Listener {
         event.setCurrentItem(result);
     }
 
+    /**
+     * Verhindert den Missbrauch von Upgrade-Items: Upgrade-Leder und Tier-Upgrades
+     * dürfen ausschließlich in den Plugin-eigenen Upgrade-Rezepten verwendet werden
+     * (z.B. NICHT als Leder für ein Buch oder als Papier für eine Karte).
+     */
+    @EventHandler(priority = org.bukkit.event.EventPriority.HIGH)
+    public void onPrepareUpgradeMisuse(PrepareItemCraftEvent event) {
+        var upgrades = plugin.upgradeItems();
+        if (upgrades == null) return;
+        boolean hasUpgrade = false;
+        for (ItemStack it : event.getInventory().getMatrix()) {
+            if (upgrades.isAnyUpgrade(it)) { hasUpgrade = true; break; }
+        }
+        if (!hasUpgrade) return;
+        // Erlaubt ist nur, wenn das Ergebnis selbst ein Upgrade-Item ist
+        // (= unser Tier-Upgrade-Rezept). Alles andere wird unterbunden.
+        ItemStack result = event.getInventory().getResult();
+        if (result != null && !result.getType().isAir() && !upgrades.isAnyUpgrade(result)) {
+            event.getInventory().setResult(null);
+        }
+    }
+
     /** Erzwingt Tier-Permissions: ohne Berechtigung verschwindet das Ergebnis. */
     @EventHandler
     public void onPrepareCraft(PrepareItemCraftEvent event) {

@@ -1,0 +1,153 @@
+ysbp_leather_backpack:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 1001
+
+ysbp_copper_backpack:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 1002
+
+ysbp_iron_backpack:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 1003
+
+ysbp_gold_backpack:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 1004
+
+ysbp_diamond_backpack:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 1005
+
+ysbp_emerald_backpack:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 1006
+
+ysbp_netherite_backpack:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 1007
+
+ysbp_upgrade_base:
+  displayname: "<#A0703C><bold>Upgrade-Leder</bold>"
+  material: LEATHER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/base.png
+    custom_model_data: 2000
+
+ysbp_upgrade_copper:
+  displayname: "<#C87B53><bold>Copper-Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/copper.png
+    custom_model_data: 2001
+
+ysbp_upgrade_iron:
+  displayname: "<#D8D8D8><bold>Iron-Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/iron.png
+    custom_model_data: 2002
+
+ysbp_upgrade_gold:
+  displayname: "<#F2D14E><bold>Gold-Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/gold.png
+    custom_model_data: 2003
+
+ysbp_upgrade_diamond:
+  displayname: "<#5BE8D4><bold>Diamond-Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/diamond.png
+    custom_model_data: 2004
+
+ysbp_upgrade_emerald:
+  displayname: "<#3BD16F><bold>Emerald-Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/emerald.png
+    custom_model_data: 2005
+
+ysbp_upgrade_netherite:
+  displayname: "<#6E5BC8><bold>Netherite-Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/netherite.png
+    custom_model_data: 2006

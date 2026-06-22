@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 3
+config-version: 4
 
 # Sprache der messages_<sprache>.yml (Standard: de).
 language: de
@@ -111,20 +111,21 @@ tiers:
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1001
     item-model: ""
-    provider-id: ""
+    provider-id: "ysbp_leather_backpack"
     storage-slots: 9
     upgrade-slots: 1
     default-main-color: "#A0703C"
     default-accent-color: "#E08A2B"
     permission: ""
     lore:
-      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades>"
-      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
-      - "<gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
+      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
       - ""
-      - "<yellow>Rechtsklick zum Öffnen"
-      - "<dark_gray>ID: <id>"
+      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
+      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<dark_gray><id>"
     recipe:
       enabled: true
       shape:
@@ -140,20 +141,21 @@ tiers:
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1002
     item-model: ""
-    provider-id: ""
+    provider-id: "ysbp_copper_backpack"
     storage-slots: 18
     upgrade-slots: 2
     default-main-color: "#C87B53"
     default-accent-color: "#7A4A2B"
     permission: ""
     lore:
-      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades>"
-      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
-      - "<gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
+      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
       - ""
-      - "<yellow>Rechtsklick zum Öffnen"
-      - "<dark_gray>ID: <id>"
+      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
+      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<dark_gray><id>"
     # Höhere Tiers werden NICHT direkt gecraftet, sondern über die Upgrade-Kette
     # (Smithing Table) erstellt. Daher ist das direkte Rezept deaktiviert.
     recipe:
@@ -171,20 +173,21 @@ tiers:
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1003
     item-model: ""
-    provider-id: ""
+    provider-id: "ysbp_iron_backpack"
     storage-slots: 27
     upgrade-slots: 3
     default-main-color: "#D8D8D8"
     default-accent-color: "#8E8E8E"
     permission: ""
     lore:
-      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades>"
-      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
-      - "<gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
+      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
       - ""
-      - "<yellow>Rechtsklick zum Öffnen"
-      - "<dark_gray>ID: <id>"
+      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
+      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<dark_gray><id>"
     recipe:
       enabled: false
       shape:
@@ -200,20 +203,21 @@ tiers:
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1004
     item-model: ""
-    provider-id: ""
+    provider-id: "ysbp_gold_backpack"
     storage-slots: 45
     upgrade-slots: 4
     default-main-color: "#F2D14E"
     default-accent-color: "#B8860B"
     permission: ""
     lore:
-      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades>"
-      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
-      - "<gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
+      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
       - ""
-      - "<yellow>Rechtsklick zum Öffnen"
-      - "<dark_gray>ID: <id>"
+      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
+      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<dark_gray><id>"
     recipe:
       enabled: false
       shape:
@@ -229,20 +233,21 @@ tiers:
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1005
     item-model: ""
-    provider-id: ""
+    provider-id: "ysbp_diamond_backpack"
     storage-slots: 54
     upgrade-slots: 5
     default-main-color: "#5BE8D4"
     default-accent-color: "#3FA9F5"
     permission: ""
     lore:
-      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades>"
-      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
-      - "<gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
+      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
       - ""
-      - "<yellow>Rechtsklick zum Öffnen"
-      - "<dark_gray>ID: <id>"
+      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
+      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<dark_gray><id>"
     recipe:
       enabled: false
       shape:
@@ -258,20 +263,21 @@ tiers:
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1006
     item-model: ""
-    provider-id: ""
+    provider-id: "ysbp_emerald_backpack"
     storage-slots: 81
     upgrade-slots: 6
     default-main-color: "#3BD16F"
     default-accent-color: "#1E7A3C"
     permission: ""
     lore:
-      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades>"
-      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
-      - "<gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
+      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
       - ""
-      - "<yellow>Rechtsklick zum Öffnen"
-      - "<dark_gray>ID: <id>"
+      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
+      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<dark_gray><id>"
     recipe:
       enabled: false
       shape:
@@ -287,20 +293,21 @@ tiers:
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1007
     item-model: ""
-    provider-id: ""
+    provider-id: "ysbp_netherite_backpack"
     storage-slots: 108
     upgrade-slots: 6
     default-main-color: "#6E5BC8"
     default-accent-color: "#1A1A1A"
     permission: ""
     lore:
-      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
-      - "<gray>Upgrade-Slots: <white><upgrades>"
-      - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
-      - "<gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
+      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
       - ""
-      - "<yellow>Rechtsklick zum Öffnen"
-      - "<dark_gray>ID: <id>"
+      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
+      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<dark_gray><id>"
     recipe:
       enabled: false
       shape:
@@ -336,15 +343,16 @@ upgrades:
     netherite: NETHERITE_INGOT
   # CustomModelData / item_model der Upgrade-Items – vorbereitet für eigene
   # Texturen via Resourcepack. 'base' = Upgrade-Leder, dann je Ziel-Tier.
-  # item-model leer lassen, wenn kein modernes item_model genutzt wird.
+  # provider-id nutzt aktive Custom-Item-Module wie Oraxen; item-model leer
+  # lassen, wenn kein modernes item_model direkt gesetzt werden soll.
   models:
-    base:      { custom-model-data: 2000, item-model: "" }
-    copper:    { custom-model-data: 2001, item-model: "" }
-    iron:      { custom-model-data: 2002, item-model: "" }
-    gold:      { custom-model-data: 2003, item-model: "" }
-    diamond:   { custom-model-data: 2004, item-model: "" }
-    emerald:   { custom-model-data: 2005, item-model: "" }
-    netherite: { custom-model-data: 2006, item-model: "" }
+    base:      { custom-model-data: 2000, item-model: "", provider-id: "ysbp_upgrade_base" }
+    copper:    { custom-model-data: 2001, item-model: "", provider-id: "ysbp_upgrade_copper" }
+    iron:      { custom-model-data: 2002, item-model: "", provider-id: "ysbp_upgrade_iron" }
+    gold:      { custom-model-data: 2003, item-model: "", provider-id: "ysbp_upgrade_gold" }
+    diamond:   { custom-model-data: 2004, item-model: "", provider-id: "ysbp_upgrade_diamond" }
+    emerald:   { custom-model-data: 2005, item-model: "", provider-id: "ysbp_upgrade_emerald" }
+    netherite: { custom-model-data: 2006, item-model: "", provider-id: "ysbp_upgrade_netherite" }
 
 # ---------------------------------------------------------------------------
 #  Externe Module / Hooks

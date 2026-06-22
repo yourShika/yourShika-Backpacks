@@ -63,13 +63,14 @@ public final class DyeCraftListener implements Listener {
         if (!(event.getInventory() instanceof CraftingInventory inv)) return;
         ItemStack[] matrix = inv.getMatrix();
         if (matrix.length < 9) return;
+        if (compute(matrix) != null) return; // gültiges Dye-Crafting wird im Klick-Handler verarbeitet
         if (containsBackpack(matrix) && event.getRecipe() != null) {
             // Verhindert, dass ein zufällig passendes Vanilla-Rezept greift.
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onClick(InventoryClickEvent event) {
         if (!(event.getInventory() instanceof CraftingInventory inv)) return;
         if (event.getRawSlot() != 0) return; // nur der Ergebnis-Slot
@@ -82,37 +83,41 @@ public final class DyeCraftListener implements Listener {
 
         event.setCancelled(true);
 
-        // Ausgabe immer ins Spieler-Inventar geben (zuverlässig; das direkte
-        // Setzen auf den Cursor in einem abgebrochenen Klick führt zu Desync,
-        // wodurch sich das Ergebnis "nicht herausnehmen" lässt).
-        var leftover = player.getInventory().addItem(result);
-        leftover.values().forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
-
-        // Farben auch server-seitig (DB) aktualisieren, damit platzierte oder per
-        // ID geöffnete Backpacks dieselbe Farbe behalten.
-        UUID id = items.getId(result);
-        if (id != null) {
-            de.yourshika.backpacks.storage.BackpackData data = plugin.manager().storage().load(id);
-            if (data != null) {
-                data.mainColor(items.getMainColor(result, data.mainColor()));
-                data.accentColor(items.getAccentColor(result, data.accentColor()));
-                plugin.manager().storage().save(data);
-            }
-        }
-
-        // Zutaten verbrauchen (je ein Stück aus jedem beteiligten Slot).
+        // 1) Zutaten verbrauchen (je ein Stück aus jedem beteiligten Slot).
         for (int i = 0; i < 9; i++) {
             ItemStack it = matrix[i];
             if (it == null || it.getType().isAir()) continue;
             int amt = it.getAmount() - 1;
-            if (amt <= 0) {
-                matrix[i] = null;
-            } else {
-                it.setAmount(amt);
-            }
+            matrix[i] = amt <= 0 ? null : it.clone();
+            if (matrix[i] != null) matrix[i].setAmount(amt);
         }
         inv.setMatrix(matrix);
-        player.updateInventory();
+
+        // 2) Ergebnis ausgeben: auf den Cursor, wenn frei – sonst ins Inventar.
+        ItemStack cursor = event.getCursor();
+        if (cursor == null || cursor.getType().isAir()) {
+            event.getView().setCursor(result);
+        } else {
+            player.getInventory().addItem(result).values()
+                    .forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
+        }
+
+        // 3) Farben server-seitig (DB) nachziehen – darf den Vorgang nie stören.
+        try {
+            UUID id = items.getId(result);
+            if (id != null) {
+                de.yourshika.backpacks.storage.BackpackData data = plugin.manager().storage().load(id);
+                if (data != null) {
+                    data.mainColor(items.getMainColor(result, data.mainColor()));
+                    data.accentColor(items.getAccentColor(result, data.accentColor()));
+                    plugin.manager().storage().save(data);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        // 4) Client im nächsten Tick synchronisieren (verhindert Slot-Desync).
+        org.bukkit.Bukkit.getScheduler().runTask(plugin, player::updateInventory);
     }
 
     /**

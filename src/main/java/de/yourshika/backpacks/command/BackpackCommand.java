@@ -58,6 +58,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "list" -> list(sender, args);
             case "give" -> give(sender, args);
             case "openid" -> openId(sender, args);
+            case "info", "recipes", "rezepte" -> info(sender);
             case "modules", "module" -> modules(sender);
             case "update" -> update(sender);
             case "reload" -> reload(sender);
@@ -70,6 +71,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     private void help(CommandSender sender) {
         msg.sendRaw(sender, "help.header");
         msg.sendRaw(sender, "help.open");
+        msg.sendRaw(sender, "help.info");
         msg.sendRaw(sender, "help.list");
         if (sender.hasPermission("yourshika.backpack.admin.color")) msg.sendRaw(sender, "help.color");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
@@ -78,6 +80,14 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         if (sender.hasPermission("yourshika.backpack.admin.update")) msg.sendRaw(sender, "help.update");
         if (sender.hasPermission("yourshika.backpack.admin.reload")) msg.sendRaw(sender, "help.reload");
         msg.sendRaw(sender, "help.footer");
+    }
+
+    private void info(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        de.yourshika.backpacks.gui.InfoMenu.openOverview(plugin, player);
     }
 
     private void modules(CommandSender sender) {
@@ -309,7 +319,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "color", "list", "version"));
+            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "list", "version"));
+            if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
             if (sender.hasPermission("yourshika.backpack.admin.modules")) subs.add("modules");

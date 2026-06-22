@@ -16,6 +16,19 @@ public final class OraxenModule extends ExternalItemModule {
     }
 
     @Override
+    protected void onEnable() throws Throwable {
+        verifyApi();
+        // Mitgelieferte Texturen/Item-Definitionen bereitstellen (best-effort).
+        new OraxenAssetDeployer(plugin).deploy();
+    }
+
+    @Override
+    protected String defaultProviderId(de.yourshika.backpacks.tier.BackpackTier tier) {
+        // Standard-Oraxen-Item-ID der mitgelieferten Definitionen.
+        return "ysbp_" + tier.key().toLowerCase() + "_backpack";
+    }
+
+    @Override
     protected void verifyApi() throws Throwable {
         Class.forName("io.th0rgal.oraxen.api.OraxenItems");
     }

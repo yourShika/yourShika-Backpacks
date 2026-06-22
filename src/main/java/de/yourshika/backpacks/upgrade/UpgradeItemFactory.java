@@ -33,14 +33,16 @@ public final class UpgradeItemFactory {
 
     private final NamespacedKey baseMarker;   // markiert das Upgrade-Leder
     private final NamespacedKey typeKey;      // Ziel-Tier eines Tier-Upgrades
+    private final YourShikaBackpacks plugin;
 
     public UpgradeItemFactory(YourShikaBackpacks plugin) {
+        this.plugin = plugin;
         this.baseMarker = new NamespacedKey(plugin, "upgrade_base");
         this.typeKey = new NamespacedKey(plugin, "upgrade_type");
     }
 
     /** Das Basis-Item "Upgrade-Leder" mit konfigurierbarem Modell. */
-    public ItemStack base(int cmd, String itemModel) {
+    public ItemStack base(int cmd, String itemModel, String providerId) {
         ItemStack item = new ItemStack(Material.LEATHER);
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().set(baseMarker, PersistentDataType.BYTE, (byte) 1);
@@ -53,6 +55,7 @@ public final class UpgradeItemFactory {
         applyCmd(meta, cmd);
         applyModel(meta, itemModel);
         item.setItemMeta(meta);
+        applyExternalModel(item, providerId);
         return item;
     }
 
@@ -60,7 +63,7 @@ public final class UpgradeItemFactory {
      * Ein Tier-Upgrade für das Ziel-Tier {@code targetTier} (z.B. "copper") mit
      * konfigurierbarem CustomModelData/item_model (für spätere eigene Texturen).
      */
-    public ItemStack tierUpgrade(String targetTier, String displayName, int cmd, String itemModel) {
+    public ItemStack tierUpgrade(String targetTier, String displayName, int cmd, String itemModel, String providerId) {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, targetTier);
@@ -73,6 +76,7 @@ public final class UpgradeItemFactory {
         applyCmd(meta, cmd);
         applyModel(meta, itemModel);
         item.setItemMeta(meta);
+        applyExternalModel(item, providerId);
         return item;
     }
 
@@ -91,6 +95,12 @@ public final class UpgradeItemFactory {
         if (itemModel == null || itemModel.isBlank()) return;
         org.bukkit.NamespacedKey key = org.bukkit.NamespacedKey.fromString(itemModel);
         if (key != null) meta.setItemModel(key);
+    }
+
+    private void applyExternalModel(ItemStack item, String providerId) {
+        if (plugin.moduleManager() != null) {
+            plugin.moduleManager().applyExternalModel(item, providerId);
+        }
     }
 
     public boolean isUpgradeBase(ItemStack item) {

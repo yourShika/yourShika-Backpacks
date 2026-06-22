@@ -37,7 +37,7 @@ import java.util.UUID;
 public final class BackpackItemFactory {
 
     /** Aktuelle Datenformat-Version eines Backpack-Items. */
-    public static final int DATA_VERSION = 1;
+    public static final int DATA_VERSION = 2;
 
     private static final Color DEFAULT_LEATHER = Color.fromRGB(0xA0, 0x70, 0x3C);
 
@@ -118,6 +118,10 @@ public final class BackpackItemFactory {
         if (meta instanceof LeatherArmorMeta leather) {
             leather.setColor(ColorUtil.toBukkitColor(main, DEFAULT_LEATHER));
         }
+        // Vanilla-Tooltips ausblenden (Farbcode/Attribute) – die Farbe steht
+        // bereits sauber in unserer Lore, sonst doppelt.
+        meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_DYE,
+                org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);
 
         int perPage = plugin.pluginConfig().storageSlotsPerPage();
         TextColor mainColor = ColorUtil.toTextColor(main, TextColor.color(0xFFFFFF));
@@ -143,6 +147,30 @@ public final class BackpackItemFactory {
         }
         meta.lore(lore);
         item.setItemMeta(meta);
+    }
+
+    /**
+     * Aktualisiert ein bestehendes Backpack-Item auf den aktuellen Stand
+     * (Name, Lore, Modell, externes Modell, Datenversion) – ohne ID, Farbe,
+     * Besitzer oder Inhalt zu verändern. So übernehmen bereits existierende
+     * Backpacks automatisch spätere Änderungen an Tier-Name/-Lore/-Textur.
+     */
+    public void refresh(ItemStack item, BackpackTier tier) {
+        if (!isBackpack(item)) return;
+        UUID id = getId(item);
+        String main = getMainColor(item, tier.defaultMainColor());
+        String accent = getAccentColor(item, tier.defaultAccentColor());
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            applyModel(meta, tier);
+            meta.getPersistentDataContainer().set(keys.dataVersion, PersistentDataType.INTEGER, DATA_VERSION);
+            item.setItemMeta(meta);
+        }
+        applyDisplay(item, tier, id, main, accent);
+        if (plugin.moduleManager() != null) {
+            plugin.moduleManager().applyExternalModel(item, tier);
+        }
     }
 
     public boolean isBackpack(ItemStack item) {

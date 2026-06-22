@@ -84,4 +84,15 @@ public final class ModuleManager {
             provider.apply(item, tier);
         }
     }
+
+    /** Überlagert ein beliebiges Plugin-Item anhand einer externen Provider-ID. */
+    public void applyExternalModel(ItemStack item, String providerId) {
+        if (providerId == null || providerId.isBlank()) return;
+        for (ExternalItemModule module : itemModules) {
+            if (module.isActive()) {
+                module.apply(item, providerId);
+                return;
+            }
+        }
+    }
 }

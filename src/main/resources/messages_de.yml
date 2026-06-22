@@ -8,6 +8,7 @@ prefix: "<gradient:#6E5BC8:#5BE8D4><bold>Backpacks</bold></gradient> <dark_gray>
 help:
   header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Befehle"
   open: "<yellow>/bp open <gray>– Backpack in der Hand öffnen"
+  info: "<yellow>/bp info <gray>– Rücksäcke, Upgrades & Rezepte ansehen"
   color: "<yellow>/bp color <Farbe> [Akzent] <gray>– Backpack einfärben (Name oder #RRGGBB)"
   list: "<yellow>/bp list [Spieler] <gray>– Backpacks auflisten"
   give: "<yellow>/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent] <gray>– Backpack geben"

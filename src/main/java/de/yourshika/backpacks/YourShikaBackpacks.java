@@ -44,7 +44,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BukkitTask autosaveTask;
 
     /** Aktuelle Struktur-Version der config.yml. */
-    private static final int CONFIG_VERSION = 3;
+    private static final int CONFIG_VERSION = 4;
 
     @Override
     public void onEnable() {
@@ -78,6 +78,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
 
         // Modul-System (externe, experimentelle Hooks) – vor der Rezept-/Item-Erstellung.
         this.moduleManager = new ModuleManager(this);
+        moduleManager.reload();
 
         // Listener registrieren.
         Bukkit.getPluginManager().registerEvents(new BackpackGuiListener(this, manager), this);
@@ -115,9 +116,6 @@ public final class YourShikaBackpacks extends JavaPlugin {
             pc.setExecutor(command);
             pc.setTabCompleter(command);
         }
-
-        // Externe Module gemäß Config (Standard: alle gesperrt).
-        moduleManager.reload();
 
         // Autosave.
         startAutosave();
@@ -183,9 +181,9 @@ public final class YourShikaBackpacks extends JavaPlugin {
         pluginConfig.load();
         messages.load(pluginConfig.language());
         tiers.load(getConfig().getConfigurationSection("tiers"));
+        moduleManager.reload();
         recipeManager.registerAll();
         upgradeManager.registerAll();
-        moduleManager.reload();
         if (autosaveTask != null) {
             autosaveTask.cancel();
             autosaveTask = null;
@@ -233,6 +231,8 @@ public final class YourShikaBackpacks extends JavaPlugin {
         saveConfig();
         pluginConfig.load();
         moduleManager.reload();
+        if (recipeManager != null) recipeManager.registerAll();
+        if (upgradeManager != null) upgradeManager.registerAll();
     }
 
     public void debug(String message) {

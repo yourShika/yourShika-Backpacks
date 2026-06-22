@@ -1,0 +1,522 @@
+# Prepared functional backpack upgrade items.
+# These are texture/model providers only; gameplay logic can bind to the IDs later.
+
+ysbp_upgrade_pickup:
+  displayname: "<#58c96a><bold>Pickup Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/pickup.png
+    custom_model_data: 2100
+
+ysbp_upgrade_advanced_pickup:
+  displayname: "<#58c96a><bold>Advanced Pickup Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_pickup.png
+    custom_model_data: 2101
+
+ysbp_upgrade_magnet:
+  displayname: "<#5aa7ff><bold>Magnet Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/magnet.png
+    custom_model_data: 2102
+
+ysbp_upgrade_advanced_magnet:
+  displayname: "<#5aa7ff><bold>Advanced Magnet Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_magnet.png
+    custom_model_data: 2103
+
+ysbp_upgrade_filter:
+  displayname: "<#d6aa4c><bold>Filter Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/filter.png
+    custom_model_data: 2104
+
+ysbp_upgrade_advanced_filter:
+  displayname: "<#d6aa4c><bold>Advanced Filter Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_filter.png
+    custom_model_data: 2105
+
+ysbp_upgrade_void:
+  displayname: "<#6e5bc8><bold>Void Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/void.png
+    custom_model_data: 2106
+
+ysbp_upgrade_advanced_void:
+  displayname: "<#6e5bc8><bold>Advanced Void Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_void.png
+    custom_model_data: 2107
+
+ysbp_upgrade_refill:
+  displayname: "<#4bbfd0><bold>Refill Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/refill.png
+    custom_model_data: 2108
+
+ysbp_upgrade_advanced_refill:
+  displayname: "<#4bbfd0><bold>Advanced Refill Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_refill.png
+    custom_model_data: 2109
+
+ysbp_upgrade_restock:
+  displayname: "<#53bd74><bold>Restock Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/restock.png
+    custom_model_data: 2110
+
+ysbp_upgrade_advanced_restock:
+  displayname: "<#53bd74><bold>Advanced Restock Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_restock.png
+    custom_model_data: 2111
+
+ysbp_upgrade_deposit:
+  displayname: "<#f0b848><bold>Deposit Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/deposit.png
+    custom_model_data: 2112
+
+ysbp_upgrade_advanced_deposit:
+  displayname: "<#f0b848><bold>Advanced Deposit Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_deposit.png
+    custom_model_data: 2113
+
+ysbp_upgrade_crafting:
+  displayname: "<#9b7447><bold>Crafting Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/crafting.png
+    custom_model_data: 2114
+
+ysbp_upgrade_compacting:
+  displayname: "<#8f9ca8><bold>Compacting Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/compacting.png
+    custom_model_data: 2115
+
+ysbp_upgrade_advanced_compacting:
+  displayname: "<#8f9ca8><bold>Advanced Compacting Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_compacting.png
+    custom_model_data: 2116
+
+ysbp_upgrade_smelting:
+  displayname: "<#e46b37><bold>Smelting Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/smelting.png
+    custom_model_data: 2117
+
+ysbp_upgrade_auto_smelting:
+  displayname: "<#e46b37><bold>Auto-Smelting Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/auto_smelting.png
+    custom_model_data: 2118
+
+ysbp_upgrade_smoking:
+  displayname: "<#9a7b5c><bold>Smoking Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/smoking.png
+    custom_model_data: 2119
+
+ysbp_upgrade_auto_smoking:
+  displayname: "<#9a7b5c><bold>Auto-Smoking Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/auto_smoking.png
+    custom_model_data: 2120
+
+ysbp_upgrade_blasting:
+  displayname: "<#d8d8d8><bold>Blasting Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/blasting.png
+    custom_model_data: 2121
+
+ysbp_upgrade_auto_blasting:
+  displayname: "<#d8d8d8><bold>Auto-Blasting Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/auto_blasting.png
+    custom_model_data: 2122
+
+ysbp_upgrade_stonecutter:
+  displayname: "<#b7b7b7><bold>Stonecutter Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stonecutter.png
+    custom_model_data: 2123
+
+ysbp_upgrade_anvil:
+  displayname: "<#777b83><bold>Anvil Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/anvil.png
+    custom_model_data: 2124
+
+ysbp_upgrade_smithing:
+  displayname: "<#7f8ea3><bold>Smithing Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/smithing.png
+    custom_model_data: 2125
+
+ysbp_upgrade_alchemy:
+  displayname: "<#50c8c8><bold>Alchemy Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/alchemy.png
+    custom_model_data: 2126
+
+ysbp_upgrade_advanced_alchemy:
+  displayname: "<#50c8c8><bold>Advanced Alchemy Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_alchemy.png
+    custom_model_data: 2127
+
+ysbp_upgrade_stack_starter:
+  displayname: "<#d9c99a><bold>Stack Upgrade Starter Tier</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_starter.png
+    custom_model_data: 2128
+
+ysbp_upgrade_stack_tier_1:
+  displayname: "<#d9c99a><bold>Stack Upgrade Tier 1</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_tier_1.png
+    custom_model_data: 2129
+
+ysbp_upgrade_stack_tier_2:
+  displayname: "<#d9c99a><bold>Stack Upgrade Tier 2</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_tier_2.png
+    custom_model_data: 2130
+
+ysbp_upgrade_stack_tier_3:
+  displayname: "<#d9c99a><bold>Stack Upgrade Tier 3</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_tier_3.png
+    custom_model_data: 2131
+
+ysbp_upgrade_stack_tier_4:
+  displayname: "<#d9c99a><bold>Stack Upgrade Tier 4</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_tier_4.png
+    custom_model_data: 2132
+
+ysbp_upgrade_stack_omega:
+  displayname: "<#d06cf5><bold>Stack Upgrade Omega Tier</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_omega.png
+    custom_model_data: 2133
+
+ysbp_upgrade_stack_downgrade_1:
+  displayname: "<#d94343><bold>Stack Downgrade Tier 1</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_downgrade_1.png
+    custom_model_data: 2134
+
+ysbp_upgrade_stack_downgrade_2:
+  displayname: "<#d94343><bold>Stack Downgrade Tier 2</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_downgrade_2.png
+    custom_model_data: 2135
+
+ysbp_upgrade_stack_downgrade_3:
+  displayname: "<#d94343><bold>Stack Downgrade Tier 3</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/stack_downgrade_3.png
+    custom_model_data: 2136
+
+ysbp_upgrade_feeding:
+  displayname: "<#e0a843><bold>Feeding Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/feeding.png
+    custom_model_data: 2137
+
+ysbp_upgrade_advanced_feeding:
+  displayname: "<#e0a843><bold>Advanced Feeding Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_feeding.png
+    custom_model_data: 2138
+
+ysbp_upgrade_tool_swapper:
+  displayname: "<#6fa0d6><bold>Tool Swapper Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/tool_swapper.png
+    custom_model_data: 2139
+
+ysbp_upgrade_advanced_tool_swapper:
+  displayname: "<#6fa0d6><bold>Advanced Tool Swapper Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_tool_swapper.png
+    custom_model_data: 2140
+
+ysbp_upgrade_jukebox:
+  displayname: "<#b66f3a><bold>Jukebox Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/jukebox.png
+    custom_model_data: 2141
+
+ysbp_upgrade_advanced_jukebox:
+  displayname: "<#b66f3a><bold>Advanced Jukebox Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_jukebox.png
+    custom_model_data: 2142
+
+ysbp_upgrade_inception:
+  displayname: "<#a0703c><bold>Inception Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/inception.png
+    custom_model_data: 2143
+
+ysbp_upgrade_everlasting:
+  displayname: "<#cfcfcf><bold>Everlasting Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/everlasting.png
+    custom_model_data: 2144
+
+ysbp_upgrade_infinity_admin:
+  displayname: "<#6e5bc8><bold>Infinity Upgrade Admin</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/infinity_admin.png
+    custom_model_data: 2145
+
+ysbp_upgrade_survival_infinity:
+  displayname: "<#3bd16f><bold>Survival Infinity Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/survival_infinity.png
+    custom_model_data: 2146
+
+ysbp_upgrade_tank:
+  displayname: "<#2b82c9><bold>Tank Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/tank.png
+    custom_model_data: 2147
+
+ysbp_upgrade_pump:
+  displayname: "<#2b82c9><bold>Pump Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/pump.png
+    custom_model_data: 2148
+
+ysbp_upgrade_advanced_pump:
+  displayname: "<#2b82c9><bold>Advanced Pump Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/advanced_pump.png
+    custom_model_data: 2149
+
+ysbp_upgrade_xp_pump:
+  displayname: "<#5bd75b><bold>XP Pump Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/xp_pump.png
+    custom_model_data: 2150
+
+ysbp_upgrade_battery:
+  displayname: "<#f2d14e><bold>Battery Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/battery.png
+    custom_model_data: 2151

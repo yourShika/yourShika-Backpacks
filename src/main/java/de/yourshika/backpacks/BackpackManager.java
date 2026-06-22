@@ -104,10 +104,10 @@ public final class BackpackManager {
         String main = items.getMainColor(item, tier.defaultMainColor());
         String accent = items.getAccentColor(item, tier.defaultAccentColor());
 
-        // Frisch vergebene Lazy-ID sofort in die Lore übernehmen.
-        if (fresh) {
-            items.applyDisplay(item, tier, id, main, accent);
-        }
+        // Item bei jedem Öffnen auf den aktuellen Stand bringen (Name/Lore/Modell),
+        // ohne ID, Farbe, Besitzer oder Inhalt zu verändern. So aktualisieren sich
+        // bereits existierende Backpacks automatisch nach Updates.
+        items.refresh(item, tier);
 
         BackpackData data = storage.load(id);
         if (data == null) {
