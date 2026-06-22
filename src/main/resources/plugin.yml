@@ -13,7 +13,7 @@ folia-supported: false
 # bewusst NICHT mehr unterstützt.
 softdepend:
   - PlaceholderAPI
-  - ProtocolLib
+  - packetevents
   - Oraxen
 
 commands:

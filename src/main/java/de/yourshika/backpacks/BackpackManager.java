@@ -88,6 +88,11 @@ public final class BackpackManager {
         String main = items.getMainColor(item, tier.defaultMainColor());
         String accent = items.getAccentColor(item, tier.defaultAccentColor());
 
+        // Frisch vergebene Lazy-ID sofort in die Lore übernehmen.
+        if (fresh) {
+            items.applyDisplay(item, tier, id, main, accent);
+        }
+
         BackpackData data = storage.load(id);
         if (data == null) {
             data = new BackpackData(id);

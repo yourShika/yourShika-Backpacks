@@ -43,9 +43,13 @@ public final class YourShikaBackpacks extends JavaPlugin {
 
     private BukkitTask autosaveTask;
 
+    /** Aktuelle Struktur-Version der config.yml. */
+    private static final int CONFIG_VERSION = 2;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        migrateConfig();
         saveResourceIfMissing("messages_de.yml");
 
         this.pluginConfig = new PluginConfig(this);
@@ -187,6 +191,33 @@ public final class YourShikaBackpacks extends JavaPlugin {
             autosaveTask = null;
         }
         startAutosave();
+    }
+
+    /**
+     * Aktualisiert eine veraltete config.yml automatisch. Bei einer
+     * Struktur-Änderung (neue Tiers/Upgrades/Rezept-Regeln) wird die alte Datei
+     * gesichert und die mitgelieferte neue Standardkonfiguration eingespielt.
+     * So greifen Änderungen (z.B. die Upgrade-Kette) auch auf bestehenden Servern.
+     */
+    private void migrateConfig() {
+        int version = getConfig().getInt("config-version", 1);
+        if (version >= CONFIG_VERSION) return;
+
+        File cfg = new File(getDataFolder(), "config.yml");
+        String backupName = "config-backup-v" + version + "-" + System.currentTimeMillis() + ".yml";
+        try {
+            if (cfg.exists()) {
+                java.nio.file.Files.copy(cfg.toPath(),
+                        new File(getDataFolder(), backupName).toPath());
+            }
+            saveResource("config.yml", true); // mit aktuellen Defaults überschreiben
+            reloadConfig();
+            getLogger().warning("config.yml war veraltet (v" + version + ") und wurde auf v"
+                    + CONFIG_VERSION + " aktualisiert. Die alte Datei wurde als '" + backupName
+                    + "' gesichert – bitte eigene Anpassungen ggf. erneut übertragen.");
+        } catch (Exception ex) {
+            getLogger().severe("config.yml konnte nicht migriert werden: " + ex.getMessage());
+        }
     }
 
     private void saveResourceIfMissing(String name) {

@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.2.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.2.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,25 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## 🔧 v0.2.1 (Bugfixes)
+
+- **Config-Auto-Update:** Bei Struktur-Änderungen aktualisiert sich die
+  `config.yml` automatisch (alte Datei wird als `config-backup-*.yml` gesichert) –
+  so greifen neue Tiers/Rezepte/Upgrade-Regeln auch auf bestehenden Servern.
+- **Nur Leder ist direkt craftbar** – alle höheren Tiers entstehen ausschließlich
+  über die **Upgrade-Kette** (Smithing). Alte Direkt-Rezepte sind deaktiviert.
+- **ID erscheint sofort** in der Lore beim Craften (vorher erst nach dem Öffnen).
+- **Netherite-Upgrade** wird jetzt im **Smithing Table** erstellt
+  (Upgrade-Leder + Netherite-Ingot + Faden — Minecraft-Smithing braucht 3 Slots).
+- **Upgrade-Leder** wird im **Vorlage-Slot** (Leder) der Veredelung **abgelehnt**.
+- **Dye-Färben:** Ergebnis lässt sich jetzt zuverlässig entnehmen (landet im Inventar).
+- **PacketEvents statt ProtocolLib** als (Roadmap-)Hook.
+- Hinweis: In **JEI/REI/EMI** zeigt der Basis-Slot der Smithing-Veredelung das
+  generische *Horse Leather Armor* – technisch bedingt, weil das Rezept **jedes**
+  Backpack dieses Tiers akzeptieren muss (das **Ergebnis** zeigt korrekt den Ziel-Rucksack).
 
 ---
 
@@ -197,19 +216,20 @@ ideal als Backpack-Basis.
 
 ## 🧰 Crafting, Upgrade-Kette & Färben
 
-**Backpacks (Crafting Table):** jeder Tier aus 8× Tier-Material um eine **Truhe**.
-Rezepte sind je Tier in der `config.yml` anpassbar. Gecraftete Backpacks sind
-**Templates ohne ID**; die ID wird **beim ersten Öffnen** vergeben.
+**Nur der Leder-Rucksack** wird direkt gecraftet (8× Leder um eine **Truhe**).
+Alle höheren Tiers entstehen über die **Upgrade-Kette** im Smithing Table.
+Frisch gecraftete Backpacks zeigen ihre **ID sofort** in der Lore.
 
 **Upgrade-Kette** — Leder → Copper → Eisen → Gold → Diamant → Smaragd → Netherite:
 
 1. **Upgrade-Leder** craften: 1× Leder (Mitte) + 4× Faden (Crafting Table).
 2. **Tier-Upgrade** craften: Upgrade-Leder + 8× Tier-Material (z. B. Kupfer) →
-   *Copper-Upgrade*. **Netherite-Upgrade**: Upgrade-Leder + 1× Netherite-Ingot
-   (bewusst günstig; im Smithing Table sind technisch nur 3 Slots möglich).
-3. **Veredeln im Smithing Table:** **Leder** (Vorlage) + **vorheriges Backpack**
-   (Basis) + **Tier-Upgrade** (Zugabe) → nächstes Backpack. **ID, Inhalt und
-   Farbe bleiben erhalten.**
+   *Copper-Upgrade* (Crafting Table). **Netherite-Upgrade**: **Smithing Table** –
+   Upgrade-Leder (Vorlage) + Netherite-Ingot (Basis) + Faden (Zugabe).
+3. **Veredeln im Smithing Table:** **normales Leder** (Vorlage) + **vorheriges
+   Backpack** (Basis) + **Tier-Upgrade** (Zugabe) → nächstes Backpack.
+   **ID, Inhalt und Farbe bleiben erhalten.** (Upgrade-Leder wird im Vorlage-Slot
+   nicht akzeptiert – dort gehört echtes Leder hin.)
 
 **Färben (Crafting Table):** Backpack in die **mittlere Spalte**, Färbemittel in
 die **linke Spalte** = Hauptfarbe, **rechte Spalte** = Akzentfarbe. Innerhalb
@@ -254,7 +274,7 @@ Module lassen sich zusätzlich **live per GUI** an-/ausschalten: **`/bp modules`
 | Modul | Zweck | Standard |
 |---|---|---|
 | **PlaceholderAPI** | `%ysbp_count%`, `%ysbp_highest_tier%`, `%ysbp_open%` | gesperrt |
-| **ProtocolLib** | Fake-Blocks für platzierte Backpacks (Roadmap) | gesperrt |
+| **PacketEvents** | Packet-Darstellung platzierter Backpacks (Roadmap) | gesperrt |
 | **Oraxen** | Custom-Modelle/Texturen | gesperrt |
 
 > **Custom-Items:** Als Custom-Item-Hook wird ausschließlich **Oraxen** unterstützt
@@ -304,7 +324,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.2.0.jar
+target/yourShika-Backpacks-0.2.1.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

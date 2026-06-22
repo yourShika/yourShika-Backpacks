@@ -5,6 +5,11 @@
 #  Standardsprache: Deutsch (de)
 # ============================================================================
 
+# Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
+# um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
+# (die alte Datei wird dabei gesichert).
+config-version: 2
+
 # Sprache der messages_<sprache>.yml (Standard: de).
 language: de
 
@@ -143,8 +148,10 @@ tiers:
       - ""
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
+    # Höhere Tiers werden NICHT direkt gecraftet, sondern über die Upgrade-Kette
+    # (Smithing Table) erstellt. Daher ist das direkte Rezept deaktiviert.
     recipe:
-      enabled: true
+      enabled: false
       shape:
         - "CCC"
         - "CHC"
@@ -172,7 +179,7 @@ tiers:
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
     recipe:
-      enabled: true
+      enabled: false
       shape:
         - "III"
         - "IHI"
@@ -200,7 +207,7 @@ tiers:
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
     recipe:
-      enabled: true
+      enabled: false
       shape:
         - "GGG"
         - "GHG"
@@ -228,7 +235,7 @@ tiers:
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
     recipe:
-      enabled: true
+      enabled: false
       shape:
         - "DDD"
         - "DHD"
@@ -256,7 +263,7 @@ tiers:
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
     recipe:
-      enabled: true
+      enabled: false
       shape:
         - "EEE"
         - "EHE"
@@ -284,7 +291,7 @@ tiers:
       - "<yellow>Rechtsklick zum Öffnen"
       - "<dark_gray>ID: <id>"
     recipe:
-      enabled: true
+      enabled: false
       shape:
         - "NNN"
         - "NHN"
@@ -333,5 +340,5 @@ hooks:
   experimental: false
   modules:
     placeholderapi: false   # Platzhalter (%ysbp_*%)
-    protocollib: false      # Fake-Blocks für platzierte Backpacks (Roadmap)
+    packetevents: false     # Packet-Darstellung platzierter Backpacks (Roadmap)
     oraxen: false           # Custom-Modelle/Texturen (einziger Item-Hook)

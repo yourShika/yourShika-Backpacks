@@ -9,6 +9,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Registriert die konfigurierbaren Crafting-Rezepte der Backpack-Tiers und
@@ -79,6 +81,32 @@ public final class RecipeManager implements Listener {
     /** Alle registrierten Rezept-Schlüssel (für die Recipe-Book-Freischaltung). */
     public List<NamespacedKey> keys() {
         return List.copyOf(registered);
+    }
+
+    /**
+     * Vergibt einem frisch gecrafteten Backpack sofort eine eindeutige ID und
+     * aktualisiert die Lore – so steht die ID direkt nach dem Craften im Item
+     * (nicht erst beim Öffnen). Bei Shift-Craft (mehrere auf einmal) bleibt es
+     * beim Lazy-Verfahren: die ID wird beim ersten Öffnen vergeben, da sich ein
+     * ganzer Stapel keine eindeutige ID teilen kann.
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onCraftBackpack(CraftItemEvent event) {
+        ItemStack result = event.getCurrentItem();
+        if (!items.isBackpack(result)) return;
+        if (items.getId(result) != null) return;   // hat bereits eine ID
+        if (event.isShiftClick()) return;           // Stapel -> Lazy-ID beim Öffnen
+
+        String tierKey = items.getTierKey(result);
+        BackpackTier tier = tiers.get(tierKey);
+        if (tier == null) return;
+
+        UUID id = UUID.randomUUID();
+        items.writeId(result, id);
+        String main = items.getMainColor(result, tier.defaultMainColor());
+        String accent = items.getAccentColor(result, tier.defaultAccentColor());
+        items.applyDisplay(result, tier, id, main, accent);
+        event.setCurrentItem(result);
     }
 
     /** Erzwingt Tier-Permissions: ohne Berechtigung verschwindet das Ergebnis. */

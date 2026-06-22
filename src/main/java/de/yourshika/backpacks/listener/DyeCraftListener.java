@@ -82,17 +82,11 @@ public final class DyeCraftListener implements Listener {
 
         event.setCancelled(true);
 
-        // Ausgabe übergeben.
-        if (event.isShiftClick()) {
-            var leftover = player.getInventory().addItem(result);
-            leftover.values().forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
-        } else {
-            ItemStack cursor = event.getCursor();
-            if (cursor != null && !cursor.getType().isAir()) {
-                return; // Cursor belegt – Backpacks sind nicht stapelbar.
-            }
-            player.setItemOnCursor(result);
-        }
+        // Ausgabe immer ins Spieler-Inventar geben (zuverlässig; das direkte
+        // Setzen auf den Cursor in einem abgebrochenen Klick führt zu Desync,
+        // wodurch sich das Ergebnis "nicht herausnehmen" lässt).
+        var leftover = player.getInventory().addItem(result);
+        leftover.values().forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
 
         // Zutaten verbrauchen (je ein Stück aus jedem beteiligten Slot).
         for (int i = 0; i < 9; i++) {

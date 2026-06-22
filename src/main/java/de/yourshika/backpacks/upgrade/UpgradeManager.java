@@ -18,7 +18,6 @@ import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.SmithingInventory;
 import org.bukkit.inventory.SmithingTransformRecipe;
 
@@ -106,11 +105,15 @@ public final class UpgradeManager implements Listener {
             Material mat = tierMaterial(target);
             try {
                 if (mat == Material.NETHERITE_INGOT || target.equalsIgnoreCase("netherite")) {
-                    // Günstig: Upgrade-Leder + 1 Netherite-Ingot (shapeless).
-                    ShapelessRecipe r = new ShapelessRecipe(key("upgrade_" + target), result);
-                    r.addIngredient(new RecipeChoice.ExactChoice(upgrades.base()));
-                    r.addIngredient(new RecipeChoice.MaterialChoice(mat));
-                    r.setGroup("yourshika_upgrades");
+                    // Smithing Table: Upgrade-Leder (Vorlage) + Netherite-Ingot (Basis)
+                    // + Faden (Zugabe). Vanilla-Smithing benötigt technisch 3 Slots;
+                    // der Faden ist die günstige dritte Zutat ("1 Upgrade-Leder +
+                    // 1 Netherite-Ingot" bleibt im Kern erhalten).
+                    SmithingTransformRecipe r = new SmithingTransformRecipe(
+                            key("upgrade_" + target), result,
+                            new RecipeChoice.ExactChoice(upgrades.base()),      // Vorlage
+                            new RecipeChoice.MaterialChoice(mat),               // Basis (Netherite-Ingot)
+                            new RecipeChoice.MaterialChoice(Material.STRING));  // Zugabe
                     Bukkit.addRecipe(r);
                     registered.add(r.getKey());
                 } else {
@@ -204,7 +207,9 @@ public final class UpgradeManager implements Listener {
             event.setResult(null);
             return;
         }
-        if (template == null || template.getType() != Material.LEATHER) {
+        // In den Vorlage-Slot gehört NORMALES Leder – kein Upgrade-Leder.
+        if (template == null || template.getType() != Material.LEATHER
+                || upgrades.isUpgradeBase(template)) {
             event.setResult(null);
             return;
         }
