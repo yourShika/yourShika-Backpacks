@@ -8,10 +8,11 @@ prefix: "<gradient:#6E5BC8:#5BE8D4><bold>Backpacks</bold></gradient> <dark_gray>
 help:
   header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Befehle"
   open: "<yellow>/bp open <gray>– Backpack in der Hand öffnen"
-  color: "<yellow>/bp color <Hauptfarbe> [Akzentfarbe] <gray>– Backpack einfärben"
+  color: "<yellow>/bp color <Farbe> [Akzent] <gray>– Backpack einfärben (Name oder #RRGGBB)"
   list: "<yellow>/bp list [Spieler] <gray>– Backpacks auflisten"
   give: "<yellow>/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent] <gray>– Backpack geben"
   openid: "<yellow>/bp openid <ID> <gray>– Backpack per ID öffnen"
+  modules: "<yellow>/bp modules <gray>– Externe Module & Status anzeigen"
   reload: "<yellow>/bp reload <gray>– Konfiguration neu laden"
   footer: "<dark_gray>Inspiriert von Sophisticated Backpacks – eigenständiges Server-Plugin."
 
@@ -26,7 +27,7 @@ error:
   world-disabled: "<red>In dieser Welt sind Backpacks deaktiviert."
   no-nesting: "<red>Backpacks dürfen nicht in Backpacks gelegt werden."
   unknown-subcommand: "<red>Unbekannter Befehl: <white><input></white> <gray>– /bp help"
-  color-usage: "<red>Verwendung: /bp color <Hauptfarbe> [Akzentfarbe]"
+  color-usage: "<red>Verwendung: /bp color <Farbe> [Akzent] <gray>(Name oder #RRGGBB)"
   give-usage: "<red>Verwendung: /bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent]"
   openid-usage: "<red>Verwendung: /bp openid <ID>"
   invalid-color: "<red>Unbekannte Farbe: <white><input></white>"

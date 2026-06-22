@@ -3,64 +3,66 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.0.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
-[![Plattform](https://img.shields.io/badge/Plattform-Paper%201.21.x-5BE8D4)](https://papermc.io)
-[![Java](https://img.shields.io/badge/Java-21-orange)](https://adoptium.net)
+[![Version](https://img.shields.io/badge/version-0.1.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
+[![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
 
 ---
 
 ## 📦 Beschreibung
 
-**yourShika Backpack's** bringt hochwertige, einfärbbare Rucksäcke mit eigenen Inventaren
-auf deinen Survival-Server – sicher gegen Dupe-Bugs, persistent gespeichert und
-vorbereitet für eigene Custom-Texturen.
+**yourShika Backpack's** bringt hochwertige, **einfärbbare** Rucksäcke mit eigenen
+Inventaren auf deinen Survival-Server – sicher gegen Dupe-Bugs, persistent
+gespeichert und vorbereitet für eigene Custom-Texturen.
 
 Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisticated-backpacks)
 ([GitHub](https://github.com/P3pp3rF1y/SophisticatedBackpacks)) inspiriert**, aber eine
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
-Textur** aus der Mod übernommen – die Mod diente ausschließlich als Feature-Ideengeber.
-**Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern ein Paper/Spigot-Plugin.**
+Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
+ein Paper/Spigot-Plugin.**
 
 ---
 
 ## 🧱 Minecraft-/Paper-Version
 
-- **Zielplattform:** Paper
-- **Gebaut gegen:** `paper-api 1.21.4-R0.1-SNAPSHOT` (Java 21)
-- **Hinweis zur gewünschten Version `26.1.2`:** Diese Versionsnummer existiert nicht als
-  offizielle Minecraft-/Paper-Version. Es wird daher die nächstpassende stabile
-  Paper-Version (1.21.x) verwendet. Die Version ist **leicht änderbar** über die
-  Eigenschaft `paper.version` in der [`pom.xml`](pom.xml) – einfach anpassen und neu bauen.
-- **Spigot:** läuft, soweit realistisch möglich. Es wird die Adventure-API von Paper
-  genutzt; auf reinem Spigot können MiniMessage-Funktionen eingeschränkt sein.
+- **Zielplattform:** Paper (läuft auch auf Spigot, dort ggf. eingeschränkte MiniMessage-Optik)
+- **Gebaut gegen:** `io.papermc.paper:paper-api:26.1.2.build.72-stable`
+- **Java:** **25** erforderlich (Minecraft 26.1.x setzt Java 25 voraus, Microsoft OpenJDK 25)
+- **Versionsschema:** Seit dem neuen `YY.D.H`-Schema verwendet die Paper-API
+  `<version>.build.<n>-<stage>` statt `-R0.1-SNAPSHOT`. Die Ziel-Version ist
+  über die Eigenschaft `paper.version` in der [`pom.xml`](pom.xml) leicht änderbar.
 
 ---
 
-## ✨ Features (v0.0.1)
+## ✨ Features
 
 - ✅ Backpacks als **normale Items** mit **eindeutiger, fälschungssicherer ID** (PDC)
 - ✅ **Eigenes Inventar pro Backpack** – gleiche Items, unterschiedliche Inhalte
 - ✅ **Persistente Speicherung** (SQLite oder YAML)
 - ✅ **Sichere GUI** mit umfassendem Dupe-/Verlust-Schutz
+- ✅ **Doppeltruhen-Layout (54 Slots)** – nur freigegebene Felder sind nutzbar
+- ✅ **Größere Tiers = mehr Platz**, bei Überschreiten einer Seite automatisches **Paging**
 - ✅ **6 Backpack-Tiers** (Leder, Kupfer, Eisen, Gold, Diamant, Netherite)
+- ✅ **Echt einfärbbar** über färbbare Leder-Items (DyeColor **oder Hex `#RRGGBB`**) –
+  Farbe sichtbar **auch ohne Resourcepack**
 - ✅ **Crafting-Rezepte** (konfigurierbar, aktivier-/deaktivierbar)
 - ✅ **Öffnen per Rechtsklick** (Haupt- & Nebenhand) **und Command**
 - ✅ **Admin-Give-Command** und **Öffnen per ID**
-- ✅ **Einfärbbare Backpacks** (Haupt- + Akzentfarbe)
-- ✅ **CustomModelData pro Tier** – vorbereitet für eigene Texturen/Resourcepacks
+- ✅ **CustomModelData + `item_model`-Component pro Tier** – vorbereitet für Resourcepacks
+- ✅ **Modulares Hook-System** – alle externen Hooks **standardmäßig gesperrt & experimentell**,
+  Live-Status über **`/bp modules`**
 - ✅ **Deutsche, konfigurierbare Nachrichten** (MiniMessage + `&`-Codes)
-- ✅ **Vorbereitete Upgrade-Slots** (in der GUI sichtbar, gesperrt)
-- ✅ **Optionale Hooks** (PlaceholderAPI aktiv; weitere vorbereitet)
 - ✅ **Schutz gegen Backpacks-in-Backpacks**
+- ❌ **Kein Vault** mehr (bewusst entfernt)
 
 ---
 
 ## 🛠️ Installation
 
 1. Plugin-JAR aus den [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   herunterladen (`yourShika-Backpacks-0.0.1.jar`).
-2. In den `plugins/`-Ordner deines Paper-Servers legen.
+   herunterladen (`yourShika-Backpacks-0.1.0.jar`).
+2. In den `plugins/`-Ordner deines **Paper 26.1.2 (Java 25)**-Servers legen.
 3. Server starten – der Datenordner **`plugins/yourShika Backpack's/`** wird automatisch
    mit `config.yml`, `messages_de.yml` und der Datenbank erstellt.
 4. Optional `config.yml` anpassen und `/bp reload` ausführen.
@@ -75,10 +77,11 @@ Hauptbefehl: `/backpack` · Aliase: `/bp`, `/ybackpack`, `/ysbackpack`
 |---|---|
 | `/bp help` | Hilfe anzeigen |
 | `/bp open` | Backpack in der Hand öffnen |
-| `/bp color <Hauptfarbe> [Akzent]` | Backpack einfärben |
+| `/bp color <Farbe> [Akzent]` | Backpack einfärben (DyeColor-Name **oder** `#RRGGBB`) |
 | `/bp list [Spieler]` | Backpacks auflisten |
 | `/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent]` | Backpack geben (Admin) |
 | `/bp openid <ID>` | Backpack per ID öffnen (Admin) |
+| `/bp modules` | Externe Module & ihren Status anzeigen (Admin) |
 | `/bp reload` | Konfiguration neu laden (Admin) |
 | `/bp version` | Plugin-Infos |
 
@@ -97,48 +100,31 @@ Hauptbefehl: `/backpack` · Aliase: `/bp`, `/ybackpack`, `/ysbackpack`
 | `yourshika.backpack.admin.openid` | Per ID öffnen | OP |
 | `yourshika.backpack.admin.openother` | Fremde Backpacks öffnen | OP |
 | `yourshika.backpack.admin.listother` | Fremde Backpacks listen | OP |
+| `yourshika.backpack.admin.modules` | Modul-Übersicht öffnen | OP |
 | `yourshika.backpack.admin.reload` | Reload | OP |
 | `yourshika.backpack.admin.debug` | Debug | OP |
-| `yourshika.backpack.place` | Platzieren *(Roadmap)* | OP |
-| `yourshika.backpack.upgrade` | Upgrades *(Roadmap)* | OP |
-
-`yourshika.backpack.*` und `yourshika.backpack.admin.*` bündeln die jeweiligen Rechte.
 
 ---
 
-## ⚙️ Konfiguration
+## 🎒 Backpacks, Tiers, Größe & Paging
 
-Alle Werte liegen in `plugins/yourShika Backpack's/config.yml`:
+Jedes Backpack öffnet als **Doppeltruhe (54 Slots)**. Die unterste Reihe (9 Slots)
+ist die **Steuerleiste** (Blättern, Info, Upgrade-Vorschau). Von den verbleibenden
+**45 Slots** sind nur so viele **freigegeben**, wie der Tier erlaubt – der Rest ist
+gesperrt. Tiers mit mehr als 45 Lager-Slots werden automatisch über mehrere
+**Seiten** geblättert (◀ / ▶).
 
-- **Sprache**, **Debug**, **Speicherart** (SQLite/YAML), **Autosave-Intervall**
-- **Tiers** mit Slots, Upgrade-Slots, Material, **CustomModelData**, Farben, Lore, Rezept
-- **Crafting** global an/aus + pro Tier
-- **Öffnen** per Rechtsklick / Nebenhand
-- **Sicherheit** (Nesting), **Welt-Whitelist/Blacklist**
-- **Platzierbare Backpacks** (vorbereitet, Roadmap)
-- **Upgrades** (vorbereiteter Abschnitt, Roadmap)
-- **Hooks**
+| Tier | Lager-Slots | Seiten* | Upgrade-Slots** | CustomModelData |
+|---|---|---|---|---|
+| Leder | 9 | 1 | 1 | 1001 |
+| Kupfer | 18 | 1 | 2 | 1002 |
+| Eisen | 27 | 1 | 3 | 1003 |
+| Gold | 45 | 1 | 4 | 1004 |
+| Diamant | 54 | 2 | 5 | 1005 |
+| Netherite | 108 | 3 | 6 | 1006 |
 
-Nachrichten sind in `messages_de.yml` frei anpassbar (MiniMessage + `&`-Codes, Platzhalter).
-
----
-
-## 🎒 Backpacks, Tiers & Farben
-
-### Tiers
-
-| Tier | Lager-Slots | Upgrade-Slots* | CustomModelData |
-|---|---|---|---|
-| Leder | 9 | 1 | 1001 |
-| Kupfer | 18 | 2 | 1002 |
-| Eisen | 27 | 3 | 1003 |
-| Gold | 36 | 4 | 1004 |
-| Diamant | 45 | 5 | 1005 |
-| Netherite | 45 | 6 | 1006 |
-
-\* Upgrade-Slots sind in v0.0.1 **vorbereitet und gesperrt** (siehe Roadmap).
-Diamant und Netherite teilen sich in 0.0.1 die Lagergröße (45); Netherite hat mehr
-Upgrade-Slots. Erweiterte Lagerung (Paging) ist als Roadmap-Feature geplant.
+\* Bei 45 nutzbaren Slots pro Seite (`gui.storage-slots-per-page`).
+\*\* Upgrade-Slots sind **vorbereitet und gesperrt** (Roadmap).
 
 ### Identität & Sicherheit
 
@@ -146,42 +132,36 @@ Jedes Backpack trägt seine **ID, Tier und Farben im PersistentDataContainer** �
 Name oder Lore. Dadurch sind Backpacks **nicht durch Umbenennen fälschbar**.
 **Der Inhalt wird niemals im Item gespeichert**, sondern serverseitig an die ID gebunden.
 Das ist der Kern des Dupe-Schutzes: Ein kopiertes Item teilt sich dasselbe Inventar.
+Beim Blättern wird stets nur die sichtbare Seite zwischen Inventar und Puffer
+synchronisiert – die Operation bleibt atomar und dupe-sicher.
 
-### Farben
+### Farben (echt einfärbbar)
 
-Haupt- und Akzentfarbe werden als Minecraft-`DyeColor` gespeichert, im Item-Lore
-angezeigt und sind über `/bp color` änderbar. Spätere visuelle Darstellung über
-Resourcepack / CustomModelData / RGB ist vorbereitet.
+Backpacks basieren standardmäßig auf einem **färbbaren Leder-Item**
+(`LEATHER_HORSE_ARMOR`). Die **Hauptfarbe färbt das Item real ein** – sichtbar
+**auch ohne Resourcepack** – und ist über `/bp color` änderbar. Als Farbe sind
+sowohl **DyeColor-Namen** (`BROWN`, `CYAN`, …) als auch **Hex-Werte** (`#A0703C`)
+erlaubt. Leder-Pferderüstung ist nicht vom Spieler anlegbar und eignet sich daher
+ideal als Backpack-Basis.
 
 ---
 
-## 🎨 CustomModelData, Custom-Texturen & Resourcepack
+## 🎨 CustomModelData, item_model & Resourcepacks
 
-- Jeder Tier besitzt eine eigene **CustomModelData** (1001–1006).
-- **Fertige Custom-Texturen sind für spätere Versionen geplant.**
-- v0.0.1 **bereitet CustomModelData bereits vor** – ein eigenes **Resourcepack kann
-  später ergänzt werden**, ohne das Backpack-System umzubauen.
-- **Ohne Resourcepack** funktionieren Backpacks als normale Items mit Name und Lore.
-- **Mit Resourcepack** sehen sie später wie eigene Items aus.
-- **ItemsAdder** und **Oraxen** können später optional genutzt werden – beide sind
-  **keine Pflicht**; fehlen sie, läuft das Plugin normal weiter.
-- Spätere Farbvarianten können zusätzliche CustomModelData-Werte verwenden
-  (z. B. Leder Rot/Blau/Grün, Diamant Schwarz/Gold, Netherite Lila/Schwarz).
+- Jeder Tier besitzt eine eigene **CustomModelData** (1001–1006) und kann optional
+  eine moderne **`item_model`-Component** setzen (`item-model: "namespace:pfad"`).
+- **Ohne Resourcepack** funktionieren Backpacks als normale (gefärbte) Leder-Items.
+- **Mit Resourcepack** sehen sie wie eigene Items aus.
+- **Externe Item-Systeme** (Nexo, ItemsAdder, Oraxen) sind **optional** und
+  experimentell – siehe Hooks. Default ist immer der eingebaute Vanilla-Anbieter.
 
 ---
 
 ## 🧰 Crafting
 
-Standardmäßig craftet man jeden Tier aus 8× Tier-Material um eine **Truhe**:
-
-```
-III      I = Tier-Material (Leder/Kupfer/Eisen/Gold/Diamant/Netherite)
-IHI      H = Truhe (CHEST)
-III
-```
-
-Gecraftete Backpacks sind **Templates ohne ID**; die eindeutige ID wird **beim ersten
-Öffnen** automatisch vergeben. Rezepte sind je Tier in der `config.yml` frei anpassbar.
+Standardmäßig craftet man jeden Tier aus 8× Tier-Material um eine **Truhe**.
+Rezepte sind je Tier in der `config.yml` frei anpassbar. Gecraftete Backpacks sind
+**Templates ohne ID**; die eindeutige ID wird **beim ersten Öffnen** vergeben.
 
 ---
 
@@ -190,74 +170,68 @@ Gecraftete Backpacks sind **Templates ohne ID**; die eindeutige ID wird **beim e
 - **SQLite** (Standard, empfohlen) → `backpacks.db`
 - **YAML** (Alternative) → `backpacks.yml`
 
-Gespeichert wird beim **Schließen**, bei **Logout**, **Plugin-Deaktivierung**,
-**Server-Stop** und per **Autosave**. Inhalte werden versioniert/Base64-serialisiert.
+Gespeichert wird beim **Schließen**, beim **Seitenwechsel**, bei **Logout**,
+**Plugin-Deaktivierung**, **Server-Stop** und per **Autosave**.
 
 ---
 
-## 🔌 Externe Hooks (optional)
+## 🔌 Externe Module / Hooks (experimentell, standardmäßig gesperrt)
 
-| Hook | Status | Zweck |
+Das Plugin läuft **vollständig eigenständig**. Externe Hooks sind als **Module**
+gekapselt und stehen unter einem **Master-Schalter** `hooks.experimental`
+(Standard: `false`). Solange dieser `false` ist, lädt **kein** externes Modul –
+unabhängig von den Einzel-Schaltern.
+
+Den Live-Status zeigt **`/bp modules`** (installiert / in Config aktiviert /
+experimentell freigegeben / **AKTIV**-**INAKTIV**).
+
+| Modul | Zweck | Standard |
 |---|---|---|
-| **PlaceholderAPI** | ✅ aktiv | `%ysbp_count%`, `%ysbp_highest_tier%`, `%ysbp_open%` |
-| **Vault** | 🔜 Roadmap | Economy (Kauf/Upgrades/Farben) |
-| **ProtocolLib** | 🔜 Roadmap | Fake-Blocks für platzierte Backpacks |
-| **ItemsAdder** | 🔜 Roadmap | Custom-Modelle/Texturen |
-| **Oraxen** | 🔜 Roadmap | Custom-Modelle/Texturen |
+| **PlaceholderAPI** | `%ysbp_count%`, `%ysbp_highest_tier%`, `%ysbp_open%` | gesperrt |
+| **ProtocolLib** | Fake-Blocks für platzierte Backpacks (Roadmap) | gesperrt |
+| **Nexo** | Custom-Modelle/Texturen (**empfohlener** Oraxen-Nachfolger) | gesperrt |
+| **ItemsAdder** | Custom-Modelle/Texturen | gesperrt |
+| **Oraxen** | Custom-Modelle/Texturen (Legacy) | gesperrt |
 
-Alle Hooks sind **optional** – fehlt eine Library, **bricht nichts**.
+> **Empfehlung Custom-Items:** Für neue Setups ist **Nexo** die zukunftssicherste
+> Wahl (offener, aktiv gepflegter Oraxen-Nachfolger). ItemsAdder bleibt eine
+> mächtige Alternative, Oraxen ist als Legacy weiter wählbar. Pro Tier kann eine
+> `provider-id` gesetzt werden, die nur greift, wenn das jeweilige Modul aktiv ist.
+> **Vault wird bewusst nicht mehr unterstützt.**
+
+Aktivieren (Beispiel PlaceholderAPI):
+
+```yaml
+hooks:
+  experimental: true
+  modules:
+    placeholderapi: true
+```
 
 ---
 
-## ⚠️ Bekannte Einschränkungen (v0.0.1)
+## ⚠️ Bekannte Einschränkungen
 
-- **Upgrades sind noch nicht funktionsfähig** (Slots sind vorbereitet/gesperrt).
-- **Platzierbare Backpacks** sind noch nicht enthalten (Roadmap, vorbereitet).
-- **Custom-Texturen/Resourcepack** liegen noch nicht bei (nur vorbereitet).
-- Diamant/Netherite teilen sich die Lagergröße (Paging ist Roadmap).
-- Reines Spigot (ohne Paper) kann MiniMessage-Funktionen einschränken.
+- **Upgrades** sind vorbereitet/gesperrt (Roadmap).
+- **Platzierbare Backpacks** sind vorbereitet (Roadmap).
+- **Custom-Texturen/Resourcepack** liegen nicht bei (nur vorbereitet).
+- Externe Module sind **experimentell**; ihre Modell-Übernahme erfolgt best-effort.
 
 ---
 
 ## 🗺️ Roadmap
 
-### Platzierbare Backpacks
-Geplant über serverseitige Alternativen (Barrel-/Chest-basiert, `BlockDisplay`/
-`ItemDisplay`/`Interaction`-Entities oder ProtocolLib-Fake-Blocks), inkl. Schutz vor
-Explosionen, optionalem Hopper-Verhalten und persistenter Speicherung.
-
-### Upgrade-System
-Die GUI besitzt bereits vorbereitete Upgrade-Slots, die Config einen `upgrades`-Bereich.
-Geplante Upgrades (Auswahl):
-
-> Pickup · Magnet · Void · Refill · Filter · Advanced Filter · Compacting ·
-> Advanced Compacting · Feeding · Advanced Feeding · Smelting · Auto-Smelting ·
-> Smoking · Auto-Smoking · Blasting · Auto-Blasting · Crafting · Stonecutter ·
-> Stack · Stack Downgrade · Jukebox · Restock · Deposit · Inception · Everlasting ·
-> Toolswapper · Tank · Pump · Battery · XP Pump · Anvil · Smithing · Alchemy · Infinity
-
-Jedes Upgrade soll später eigene CustomModelData/Texturen, Permissions, Rezepte und
-Konfiguration erhalten. **Backpacks-in-Backpacks** bleiben standardmäßig deaktiviert und
-kommen erst mit dem **Inception Upgrade** (mit Limits & Dupe-Schutz).
-
-### Weiteres
-Custom-Texturen + eigenes Resourcepack · ItemsAdder-/Oraxen-Integration ·
-Vault-Economy · Hopper-Automation für platzierte Backpacks.
-
----
-
-## 📝 Release Notes – v0.0.1
-
-Erste Version. Fokus auf das **stabile Grund-Backpack-System**:
-Items mit eindeutigen IDs, eigene persistente Inventare, sichere GUI, 6 Tiers,
-Crafting, Farben, Commands, Permissions, deutsche Nachrichten, CustomModelData-
-Vorbereitung sowie vorbereitete Upgrade-Slots und -Konfiguration.
+- **Upgrade-System** (Pickup, Magnet, Void, Filter, Compacting, Smelting, Stack,
+  Inception u.v.m.) – Slots & Config sind bereits vorbereitet.
+- **Platzierbare Backpacks** (BlockDisplay/Barrel-basiert, optional ProtocolLib).
+- **Eigenes Resourcepack** + tiefere Nexo-/ItemsAdder-/Oraxen-Integration.
+- **Backpacks-in-Backpacks** nur über das geplante **Inception Upgrade** (mit Limits & Dupe-Schutz).
 
 ---
 
 ## 🧪 Build-Hinweise
 
-Voraussetzungen: **JDK 21** und **Maven** (oder das mitgelieferte Build via GitHub Actions).
+Voraussetzungen: **JDK 25** und **Maven**.
 
 ```bash
 mvn clean package
@@ -266,11 +240,11 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.0.1.jar
+target/yourShika-Backpacks-0.1.0.jar
 ```
 
-Die Ziel-Minecraft-/Paper-Version lässt sich über die Eigenschaft `paper.version`
-in der [`pom.xml`](pom.xml) anpassen.
+Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der
+[`pom.xml`](pom.xml) anpassen.
 
 ---
 

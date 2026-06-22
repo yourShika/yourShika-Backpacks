@@ -58,6 +58,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "list" -> list(sender, args);
             case "give" -> give(sender, args);
             case "openid" -> openId(sender, args);
+            case "modules", "module" -> modules(sender);
             case "reload" -> reload(sender);
             case "version", "ver" -> version(sender);
             default -> msg.send(sender, "error.unknown-subcommand", ph("input", args[0]));
@@ -72,8 +73,21 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "help.list");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
         if (sender.hasPermission("yourshika.backpack.admin.openid")) msg.sendRaw(sender, "help.openid");
+        if (sender.hasPermission("yourshika.backpack.admin.modules")) msg.sendRaw(sender, "help.modules");
         if (sender.hasPermission("yourshika.backpack.admin.reload")) msg.sendRaw(sender, "help.reload");
         msg.sendRaw(sender, "help.footer");
+    }
+
+    private void modules(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        if (!sender.hasPermission("yourshika.backpack.admin.modules")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        de.yourshika.backpacks.gui.ModulesMenu.open(plugin, player);
     }
 
     private void open(CommandSender sender) {
@@ -116,18 +130,18 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             msg.send(sender, "error.hold-backpack");
             return;
         }
-        DyeColor main = parseDyeOrNull(args[1]);
-        if (main == null) {
+        if (!ColorUtil.isValid(args[1])) {
             msg.send(sender, "error.invalid-color", ph("input", args[1]));
             return;
         }
-        DyeColor accent = main;
+        String main = ColorUtil.normalize(args[1], args[1]);
+        String accent = main;
         if (args.length >= 3) {
-            accent = parseDyeOrNull(args[2]);
-            if (accent == null) {
+            if (!ColorUtil.isValid(args[2])) {
                 msg.send(sender, "error.invalid-color", ph("input", args[2]));
                 return;
             }
+            accent = ColorUtil.normalize(args[2], args[2]);
         }
 
         String tierKey = items.getTierKey(item);
@@ -154,8 +168,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             data.tier(tier.key());
             data.contents(new ItemStack[tier.storageSlots()]);
         }
-        data.mainColor(main.name());
-        data.accentColor(accent.name());
+        data.mainColor(main);
+        data.accentColor(accent);
         manager.storage().save(data);
 
         msg.send(sender, "color.success",
@@ -222,8 +236,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
                 return;
             }
         }
-        DyeColor main = args.length >= 5 ? parseDyeOrDefault(args[4], tier.defaultMainColor()) : tier.defaultMainColor();
-        DyeColor accent = args.length >= 6 ? parseDyeOrDefault(args[5], tier.defaultAccentColor()) : tier.defaultAccentColor();
+        String main = args.length >= 5 ? colorTokenOrDefault(args[4], tier.defaultMainColor()) : tier.defaultMainColor();
+        String accent = args.length >= 6 ? colorTokenOrDefault(args[5], tier.defaultAccentColor()) : tier.defaultAccentColor();
 
         for (int i = 0; i < amount; i++) {
             ItemStack item = manager.createNew(tier, target.getUniqueId(), main, accent);
@@ -278,17 +292,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
                 ph("count", String.valueOf(manager.storage().count())));
     }
 
-    private DyeColor parseDyeOrNull(String s) {
-        try {
-            return DyeColor.valueOf(s.toUpperCase());
-        } catch (IllegalArgumentException ex) {
-            return null;
-        }
-    }
-
-    private DyeColor parseDyeOrDefault(String s, DyeColor def) {
-        DyeColor c = parseDyeOrNull(s);
-        return c == null ? def : c;
+    private String colorTokenOrDefault(String s, String def) {
+        return ColorUtil.isValid(s) ? ColorUtil.normalize(s, def) : def;
     }
 
     @Override
@@ -297,6 +302,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "color", "list", "version"));
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
+            if (sender.hasPermission("yourshika.backpack.admin.modules")) subs.add("modules");
             if (sender.hasPermission("yourshika.backpack.admin.reload")) subs.add("reload");
             return filter(subs, args[0]);
         }

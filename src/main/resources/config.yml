@@ -1,6 +1,7 @@
 # ============================================================================
 #  yourShika Backpack's – Konfiguration
 #  Datenordner: plugins/yourShika Backpack's/
+#  Zielplattform: Paper 26.1.2 (Java 25)
 #  Standardsprache: Deutsch (de)
 # ============================================================================
 
@@ -21,6 +22,18 @@ storage:
     interval-minutes: 5
 
 # ---------------------------------------------------------------------------
+#  GUI
+#  Jedes Backpack öffnet als Doppeltruhe (54 Slots). Nur die für den Tier
+#  freigegebenen Felder sind nutzbar, der Rest ist gesperrt. Tiers mit mehr
+#  Lager-Slots als auf eine Seite passen, werden automatisch über mehrere
+#  Seiten geblättert (Paging).
+# ---------------------------------------------------------------------------
+gui:
+  # Nutzbare Lager-Slots pro Seite (1-45). Die unterste Reihe (9 Slots) bleibt
+  # immer für Steuerung (Blättern, Info, Upgrade-Vorschau) reserviert.
+  storage-slots-per-page: 45
+
+# ---------------------------------------------------------------------------
 #  Öffnen
 # ---------------------------------------------------------------------------
 open:
@@ -37,7 +50,7 @@ crafting:
 #  Sicherheit
 # ---------------------------------------------------------------------------
 security:
-  # Backpacks in Backpacks. Für 0.0.1 dringend auf false lassen (Dupe-Schutz).
+  # Backpacks in Backpacks. Dringend auf false lassen (Dupe-Schutz).
   # Später optional über das geplante "Inception Upgrade".
   allow-nesting: false
 
@@ -52,8 +65,8 @@ worlds:
 
 # ---------------------------------------------------------------------------
 #  Platzierbare Backpacks (Roadmap)
-#  In 0.0.1 deaktiviert. Vorbereitet für eine spätere BlockDisplay-/Barrel-
-#  basierte Umsetzung. Siehe README -> Roadmap.
+#  Deaktiviert. Vorbereitet für eine spätere BlockDisplay-/Barrel-basierte
+#  Umsetzung. Siehe README -> Roadmap.
 # ---------------------------------------------------------------------------
 placeable:
   enabled: false
@@ -65,28 +78,40 @@ placeable:
 
 # ---------------------------------------------------------------------------
 #  Backpack-Tiers
-#  - material:          Basis-Item (ohne Resourcepack sichtbar)
-#  - custom-model-data: für spätere Custom-Texturen / Resourcepacks
-#  - storage-rows:      Lager-Reihen (1-5) -> nutzbare Slots = Reihen * 9
-#  - upgrade-slots:     vorbereitete Upgrade-Slots (in 0.0.1 gesperrt)
-#  - default-*-color:   DyeColor (z.B. RED, BLUE, BROWN, ORANGE ...)
-#  - recipe:            optionales, eigenes Crafting-Rezept
+#  - material:          Basis-Item. Standard: LEATHER_HORSE_ARMOR – ein
+#                       färbbares Leder-Item, das auch ohne Resourcepack die
+#                       eingestellte Farbe sichtbar annimmt und nicht
+#                       anziehbar ist. Jedes färbbare Leder-Item ist möglich
+#                       (LEATHER_HELMET/CHESTPLATE/LEGGINGS/BOOTS/HORSE_ARMOR).
+#  - storage-slots:     Nutzbare Lager-Slots insgesamt. Darf 45 (eine Seite)
+#                       übersteigen – dann wird automatisch geblättert.
+#  - upgrade-slots:     Vorbereitete Upgrade-Slots (aktuell gesperrt/Roadmap).
+#  - default-main-color / default-accent-color:
+#                       DyeColor-Name (z.B. BROWN) ODER Hex (#A0703C).
+#                       Die Hauptfarbe färbt das Leder-Item real ein.
+#  - custom-model-data: für klassische Resourcepacks.
+#  - item-model:        moderne item_model-Component (z.B. "yourshika:leather_backpack").
+#  - provider-id:       optionale Custom-Item-ID für ein externes Modul
+#                       (Nexo/ItemsAdder/Oraxen) – greift nur, wenn das Modul
+#                       experimentell aktiviert ist (siehe modules unten).
+#  - recipe:            optionales, eigenes Crafting-Rezept.
 #
-#  Lore-/Name-Platzhalter: <storage> <upgrades> <id> <main_color> <accent_color>
+#  Lore-/Name-Platzhalter: <storage> <pages> <upgrades> <id> <main_color> <accent_color>
 # ---------------------------------------------------------------------------
 tiers:
   leather:
     display-name: "<#A0703C>Leder-Rucksack</#A0703C>"
-    material: CHEST
+    material: LEATHER_HORSE_ARMOR
     custom-model-data: 1001
-    storage-rows: 1
+    item-model: ""
+    provider-id: ""
+    storage-slots: 9
     upgrade-slots: 1
-    default-main-color: BROWN
-    default-accent-color: ORANGE
+    default-main-color: "#A0703C"
+    default-accent-color: "#E08A2B"
     permission: ""
-    price: 0.0
     lore:
-      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
       - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
       - ""
@@ -104,16 +129,17 @@ tiers:
 
   copper:
     display-name: "<#C87B53>Kupfer-Rucksack</#C87B53>"
-    material: CHEST
+    material: LEATHER_HORSE_ARMOR
     custom-model-data: 1002
-    storage-rows: 2
+    item-model: ""
+    provider-id: ""
+    storage-slots: 18
     upgrade-slots: 2
-    default-main-color: ORANGE
-    default-accent-color: BROWN
+    default-main-color: "#C87B53"
+    default-accent-color: "#7A4A2B"
     permission: ""
-    price: 0.0
     lore:
-      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
       - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
       - ""
@@ -131,16 +157,17 @@ tiers:
 
   iron:
     display-name: "<#D8D8D8>Eisen-Rucksack</#D8D8D8>"
-    material: CHEST
+    material: LEATHER_HORSE_ARMOR
     custom-model-data: 1003
-    storage-rows: 3
+    item-model: ""
+    provider-id: ""
+    storage-slots: 27
     upgrade-slots: 3
-    default-main-color: LIGHT_GRAY
-    default-accent-color: GRAY
+    default-main-color: "#D8D8D8"
+    default-accent-color: "#8E8E8E"
     permission: ""
-    price: 0.0
     lore:
-      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
       - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
       - ""
@@ -158,16 +185,17 @@ tiers:
 
   gold:
     display-name: "<#F2D14E>Gold-Rucksack</#F2D14E>"
-    material: CHEST
+    material: LEATHER_HORSE_ARMOR
     custom-model-data: 1004
-    storage-rows: 4
+    item-model: ""
+    provider-id: ""
+    storage-slots: 45
     upgrade-slots: 4
-    default-main-color: YELLOW
-    default-accent-color: ORANGE
+    default-main-color: "#F2D14E"
+    default-accent-color: "#B8860B"
     permission: ""
-    price: 0.0
     lore:
-      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
       - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
       - ""
@@ -185,16 +213,17 @@ tiers:
 
   diamond:
     display-name: "<#5BE8D4>Diamant-Rucksack</#5BE8D4>"
-    material: CHEST
+    material: LEATHER_HORSE_ARMOR
     custom-model-data: 1005
-    storage-rows: 5
+    item-model: ""
+    provider-id: ""
+    storage-slots: 54
     upgrade-slots: 5
-    default-main-color: CYAN
-    default-accent-color: LIGHT_BLUE
+    default-main-color: "#5BE8D4"
+    default-accent-color: "#3FA9F5"
     permission: ""
-    price: 0.0
     lore:
-      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
       - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
       - ""
@@ -212,16 +241,17 @@ tiers:
 
   netherite:
     display-name: "<#6E5BC8>Netherite-Rucksack</#6E5BC8>"
-    material: CHEST
+    material: LEATHER_HORSE_ARMOR
     custom-model-data: 1006
-    storage-rows: 5
+    item-model: ""
+    provider-id: ""
+    storage-slots: 108
     upgrade-slots: 6
-    default-main-color: PURPLE
-    default-accent-color: BLACK
+    default-main-color: "#6E5BC8"
+    default-accent-color: "#1A1A1A"
     permission: ""
-    price: 0.0
     lore:
-      - "<gray>Lager: <white><storage> Slots"
+      - "<gray>Lager: <white><storage> Slots <dark_gray>(<pages> Seite/n)"
       - "<gray>Upgrade-Slots: <white><upgrades> <dark_gray>(Roadmap)"
       - "<gray>Farbe: <main_color> <dark_gray>/</dark_gray> <accent_color>"
       - ""
@@ -239,8 +269,8 @@ tiers:
 
 # ---------------------------------------------------------------------------
 #  Upgrades (Roadmap / vorbereitet)
-#  In 0.0.1 noch nicht funktionsfähig. Dieser Abschnitt dient als Grundlage
-#  für spätere Versionen. Siehe README -> Upgrade-Roadmap.
+#  Noch nicht funktionsfähig. Dieser Abschnitt dient als Grundlage für spätere
+#  Versionen. Siehe README -> Upgrade-Roadmap.
 # ---------------------------------------------------------------------------
 upgrades:
   enabled: false
@@ -257,18 +287,25 @@ upgrades:
       enabled: false
       permission: "yourshika.backpack.upgrade.void"
       custom-model-data: 2003
-    refill:
-      enabled: false
-      permission: "yourshika.backpack.upgrade.refill"
-      custom-model-data: 2004
     # ... weitere Upgrades folgen (Filter, Compacting, Smelting, Stack, ...).
 
 # ---------------------------------------------------------------------------
-#  Externe Hooks (alle optional – fehlt die Library, läuft das Plugin normal).
+#  Externe Module / Hooks (EXPERIMENTELL)
+#
+#  Master-Schalter: hooks.experimental
+#    - false (Standard): KEIN externes Modul lädt – egal, was unten steht.
+#      Das Plugin läuft vollständig eigenständig mit Vanilla-Items.
+#    - true: Module dürfen laden, sofern sie zusätzlich einzeln aktiviert
+#      sind UND das jeweilige Plugin installiert ist.
+#
+#  Status & Verfügbarkeit jederzeit im Spiel sichtbar über: /bp modules
+#  Vault wird bewusst nicht mehr unterstützt.
 # ---------------------------------------------------------------------------
 hooks:
-  placeholderapi: true
-  vault: false        # Economy-Anbindung (Roadmap)
-  protocollib: false  # Fake-Blocks für platzierte Backpacks (Roadmap)
-  itemsadder: false   # Custom-Modelle (Roadmap)
-  oraxen: false       # Custom-Modelle (Roadmap)
+  experimental: false
+  modules:
+    placeholderapi: false   # Platzhalter (%ysbp_*%)
+    protocollib: false      # Fake-Blocks für platzierte Backpacks (Roadmap)
+    nexo: false             # Custom-Modelle/Texturen (empfohlener Oraxen-Nachfolger)
+    itemsadder: false       # Custom-Modelle/Texturen
+    oraxen: false           # Custom-Modelle/Texturen (Legacy)

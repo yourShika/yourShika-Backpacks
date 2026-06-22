@@ -4,11 +4,12 @@ import de.yourshika.backpacks.command.BackpackCommand;
 import de.yourshika.backpacks.config.MessageManager;
 import de.yourshika.backpacks.config.PluginConfig;
 import de.yourshika.backpacks.craft.RecipeManager;
-import de.yourshika.backpacks.hook.PlaceholderHook;
+import de.yourshika.backpacks.gui.BackpackMenuHolder;
 import de.yourshika.backpacks.item.BackpackItemFactory;
 import de.yourshika.backpacks.item.BackpackKeys;
 import de.yourshika.backpacks.listener.BackpackGuiListener;
 import de.yourshika.backpacks.listener.BackpackInteractListener;
+import de.yourshika.backpacks.module.ModuleManager;
 import de.yourshika.backpacks.storage.BackpackStorage;
 import de.yourshika.backpacks.storage.SqliteBackpackStorage;
 import de.yourshika.backpacks.storage.YamlBackpackStorage;
@@ -22,7 +23,8 @@ import java.io.File;
 
 /**
  * Hauptklasse von "yourShika Backpack's". Initialisiert Konfiguration,
- * Persistenz, Tiers, GUI-Listener, Befehle, Rezepte und optionale Hooks.
+ * Persistenz, Tiers, GUI-Listener, Befehle, Rezepte und das experimentelle
+ * Modul-System (externe Hooks).
  */
 public final class YourShikaBackpacks extends JavaPlugin {
 
@@ -34,9 +36,9 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BackpackStorage storage;
     private BackpackManager manager;
     private RecipeManager recipeManager;
+    private ModuleManager moduleManager;
 
     private BukkitTask autosaveTask;
-    private boolean placeholderHooked = false;
 
     @Override
     public void onEnable() {
@@ -67,6 +69,9 @@ public final class YourShikaBackpacks extends JavaPlugin {
 
         this.manager = new BackpackManager(this, storage, itemFactory, tiers);
 
+        // Modul-System (externe, experimentelle Hooks) – vor der Rezept-/Item-Erstellung.
+        this.moduleManager = new ModuleManager(this);
+
         // Listener registrieren.
         Bukkit.getPluginManager().registerEvents(new BackpackGuiListener(this, manager), this);
         Bukkit.getPluginManager().registerEvents(new BackpackInteractListener(this, manager), this);
@@ -84,13 +89,13 @@ public final class YourShikaBackpacks extends JavaPlugin {
             pc.setTabCompleter(command);
         }
 
-        // Optionale Hooks.
-        setupHooks();
+        // Externe Module gemäß Config (Standard: alle gesperrt).
+        moduleManager.reload();
 
         // Autosave.
         startAutosave();
 
-        getLogger().info("yourShika Backpack's v" + getPluginMeta().getVersion() + " aktiviert.");
+        getLogger().info("yourShika Backpack's v" + getPluginMeta().getVersion() + " aktiviert (Paper 26.1.x / Java 25).");
     }
 
     @Override
@@ -103,11 +108,13 @@ public final class YourShikaBackpacks extends JavaPlugin {
         if (manager != null) {
             manager.saveAllOpen();
             for (var player : Bukkit.getOnlinePlayers()) {
-                if (player.getOpenInventory().getTopInventory().getHolder()
-                        instanceof de.yourshika.backpacks.gui.BackpackMenuHolder) {
+                if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackMenuHolder) {
                     player.closeInventory();
                 }
             }
+        }
+        if (moduleManager != null) {
+            moduleManager.shutdown();
         }
         if (recipeManager != null) {
             recipeManager.unregisterAll();
@@ -127,19 +134,6 @@ public final class YourShikaBackpacks extends JavaPlugin {
         return new SqliteBackpackStorage(this, new File(dir, "backpacks.db"));
     }
 
-    private void setupHooks() {
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            try {
-                new PlaceholderHook(this, manager, tiers).register();
-                placeholderHooked = true;
-                getLogger().info("Hook aktiv: PlaceholderAPI");
-            } catch (Throwable t) {
-                getLogger().warning("PlaceholderAPI-Hook fehlgeschlagen: " + t.getMessage());
-            }
-        }
-        // Vault / ProtocolLib / ItemsAdder / Oraxen: für spätere Versionen vorbereitet.
-    }
-
     private void startAutosave() {
         if (!pluginConfig.autosaveEnabled()) return;
         long ticks = pluginConfig.autosaveIntervalMinutes() * 60L * 20L;
@@ -153,13 +147,14 @@ public final class YourShikaBackpacks extends JavaPlugin {
         }, ticks, ticks);
     }
 
-    /** Lädt Config, Nachrichten, Tiers und Rezepte neu (für /backpack reload). */
+    /** Lädt Config, Nachrichten, Tiers, Rezepte und Module neu (für /backpack reload). */
     public void reloadAll() {
         reloadConfig();
         pluginConfig.load();
         messages.load(pluginConfig.language());
         tiers.load(getConfig().getConfigurationSection("tiers"));
         recipeManager.registerAll();
+        moduleManager.reload();
         if (autosaveTask != null) {
             autosaveTask.cancel();
             autosaveTask = null;
@@ -185,5 +180,5 @@ public final class YourShikaBackpacks extends JavaPlugin {
     public TierRegistry tiers() { return tiers; }
     public BackpackManager manager() { return manager; }
     public BackpackItemFactory itemFactory() { return itemFactory; }
-    public boolean isPlaceholderHooked() { return placeholderHooked; }
+    public ModuleManager moduleManager() { return moduleManager; }
 }

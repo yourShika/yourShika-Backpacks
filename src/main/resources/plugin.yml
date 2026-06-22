@@ -7,13 +7,16 @@ description: Eigenständiges, serverseitiges Backpack-System (inspiriert von Sop
 website: https://github.com/yourShika/yourShika-Backpacks
 folia-supported: false
 
-# Optionale Hooks – brechen das Plugin nicht, wenn nicht vorhanden.
+# Optionale, EXPERIMENTELLE Module – brechen das Plugin nicht, wenn nicht
+# vorhanden. Sie laden zur Laufzeit nur, wenn hooks.experimental: true gesetzt
+# ist (siehe config.yml) und das jeweilige Modul aktiviert wurde. Vault wird
+# bewusst NICHT mehr unterstützt.
 softdepend:
   - PlaceholderAPI
-  - Vault
   - ProtocolLib
   - ItemsAdder
   - Oraxen
+  - Nexo
 
 commands:
   backpack:
@@ -72,12 +75,14 @@ permissions:
       yourshika.backpack.admin.openother: true
       yourshika.backpack.admin.listother: true
       yourshika.backpack.admin.reload: true
+      yourshika.backpack.admin.modules: true
       yourshika.backpack.admin.debug: true
   yourshika.backpack.admin.give: { default: op }
   yourshika.backpack.admin.openid: { default: op }
   yourshika.backpack.admin.openother: { default: op }
   yourshika.backpack.admin.listother: { default: op }
   yourshika.backpack.admin.reload: { default: op }
+  yourshika.backpack.admin.modules: { default: op }
   yourshika.backpack.admin.debug: { default: op }
 
   # Vorbereitet für spätere Versionen (Platzieren / Upgrades).

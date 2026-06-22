@@ -3,6 +3,7 @@ package de.yourshika.backpacks.listener;
 import de.yourshika.backpacks.BackpackManager;
 import de.yourshika.backpacks.YourShikaBackpacks;
 import de.yourshika.backpacks.gui.BackpackMenuHolder;
+import de.yourshika.backpacks.gui.ModulesMenuHolder;
 import de.yourshika.backpacks.item.BackpackItemFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +21,8 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Schützt die Backpack-GUI vor sämtlichen Dupe- und Verlust-Vektoren:
  * gesperrte Slots, Shift-Click, Drag, Hotbar-Swap, Offhand-Swap, Doppelklick
- * und Backpacks-in-Backpacks. Beim Schließen wird der Inhalt sicher gespeichert.
+ * und Backpacks-in-Backpacks. Steuert außerdem das Blättern und speichert beim
+ * Schließen sicher.
  */
 public final class BackpackGuiListener implements Listener {
 
@@ -38,28 +40,38 @@ public final class BackpackGuiListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         Inventory top = event.getView().getTopInventory();
         if (!(top.getHolder() instanceof BackpackMenuHolder holder)) return;
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
 
         int raw = event.getRawSlot();
         boolean clickedTop = raw < top.getSize();
         ClickType click = event.getClick();
         InventoryAction action = event.getAction();
 
-        // 1) Doppelklick (Items zusammenführen) komplett unterbinden – verhindert
-        //    das Einsammeln dekorativer Slots und diverse Dupe-Tricks.
+        // 0) Blättern.
+        if (clickedTop && holder.isPrevButton(raw)) {
+            event.setCancelled(true);
+            manager.changePage(holder, -1);
+            return;
+        }
+        if (clickedTop && holder.isNextButton(raw)) {
+            event.setCancelled(true);
+            manager.changePage(holder, +1);
+            return;
+        }
+
+        // 1) Doppelklick (Items zusammenführen) komplett unterbinden.
         if (action == InventoryAction.COLLECT_TO_CURSOR) {
             event.setCancelled(true);
             return;
         }
 
-        // 2) Klick auf gesperrte Slots (Kontroll-/Upgrade-Reihe) blocken.
+        // 2) Klick auf gesperrte Slots (Steuerleiste / inaktive Lager-Slots) blocken.
         if (clickedTop && holder.isLocked(raw)) {
             event.setCancelled(true);
             return;
         }
 
-        // 3) Hotbar-Swap / Offhand-Swap auf gesperrte Slots blocken; in Lager-Slots
-        //    prüfen, ob ein Backpack hineingetauscht würde (Anti-Nesting).
+        // 3) Hotbar-/Offhand-Swap absichern; Anti-Nesting prüfen.
         if (click == ClickType.NUMBER_KEY) {
             if (clickedTop && holder.isLocked(raw)) {
                 event.setCancelled(true);
@@ -68,12 +80,12 @@ public final class BackpackGuiListener implements Listener {
             ItemStack hotbar = event.getView().getBottomInventory().getItem(event.getHotbarButton());
             if (clickedTop && items.isBackpack(hotbar)) {
                 event.setCancelled(true);
-                denyNesting((Player) event.getWhoClicked());
+                denyNesting(player);
                 return;
             }
         }
         if (click == ClickType.SWAP_OFFHAND) {
-            ItemStack offhand = ((Player) event.getWhoClicked()).getInventory().getItemInOffHand();
+            ItemStack offhand = player.getInventory().getItemInOffHand();
             if (clickedTop && (holder.isLocked(raw) || items.isBackpack(offhand))) {
                 event.setCancelled(true);
                 return;
@@ -83,11 +95,11 @@ public final class BackpackGuiListener implements Listener {
         // 4) Anti-Nesting: kein Backpack auf den Cursor in das Lager legen.
         if (clickedTop && items.isBackpack(event.getCursor())) {
             event.setCancelled(true);
-            denyNesting((Player) event.getWhoClicked());
+            denyNesting(player);
             return;
         }
 
-        // 5) Shift-Click aus dem Spieler-Inventar in das Backpack kontrolliert behandeln.
+        // 5) Shift-Click aus dem Spieler-Inventar kontrolliert behandeln.
         if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
             boolean fromPlayer = !clickedTop;
             if (fromPlayer) {
@@ -95,22 +107,36 @@ public final class BackpackGuiListener implements Listener {
                 if (moving == null || moving.getType().isAir()) return;
                 if (items.isBackpack(moving)) {
                     event.setCancelled(true);
-                    denyNesting((Player) event.getWhoClicked());
+                    denyNesting(player);
                     return;
                 }
-                // Manuelles, sicheres Verschieben ausschließlich in Lager-Slots.
+                // Manuelles, sicheres Verschieben ausschließlich in aktive Lager-Slots.
                 event.setCancelled(true);
-                ItemStack leftover = moveIntoStorage(top, holder.storageSlots(), moving.clone());
+                ItemStack leftover = moveIntoStorage(top, holder.activeCount(), moving.clone());
                 event.setCurrentItem(leftover);
-                ((Player) event.getWhoClicked()).updateInventory();
+                player.updateInventory();
                 return;
             } else {
-                // Shift-Click aus dem Backpack heraus: gesperrte Slots schützen,
-                // Lager-Slots dürfen normal in das Spieler-Inventar wandern.
+                // Shift-Click aus dem Backpack heraus: gesperrte Slots schützen.
                 if (holder.isLocked(raw)) {
                     event.setCancelled(true);
                 }
             }
+        }
+    }
+
+    // Reine Anzeige-GUI /bp modules: jede Interaktion unterbinden.
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onModulesClick(InventoryClickEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof ModulesMenuHolder) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onModulesDrag(InventoryDragEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof ModulesMenuHolder) {
+            event.setCancelled(true);
         }
     }
 
@@ -147,7 +173,7 @@ public final class BackpackGuiListener implements Listener {
     public void onClose(InventoryCloseEvent event) {
         Inventory top = event.getView().getTopInventory();
         if (top.getHolder() instanceof BackpackMenuHolder holder) {
-            manager.saveAndRelease(holder, top);
+            manager.saveAndRelease(holder);
             plugin.debug("Backpack " + holder.backpackId() + " gespeichert & freigegeben.");
         }
     }
@@ -157,14 +183,13 @@ public final class BackpackGuiListener implements Listener {
     }
 
     /**
-     * Verschiebt ein Item ausschließlich in die Lager-Slots (0..storageSlots-1).
-     * Stapelt zuerst in passende Stacks, danach in leere Slots. Gibt den Rest
-     * zurück (oder null, wenn alles untergebracht wurde).
+     * Verschiebt ein Item ausschließlich in die aktiven Lager-Slots
+     * (0..activeCount-1) der aktuellen Seite. Stapelt zuerst in passende Stacks,
+     * danach in leere Slots. Gibt den Rest zurück (oder null).
      */
-    private ItemStack moveIntoStorage(Inventory inv, int storageSlots, ItemStack moving) {
+    private ItemStack moveIntoStorage(Inventory inv, int active, ItemStack moving) {
         int max = moving.getMaxStackSize();
-        // 1) In bestehende, gleichartige Stacks füllen.
-        for (int i = 0; i < storageSlots && moving.getAmount() > 0; i++) {
+        for (int i = 0; i < active && moving.getAmount() > 0; i++) {
             ItemStack slot = inv.getItem(i);
             if (slot != null && slot.isSimilar(moving)) {
                 int space = slot.getMaxStackSize() - slot.getAmount();
@@ -175,8 +200,7 @@ public final class BackpackGuiListener implements Listener {
                 }
             }
         }
-        // 2) In leere Slots legen.
-        for (int i = 0; i < storageSlots && moving.getAmount() > 0; i++) {
+        for (int i = 0; i < active && moving.getAmount() > 0; i++) {
             ItemStack slot = inv.getItem(i);
             if (slot == null || slot.getType().isAir()) {
                 int add = Math.min(max, moving.getAmount());

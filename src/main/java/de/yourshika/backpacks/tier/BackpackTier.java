@@ -1,6 +1,5 @@
 package de.yourshika.backpacks.tier;
 
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
 import java.util.List;
@@ -9,8 +8,11 @@ import java.util.List;
  * Unveränderliche Beschreibung eines Backpack-Tiers. Alle Werte werden aus der
  * config.yml geladen, sodass Server-Admins Tiers frei anpassen können.
  *
- * <p>Speicher und Upgrade-Slots werden hier nur definiert; die eigentliche
+ * <p>Speicher- und Upgrade-Slots werden hier nur definiert; die eigentliche
  * Persistenz erfolgt server-seitig über die Backpack-ID.</p>
+ *
+ * <p>Farben werden als <em>Token</em> gespeichert: ein DyeColor-Name oder ein
+ * Hex-Wert ({@code #RRGGBB}). Siehe {@code ColorUtil}.</p>
  */
 public final class BackpackTier {
 
@@ -18,29 +20,31 @@ public final class BackpackTier {
     private final String displayName;     // MiniMessage
     private final Material material;
     private final int customModelData;    // 0 = keiner
-    private final int storageRows;        // Anzahl Lager-Reihen (1-5)
+    private final String itemModel;       // moderne item_model-Component ("" = keine)
+    private final String providerId;      // Custom-Item-ID für externes Modul ("" = keine)
+    private final int storageSlots;       // nutzbare Lager-Slots insgesamt (kann > 45 sein)
     private final int upgradeSlots;       // vorbereitete Upgrade-Slots
-    private final DyeColor defaultMainColor;
-    private final DyeColor defaultAccentColor;
+    private final String defaultMainColor;   // Token (Dye oder Hex)
+    private final String defaultAccentColor; // Token (Dye oder Hex)
     private final String permission;      // null = keine
-    private final double price;           // Vault-Roadmap
     private final List<String> lore;      // MiniMessage-Zeilen
     private final RecipeDefinition recipe;
 
     public BackpackTier(String key, String displayName, Material material, int customModelData,
-                        int storageRows, int upgradeSlots, DyeColor defaultMainColor,
-                        DyeColor defaultAccentColor, String permission, double price,
+                        String itemModel, String providerId, int storageSlots, int upgradeSlots,
+                        String defaultMainColor, String defaultAccentColor, String permission,
                         List<String> lore, RecipeDefinition recipe) {
         this.key = key;
         this.displayName = displayName;
         this.material = material;
         this.customModelData = customModelData;
-        this.storageRows = Math.max(1, Math.min(5, storageRows));
+        this.itemModel = itemModel == null ? "" : itemModel;
+        this.providerId = providerId == null ? "" : providerId;
+        this.storageSlots = Math.max(1, storageSlots);
         this.upgradeSlots = Math.max(0, upgradeSlots);
         this.defaultMainColor = defaultMainColor;
         this.defaultAccentColor = defaultAccentColor;
         this.permission = permission;
-        this.price = price;
         this.lore = lore;
         this.recipe = recipe;
     }
@@ -49,16 +53,22 @@ public final class BackpackTier {
     public String displayName() { return displayName; }
     public Material material() { return material; }
     public int customModelData() { return customModelData; }
-    public int storageRows() { return storageRows; }
-    /** Nutzbare Lager-Slots (Reihen * 9). */
-    public int storageSlots() { return storageRows * 9; }
+    public String itemModel() { return itemModel; }
+    public String providerId() { return providerId; }
+    /** Nutzbare Lager-Slots insgesamt (über alle Seiten). */
+    public int storageSlots() { return storageSlots; }
     public int upgradeSlots() { return upgradeSlots; }
-    public DyeColor defaultMainColor() { return defaultMainColor; }
-    public DyeColor defaultAccentColor() { return defaultAccentColor; }
+    public String defaultMainColor() { return defaultMainColor; }
+    public String defaultAccentColor() { return defaultAccentColor; }
     public String permission() { return permission; }
-    public double price() { return price; }
     public List<String> lore() { return lore; }
     public RecipeDefinition recipe() { return recipe; }
+
+    /** Anzahl benötigter GUI-Seiten bei gegebener Seitengröße. */
+    public int pageCount(int slotsPerPage) {
+        int per = Math.max(1, slotsPerPage);
+        return Math.max(1, (storageSlots + per - 1) / per);
+    }
 
     /** Konfigurierbares Crafting-Rezept eines Tiers. */
     public record RecipeDefinition(boolean enabled, List<String> shape,

@@ -44,23 +44,24 @@ public final class TierRegistry {
 
     private BackpackTier parse(String key, ConfigurationSection sec) {
         String displayName = sec.getString("display-name", "<white>" + key + " Backpack</white>");
-        Material material = Material.matchMaterial(sec.getString("material", "CHEST"));
-        if (material == null) material = Material.CHEST;
+        Material material = Material.matchMaterial(sec.getString("material", "LEATHER_HORSE_ARMOR"));
+        if (material == null) material = Material.LEATHER_HORSE_ARMOR;
         int cmd = sec.getInt("custom-model-data", 0);
-        int rows = sec.getInt("storage-rows", 3);
+        String itemModel = sec.getString("item-model", "");
+        String providerId = sec.getString("provider-id", "");
+        int slots = sec.getInt("storage-slots", 9);
         int upgrades = sec.getInt("upgrade-slots", 0);
-        var mainColor = parseDye(sec.getString("default-main-color", "BROWN"));
-        var accentColor = parseDye(sec.getString("default-accent-color", "ORANGE"));
+        String mainColor = sec.getString("default-main-color", "BROWN");
+        String accentColor = sec.getString("default-accent-color", "ORANGE");
         String permission = sec.getString("permission", null);
         if (permission != null && permission.isBlank()) permission = null;
-        double price = sec.getDouble("price", 0.0D);
         List<String> lore = sec.getStringList("lore");
 
         ConfigurationSection recipeSec = sec.getConfigurationSection("recipe");
         BackpackTier.RecipeDefinition recipe = parseRecipe(recipeSec);
 
-        return new BackpackTier(key, displayName, material, cmd, rows, upgrades,
-                mainColor, accentColor, permission, price, lore, recipe);
+        return new BackpackTier(key, displayName, material, cmd, itemModel, providerId,
+                slots, upgrades, mainColor, accentColor, permission, lore, recipe);
     }
 
     private BackpackTier.RecipeDefinition parseRecipe(ConfigurationSection sec) {
@@ -77,14 +78,6 @@ public final class TierRegistry {
             }
         }
         return new BackpackTier.RecipeDefinition(enabled, shape, ingredients);
-    }
-
-    private org.bukkit.DyeColor parseDye(String name) {
-        try {
-            return org.bukkit.DyeColor.valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException ex) {
-            return org.bukkit.DyeColor.WHITE;
-        }
     }
 
     public BackpackTier get(String key) {

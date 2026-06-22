@@ -8,12 +8,12 @@ import de.yourshika.backpacks.tier.BackpackTier;
 import de.yourshika.backpacks.tier.TierRegistry;
 import de.yourshika.backpacks.util.ColorUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -28,8 +28,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Zentraler Dienst für das Öffnen, Befüllen und Speichern von Backpacks.
- * Verwaltet außerdem, welches Backpack gerade von wem geöffnet ist, um
- * gleichzeitiges Öffnen (und damit Dupe-Risiken) zu verhindern.
+ *
+ * <p>Jedes Backpack öffnet als Doppeltruhe (54 Slots). Nur die für den Tier
+ * freigegebenen Lager-Slots sind nutzbar; größere Tiers werden über mehrere
+ * Seiten geblättert. Es ist stets nur ein Betrachter pro Backpack erlaubt, um
+ * Dupe-Risiken auszuschließen.</p>
  */
 public final class BackpackManager {
 
@@ -58,7 +61,7 @@ public final class BackpackManager {
     }
 
     /**
-     * Öffnet das Backpack-Item für einen Spieler. Gibt eine Fehlermeldung-Key
+     * Öffnet das Backpack-Item für einen Spieler. Gibt einen Fehlermeldung-Key
      * zurück, falls etwas schiefgeht, sonst null bei Erfolg.
      */
     public String openFromItem(Player player, ItemStack item) {
@@ -81,20 +84,19 @@ public final class BackpackManager {
             return "error.already-open";
         }
 
-        DyeColor main = items.getMainColor(item, tier.defaultMainColor());
-        DyeColor accent = items.getAccentColor(item, tier.defaultAccentColor());
+        String main = items.getMainColor(item, tier.defaultMainColor());
+        String accent = items.getAccentColor(item, tier.defaultAccentColor());
 
         BackpackData data = storage.load(id);
         if (data == null) {
             data = new BackpackData(id);
             data.owner(player.getUniqueId());
             data.tier(tier.key());
-            data.mainColor(main.name());
-            data.accentColor(accent.name());
+            data.mainColor(main);
+            data.accentColor(accent);
             data.contents(new ItemStack[tier.storageSlots()]);
             storage.save(data);
         } else if (fresh) {
-            // Sollte selten passieren (ID-Kollision), Daten bleiben erhalten.
             plugin.debug("Frisches Item traf bestehende Daten: " + id);
         }
 
@@ -115,77 +117,153 @@ public final class BackpackManager {
         if (openBackpacks.containsKey(id)) {
             return "error.already-open";
         }
-        DyeColor main = ColorUtil.parseDye(data.mainColor(), tier.defaultMainColor());
-        DyeColor accent = ColorUtil.parseDye(data.accentColor(), tier.defaultAccentColor());
+        String main = data.mainColor() != null ? data.mainColor() : tier.defaultMainColor();
+        String accent = data.accentColor() != null ? data.accentColor() : tier.defaultAccentColor();
         openInventory(player, tier, data, main, accent);
         return null;
     }
 
     private void openInventory(Player player, BackpackTier tier, BackpackData data,
-                               DyeColor main, DyeColor accent) {
-        int storageSlots = tier.storageSlots();
-        int totalRows = tier.storageRows() + 1; // + Kontroll-/Upgrade-Reihe
-        int size = totalRows * 9;
-        int infoSlot = storageSlots + 8;
+                               String main, String accent) {
+        int slotsPerPage = plugin.pluginConfig().storageSlotsPerPage();
+        int capacity = tier.storageSlots();
+        ItemStack[] buffer = bufferFor(data.contents(), capacity);
 
-        BackpackMenuHolder holder = new BackpackMenuHolder(data.id(), tier.key(), storageSlots, infoSlot);
+        BackpackMenuHolder holder = new BackpackMenuHolder(
+                data.id(), tier.key(), capacity, slotsPerPage, buffer, main, accent);
 
-        Component title = mini.deserialize(tier.displayName(), TagResolver.resolver(
-                Placeholder.component("main_color", Component.text(ColorUtil.pretty(main)).color(ColorUtil.toTextColor(main))),
-                Placeholder.component("accent_color", Component.text(ColorUtil.pretty(accent)).color(ColorUtil.toTextColor(accent))),
-                Placeholder.unparsed("storage", String.valueOf(storageSlots)),
-                Placeholder.unparsed("upgrades", String.valueOf(tier.upgradeSlots())),
-                Placeholder.unparsed("id", data.id().toString().substring(0, 8))
-        )).decoration(TextDecoration.ITALIC, false);
-
-        Inventory inv = Bukkit.createInventory(holder, size, title);
+        Inventory inv = Bukkit.createInventory(holder, BackpackMenuHolder.INVENTORY_SIZE,
+                title(tier, data, main, accent, holder));
         holder.setInventory(inv);
 
-        // Lager-Inhalt einsetzen.
-        ItemStack[] contents = data.contents();
-        if (contents != null) {
-            for (int i = 0; i < storageSlots && i < contents.length; i++) {
-                inv.setItem(i, contents[i]);
-            }
-        }
-
-        // Kontroll-/Upgrade-Reihe füllen.
-        fillControlRow(inv, tier, data, main, accent, storageSlots, infoSlot);
+        renderPage(holder);
 
         openBackpacks.put(data.id(), player.getUniqueId());
         player.openInventory(inv);
     }
 
-    private void fillControlRow(Inventory inv, BackpackTier tier, BackpackData data,
-                                DyeColor main, DyeColor accent, int storageSlots, int infoSlot) {
-        ItemStack filler = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
-
-        for (int i = storageSlots; i < storageSlots + 9; i++) {
-            inv.setItem(i, filler);
+    /** Baut einen Buffer mindestens in Kapazitätsgröße auf (überzählige Items bleiben erhalten). */
+    private ItemStack[] bufferFor(ItemStack[] contents, int capacity) {
+        int len = Math.max(capacity, contents == null ? 0 : contents.length);
+        ItemStack[] buffer = new ItemStack[len];
+        if (contents != null) {
+            System.arraycopy(contents, 0, buffer, 0, Math.min(contents.length, len));
         }
-
-        // Vorbereitete (gesperrte) Upgrade-Slots – links beginnend, max. 7.
-        int upgradeCount = Math.min(tier.upgradeSlots(), 7);
-        for (int u = 0; u < upgradeCount; u++) {
-            inv.setItem(storageSlots + u, upgradePlaceholder(u + 1));
-        }
-
-        // Info-Item rechts.
-        inv.setItem(infoSlot, infoItem(tier, data, main, accent));
+        return buffer;
     }
 
-    private ItemStack infoItem(BackpackTier tier, BackpackData data, DyeColor main, DyeColor accent) {
+    /** Zeichnet die aktuelle Seite des Holders vollständig neu. */
+    public void renderPage(BackpackMenuHolder holder) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        BackpackTier tier = tiers.get(holder.tierKey());
+
+        int base = holder.pageBase();
+        int active = holder.activeCount();
+        ItemStack[] buffer = holder.buffer();
+
+        // Lager-Bereich (Slots 0..44).
+        for (int slot = 0; slot < BackpackMenuHolder.CONTROL_ROW_START; slot++) {
+            if (slot < active) {
+                int global = base + slot;
+                inv.setItem(slot, global < buffer.length ? buffer[global] : null);
+            } else {
+                inv.setItem(slot, lockedFiller());
+            }
+        }
+
+        fillControlRow(inv, tier, holder);
+
+        // Titel mit Seitenangabe aktualisieren (sofern paging).
+        // (Der Titel ist beim Erstellen gesetzt; eine Aktualisierung erfordert
+        //  ein Neuöffnen – daher wird die Seite zusätzlich im Info-Item gezeigt.)
+    }
+
+    private void fillControlRow(Inventory inv, BackpackTier tier, BackpackMenuHolder holder) {
+        ItemStack filler = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
+        for (int slot = BackpackMenuHolder.CONTROL_ROW_START; slot < BackpackMenuHolder.INVENTORY_SIZE; slot++) {
+            inv.setItem(slot, filler);
+        }
+
+        // Gesperrte Upgrade-Vorschau-Slots.
+        int upgradeCount = tier == null ? 0 : Math.min(tier.upgradeSlots(), BackpackMenuHolder.UPGRADE_SLOTS.length);
+        for (int u = 0; u < upgradeCount; u++) {
+            inv.setItem(BackpackMenuHolder.UPGRADE_SLOTS[u], upgradePlaceholder(u + 1));
+        }
+
+        // Info-Item.
+        inv.setItem(BackpackMenuHolder.INFO_SLOT, infoItem(tier, holder));
+
+        // Blätter-Buttons.
+        if (holder.hasPaging()) {
+            if (holder.currentPage() > 0) {
+                inv.setItem(BackpackMenuHolder.PREV_SLOT,
+                        navButton(Material.ARROW, "<green>◀ Vorherige Seite", holder));
+            }
+            if (holder.currentPage() < holder.pageCount() - 1) {
+                inv.setItem(BackpackMenuHolder.NEXT_SLOT,
+                        navButton(Material.ARROW, "<green>Nächste Seite ▶", holder));
+            }
+        }
+    }
+
+    /** Wechselt die Seite eines geöffneten Backpacks (dupe-sicher). */
+    public void changePage(BackpackMenuHolder holder, int delta) {
+        if (!holder.hasPaging()) return;
+        int target = holder.currentPage() + delta;
+        if (target < 0 || target >= holder.pageCount()) return;
+        flushVisiblePage(holder);
+        holder.currentPage(target);
+        renderPage(holder);
+    }
+
+    /** Kopiert die aktuell sichtbare Seite zurück in den Buffer. */
+    public void flushVisiblePage(BackpackMenuHolder holder) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        int base = holder.pageBase();
+        int active = holder.activeCount();
+        ItemStack[] buffer = holder.buffer();
+        for (int slot = 0; slot < active; slot++) {
+            int global = base + slot;
+            if (global < buffer.length) {
+                buffer[global] = inv.getItem(slot);
+            }
+        }
+    }
+
+    private Component title(BackpackTier tier, BackpackData data, String main, String accent,
+                            BackpackMenuHolder holder) {
+        TextColor mainColor = ColorUtil.toTextColor(main, TextColor.color(0xFFFFFF));
+        TextColor accentColor = ColorUtil.toTextColor(accent, TextColor.color(0xFFFFFF));
+        String pageSuffix = holder.hasPaging()
+                ? " <dark_gray>(Seite " + (holder.currentPage() + 1) + "/" + holder.pageCount() + ")" : "";
+        return mini.deserialize(tier.displayName() + pageSuffix, TagResolver.resolver(
+                Placeholder.component("main_color", Component.text(ColorUtil.pretty(main)).color(mainColor)),
+                Placeholder.component("accent_color", Component.text(ColorUtil.pretty(accent)).color(accentColor)),
+                Placeholder.unparsed("storage", String.valueOf(tier.storageSlots())),
+                Placeholder.unparsed("pages", String.valueOf(holder.pageCount())),
+                Placeholder.unparsed("upgrades", String.valueOf(tier.upgradeSlots())),
+                Placeholder.unparsed("id", data.id().toString().substring(0, 8))
+        )).decoration(TextDecoration.ITALIC, false);
+    }
+
+    private ItemStack infoItem(BackpackTier tier, BackpackMenuHolder holder) {
         ItemStack item = new ItemStack(Material.NAME_TAG);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(mini.deserialize("<gold><bold>Backpack-Info</bold></gold>")
-                .decoration(TextDecoration.ITALIC, false));
+        meta.displayName(line("<gold><bold>Backpack-Info</bold></gold>"));
         List<Component> lore = new ArrayList<>();
-        lore.add(line("<gray>Tier: <white>" + tier.key()));
-        lore.add(line("<gray>ID: <white>" + data.id().toString().substring(0, 8)));
-        lore.add(line("<gray>Lager: <white>" + tier.storageSlots() + " Slots"));
-        lore.add(line("<gray>Hauptfarbe: <white>" + ColorUtil.pretty(main)));
-        lore.add(line("<gray>Akzentfarbe: <white>" + ColorUtil.pretty(accent)));
-        lore.add(line("<gray>Upgrade-Slots: <white>" + tier.upgradeSlots() + " <dark_gray>(Roadmap)"));
+        if (tier != null) {
+            lore.add(line("<gray>Tier: <white>" + tier.key()));
+            lore.add(line("<gray>Lager gesamt: <white>" + tier.storageSlots() + " Slots"));
+            lore.add(line("<gray>Upgrade-Slots: <white>" + tier.upgradeSlots() + " <dark_gray>(Roadmap)"));
+        }
+        lore.add(line("<gray>ID: <white>" + holder.backpackId().toString().substring(0, 8)));
+        lore.add(line("<gray>Haupt: " + ColorUtil.pretty(holder.mainColor())
+                + " <dark_gray>/</dark_gray> <gray>Akzent: " + ColorUtil.pretty(holder.accentColor())));
+        if (holder.hasPaging()) {
+            lore.add(line("<gray>Seite: <white>" + (holder.currentPage() + 1) + "/" + holder.pageCount()));
+        }
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
@@ -194,14 +272,26 @@ public final class BackpackManager {
     private ItemStack upgradePlaceholder(int index) {
         ItemStack item = new ItemStack(Material.IRON_BARS);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(mini.deserialize("<dark_gray>Upgrade-Slot " + index + "</dark_gray>")
-                .decoration(TextDecoration.ITALIC, false));
+        meta.displayName(line("<dark_gray>Upgrade-Slot " + index + "</dark_gray>"));
         List<Component> lore = new ArrayList<>();
         lore.add(line("<dark_gray>Gesperrt"));
         lore.add(line("<gray>Upgrades folgen in einer späteren Version."));
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
+    }
+
+    private ItemStack navButton(Material material, String name, BackpackMenuHolder holder) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line(name));
+        meta.lore(List.of(line("<gray>Seite " + (holder.currentPage() + 1) + "/" + holder.pageCount())));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private ItemStack lockedFiller() {
+        return pane(Material.BLACK_STAINED_GLASS_PANE, Component.text(" "));
     }
 
     private ItemStack pane(Material material, Component name) {
@@ -217,59 +307,53 @@ public final class BackpackManager {
     }
 
     /**
-     * Speichert den Inhalt eines geöffneten Backpacks aus seinem Inventar und
-     * gibt den "geöffnet"-Status frei.
+     * Speichert den Inhalt eines geöffneten Backpacks und gibt den
+     * "geöffnet"-Status frei.
      */
-    public void saveAndRelease(BackpackMenuHolder holder, Inventory inv) {
+    public void saveAndRelease(BackpackMenuHolder holder) {
         try {
+            flushVisiblePage(holder);
             BackpackData data = storage.load(holder.backpackId());
             if (data == null) {
                 data = new BackpackData(holder.backpackId());
                 data.tier(holder.tierKey());
             }
-            ItemStack[] contents = new ItemStack[holder.storageSlots()];
-            for (int i = 0; i < holder.storageSlots(); i++) {
-                contents[i] = inv.getItem(i);
-            }
-            data.contents(contents);
+            data.contents(holder.buffer());
             storage.save(data);
         } catch (Exception ex) {
-            plugin.getLogger().severe("Backpack " + holder.backpackId() + " konnte beim Schließen nicht gespeichert werden: " + ex.getMessage());
+            plugin.getLogger().severe("Backpack " + holder.backpackId()
+                    + " konnte beim Schließen nicht gespeichert werden: " + ex.getMessage());
         } finally {
             openBackpacks.remove(holder.backpackId());
         }
     }
 
-    /** Speichert alle aktuell offenen Backpacks (Autosave / Shutdown). */
+    /** Speichert alle aktuell offenen Backpacks (Autosave / Shutdown), ohne sie zu schließen. */
     public void saveAllOpen() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             Inventory top = player.getOpenInventory().getTopInventory();
             if (top != null && top.getHolder() instanceof BackpackMenuHolder holder) {
-                // Inhalt speichern, aber Status NICHT freigeben (bleibt geöffnet).
+                flushVisiblePage(holder);
                 BackpackData data = storage.load(holder.backpackId());
                 if (data == null) {
                     data = new BackpackData(holder.backpackId());
                     data.tier(holder.tierKey());
                 }
-                ItemStack[] contents = new ItemStack[holder.storageSlots()];
-                for (int i = 0; i < holder.storageSlots(); i++) {
-                    contents[i] = top.getItem(i);
-                }
-                data.contents(contents);
+                data.contents(holder.buffer());
                 storage.save(data);
             }
         }
     }
 
     /** Erzeugt ein neues, sofort registriertes Backpack-Item mit eigener ID. */
-    public ItemStack createNew(BackpackTier tier, UUID owner, DyeColor main, DyeColor accent) {
+    public ItemStack createNew(BackpackTier tier, UUID owner, String main, String accent) {
         UUID id = UUID.randomUUID();
         ItemStack item = items.create(tier, id, main, accent);
         BackpackData data = new BackpackData(id);
         data.owner(owner);
         data.tier(tier.key());
-        data.mainColor(main.name());
-        data.accentColor(accent.name());
+        data.mainColor(main);
+        data.accentColor(accent);
         data.contents(new ItemStack[tier.storageSlots()]);
         storage.save(data);
         return item;

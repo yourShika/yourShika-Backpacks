@@ -4,13 +4,17 @@ import de.yourshika.backpacks.YourShikaBackpacks;
 import de.yourshika.backpacks.tier.BackpackTier;
 import de.yourshika.backpacks.util.ColorUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.DyeColor;
+import org.bukkit.Color;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -25,11 +29,17 @@ import java.util.UUID;
  *
  * <p>Der Inhalt eines Backpacks wird bewusst NICHT im Item gespeichert, sondern
  * server-seitig anhand der ID – das verhindert Item-Duplikation.</p>
+ *
+ * <p>Standard-Material ist ein färbbares Leder-Item: die Hauptfarbe wird real
+ * über {@link LeatherArmorMeta} eingefärbt, sodass die Farbe auch ohne
+ * Resourcepack sichtbar ist. Farben sind Tokens (DyeColor-Name oder Hex).</p>
  */
 public final class BackpackItemFactory {
 
     /** Aktuelle Datenformat-Version eines Backpack-Items. */
     public static final int DATA_VERSION = 1;
+
+    private static final Color DEFAULT_LEATHER = Color.fromRGB(0xA0, 0x70, 0x3C);
 
     private final YourShikaBackpacks plugin;
     private final BackpackKeys keys;
@@ -47,9 +57,10 @@ public final class BackpackItemFactory {
     /**
      * Erstellt ein vollständiges Backpack-Item. {@code id} darf null sein – dann
      * wird beim ersten Öffnen automatisch eine eindeutige ID vergeben
-     * (Lazy-ID, z.B. für gecraftete Backpacks).
+     * (Lazy-ID, z.B. für gecraftete Backpacks). {@code main}/{@code accent} sind
+     * Farb-Tokens (DyeColor-Name oder Hex).
      */
-    public ItemStack create(BackpackTier tier, UUID id, DyeColor main, DyeColor accent) {
+    public ItemStack create(BackpackTier tier, UUID id, String main, String accent) {
         ItemStack item = new ItemStack(tier.material());
         ItemMeta meta = item.getItemMeta();
 
@@ -60,21 +71,21 @@ public final class BackpackItemFactory {
         if (id != null) {
             pdc.set(keys.id, PersistentDataType.STRING, id.toString());
         }
-        pdc.set(keys.mainColor, PersistentDataType.STRING, main.name());
-        pdc.set(keys.accentColor, PersistentDataType.STRING, accent.name());
+        pdc.set(keys.mainColor, PersistentDataType.STRING, main);
+        pdc.set(keys.accentColor, PersistentDataType.STRING, accent);
 
-        if (tier.customModelData() > 0) {
-            meta.setCustomModelData(tier.customModelData());
-        }
+        applyModel(meta, tier);
+
         // Backpacks niemals stapeln – garantiert eindeutige Items.
-        try {
-            meta.setMaxStackSize(1);
-        } catch (Throwable ignored) {
-            // Ältere API ohne setMaxStackSize – unkritisch.
-        }
+        meta.setMaxStackSize(1);
 
         item.setItemMeta(meta);
         applyDisplay(item, tier, id, main, accent);
+
+        // Optionales externes Modell (Nexo/ItemsAdder/Oraxen) überlagern.
+        if (plugin.moduleManager() != null) {
+            plugin.moduleManager().applyExternalModel(item, tier);
+        }
         return item;
     }
 
@@ -83,15 +94,40 @@ public final class BackpackItemFactory {
         return create(tier, null, tier.defaultMainColor(), tier.defaultAccentColor());
     }
 
-    /** Aktualisiert Name und Lore eines bestehenden Backpacks. */
-    public void applyDisplay(ItemStack item, BackpackTier tier, UUID id, DyeColor main, DyeColor accent) {
+    /** Setzt die CustomModelData- und item_model-Component (für Resourcepacks). */
+    private void applyModel(ItemMeta meta, BackpackTier tier) {
+        if (tier.customModelData() > 0) {
+            CustomModelDataComponent component = meta.getCustomModelDataComponent();
+            component.setFloats(List.of((float) tier.customModelData()));
+            meta.setCustomModelDataComponent(component);
+        }
+        if (tier.itemModel() != null && !tier.itemModel().isBlank()) {
+            NamespacedKey model = NamespacedKey.fromString(tier.itemModel());
+            if (model != null) {
+                meta.setItemModel(model);
+            }
+        }
+    }
+
+    /** Aktualisiert Name, Lore und Leder-Färbung eines bestehenden Backpacks. */
+    public void applyDisplay(ItemStack item, BackpackTier tier, UUID id, String main, String accent) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
+        // Echte Leder-Färbung anhand der Hauptfarbe.
+        if (meta instanceof LeatherArmorMeta leather) {
+            leather.setColor(ColorUtil.toBukkitColor(main, DEFAULT_LEATHER));
+        }
+
+        int perPage = plugin.pluginConfig().storageSlotsPerPage();
+        TextColor mainColor = ColorUtil.toTextColor(main, TextColor.color(0xFFFFFF));
+        TextColor accentColor = ColorUtil.toTextColor(accent, TextColor.color(0xFFFFFF));
+
         TagResolver resolvers = TagResolver.resolver(
-                Placeholder.component("main_color", Component.text(ColorUtil.pretty(main)).color(ColorUtil.toTextColor(main))),
-                Placeholder.component("accent_color", Component.text(ColorUtil.pretty(accent)).color(ColorUtil.toTextColor(accent))),
+                Placeholder.component("main_color", Component.text(ColorUtil.pretty(main)).color(mainColor)),
+                Placeholder.component("accent_color", Component.text(ColorUtil.pretty(accent)).color(accentColor)),
                 Placeholder.unparsed("storage", String.valueOf(tier.storageSlots())),
+                Placeholder.unparsed("pages", String.valueOf(tier.pageCount(perPage))),
                 Placeholder.unparsed("upgrades", String.valueOf(tier.upgradeSlots())),
                 Placeholder.unparsed("id", id == null ? "—" : shortId(id))
         );
@@ -131,16 +167,18 @@ public final class BackpackItemFactory {
         }
     }
 
-    public DyeColor getMainColor(ItemStack item, DyeColor fallback) {
+    /** Liefert den Haupt-Farb-Token oder den Fallback. */
+    public String getMainColor(ItemStack item, String fallback) {
         if (!isBackpack(item)) return fallback;
         String raw = item.getItemMeta().getPersistentDataContainer().get(keys.mainColor, PersistentDataType.STRING);
-        return ColorUtil.parseDye(raw, fallback);
+        return raw == null ? fallback : raw;
     }
 
-    public DyeColor getAccentColor(ItemStack item, DyeColor fallback) {
+    /** Liefert den Akzent-Farb-Token oder den Fallback. */
+    public String getAccentColor(ItemStack item, String fallback) {
         if (!isBackpack(item)) return fallback;
         String raw = item.getItemMeta().getPersistentDataContainer().get(keys.accentColor, PersistentDataType.STRING);
-        return ColorUtil.parseDye(raw, fallback);
+        return raw == null ? fallback : raw;
     }
 
     /** Vergibt bei Bedarf eine neue, eindeutige ID und schreibt sie in das Item. */
@@ -151,10 +189,10 @@ public final class BackpackItemFactory {
         return id;
     }
 
-    public void writeColors(ItemStack item, DyeColor main, DyeColor accent) {
+    public void writeColors(ItemStack item, String main, String accent) {
         ItemMeta meta = item.getItemMeta();
-        meta.getPersistentDataContainer().set(keys.mainColor, PersistentDataType.STRING, main.name());
-        meta.getPersistentDataContainer().set(keys.accentColor, PersistentDataType.STRING, accent.name());
+        meta.getPersistentDataContainer().set(keys.mainColor, PersistentDataType.STRING, main);
+        meta.getPersistentDataContainer().set(keys.accentColor, PersistentDataType.STRING, accent);
         item.setItemMeta(meta);
     }
 
