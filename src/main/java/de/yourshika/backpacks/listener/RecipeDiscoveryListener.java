@@ -36,6 +36,7 @@ public final class RecipeDiscoveryListener implements Listener {
         List<NamespacedKey> keys = new ArrayList<>();
         if (plugin.recipeManager() != null) keys.addAll(plugin.recipeManager().keys());
         if (plugin.upgradeManager() != null) keys.addAll(plugin.upgradeManager().keys());
+        if (plugin.functionUpgrades() != null) keys.addAll(plugin.functionUpgrades().keys());
         if (keys.isEmpty()) return;
         try {
             player.discoverRecipes(keys);

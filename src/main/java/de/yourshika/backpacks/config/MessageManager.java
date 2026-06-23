@@ -33,18 +33,18 @@ public final class MessageManager {
         String fileName = "messages_" + language.toLowerCase() + ".yml";
         File file = new File(plugin.getDataFolder(), fileName);
         if (!file.exists()) {
-            // Falls die gewünschte Sprache nicht existiert, Standard (de) speichern.
+            // If the requested language does not exist, fall back to English.
             if (plugin.getResource(fileName) != null) {
                 plugin.saveResource(fileName, false);
             } else {
-                plugin.saveResource("messages_de.yml", false);
-                file = new File(plugin.getDataFolder(), "messages_de.yml");
+                plugin.saveResource("messages_en.yml", false);
+                file = new File(plugin.getDataFolder(), "messages_en.yml");
             }
         }
         messages = YamlConfiguration.loadConfiguration(file);
 
-        // Defaults aus dem JAR als Fallback einhängen (fehlende Keys ergänzen).
-        InputStream def = plugin.getResource("messages_de.yml");
+        // Hook in the bundled English defaults as a fallback (fills missing keys).
+        InputStream def = plugin.getResource("messages_en.yml");
         if (def != null) {
             messages.setDefaults(YamlConfiguration.loadConfiguration(
                     new InputStreamReader(def, StandardCharsets.UTF_8)));

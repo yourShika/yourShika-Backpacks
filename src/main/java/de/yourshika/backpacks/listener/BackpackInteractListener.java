@@ -53,6 +53,12 @@ public final class BackpackInteractListener implements Listener {
                 plugin.messages().send(player, "error.no-place");
                 return;
             }
+            // Optional: Platzieren nur erlauben, wenn PacketEvents aktiv ist.
+            if (plugin.pluginConfig().placeRequiresPacketEvents()
+                    && !plugin.moduleManager().isActive("packetevents")) {
+                plugin.messages().send(player, "error.place-needs-packetevents");
+                return;
+            }
             if (!plugin.pluginConfig().isWorldAllowed(player.getWorld().getName())) {
                 plugin.messages().send(player, "error.world-disabled");
                 return;

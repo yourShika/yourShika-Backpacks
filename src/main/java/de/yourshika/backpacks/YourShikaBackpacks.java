@@ -39,18 +39,19 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private ModuleManager moduleManager;
     private de.yourshika.backpacks.upgrade.UpgradeItemFactory upgradeItems;
     private de.yourshika.backpacks.upgrade.UpgradeManager upgradeManager;
+    private de.yourshika.backpacks.upgrade.FunctionUpgradeManager functionUpgrades;
     private de.yourshika.backpacks.place.PlaceableManager placeableManager;
 
     private BukkitTask autosaveTask;
 
     /** Aktuelle Struktur-Version der config.yml. */
-    private static final int CONFIG_VERSION = 4;
+    private static final int CONFIG_VERSION = 5;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         migrateConfig();
-        saveResourceIfMissing("messages_de.yml");
+        saveResourceIfMissing("messages_en.yml");
 
         this.pluginConfig = new PluginConfig(this);
         this.pluginConfig.load();
@@ -109,6 +110,15 @@ public final class YourShikaBackpacks extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(upgradeManager, this);
         this.upgradeManager.registerAll();
 
+        // Funktionale Upgrades (Pickup, Magnet, Crafting, ...).
+        this.functionUpgrades = new de.yourshika.backpacks.upgrade.FunctionUpgradeManager(
+                this, upgradeItems, upgradeManager);
+        this.functionUpgrades.registerAll();
+        Bukkit.getPluginManager().registerEvents(
+                new de.yourshika.backpacks.listener.UpgradeEffectListener(this, manager), this);
+        new de.yourshika.backpacks.listener.UpgradeMagnetTask(this, manager)
+                .runTaskTimer(this, 20L, 8L);
+
         // Befehle.
         BackpackCommand command = new BackpackCommand(this, manager, tiers);
         PluginCommand pc = getCommand("backpack");
@@ -147,6 +157,9 @@ public final class YourShikaBackpacks extends JavaPlugin {
         if (upgradeManager != null) {
             upgradeManager.unregisterAll();
         }
+        if (functionUpgrades != null) {
+            functionUpgrades.unregisterAll();
+        }
         if (storage != null) {
             storage.close();
         }
@@ -184,6 +197,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
         moduleManager.reload();
         recipeManager.registerAll();
         upgradeManager.registerAll();
+        functionUpgrades.registerAll();
         if (autosaveTask != null) {
             autosaveTask.cancel();
             autosaveTask = null;
@@ -280,6 +294,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     public ModuleManager moduleManager() { return moduleManager; }
     public RecipeManager recipeManager() { return recipeManager; }
     public de.yourshika.backpacks.upgrade.UpgradeManager upgradeManager() { return upgradeManager; }
+    public de.yourshika.backpacks.upgrade.FunctionUpgradeManager functionUpgrades() { return functionUpgrades; }
     public de.yourshika.backpacks.upgrade.UpgradeItemFactory upgradeItems() { return upgradeItems; }
     public de.yourshika.backpacks.place.PlaceableManager placeableManager() { return placeableManager; }
 }

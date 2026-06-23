@@ -33,12 +33,43 @@ public final class UpgradeItemFactory {
 
     private final NamespacedKey baseMarker;   // markiert das Upgrade-Leder
     private final NamespacedKey typeKey;      // Ziel-Tier eines Tier-Upgrades
+    private final NamespacedKey functionKey;  // Funktions-Upgrade (pickup, magnet, ...)
     private final YourShikaBackpacks plugin;
 
     public UpgradeItemFactory(YourShikaBackpacks plugin) {
         this.plugin = plugin;
         this.baseMarker = new NamespacedKey(plugin, "upgrade_base");
         this.typeKey = new NamespacedKey(plugin, "upgrade_type");
+        this.functionKey = new NamespacedKey(plugin, "upgrade_function");
+    }
+
+    /** Ein Funktions-Upgrade (z.B. "pickup", "magnet", "crafting", ...). */
+    public ItemStack functionUpgrade(String functionId, String displayName, List<String> loreMini,
+                                     int cmd, String itemModel, String providerId) {
+        ItemStack item = new ItemStack(Material.PAPER);
+        ItemMeta meta = item.getItemMeta();
+        meta.getPersistentDataContainer().set(functionKey, PersistentDataType.STRING, functionId);
+        meta.displayName(MINI.deserialize(displayName).decoration(TextDecoration.ITALIC, false));
+        List<Component> lore = new java.util.ArrayList<>();
+        for (String l : loreMini) lore.add(line(l));
+        meta.lore(lore);
+        applyCmd(meta, cmd);
+        applyModel(meta, itemModel);
+        item.setItemMeta(meta);
+        applyExternalModel(item, providerId);
+        return item;
+    }
+
+    public boolean isFunctionUpgrade(ItemStack item) {
+        return getFunctionType(item) != null;
+    }
+
+    /** Funktions-Typ eines Funktions-Upgrades oder null. */
+    public String getFunctionType(ItemStack item) {
+        if (item == null) return null;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return null;
+        return meta.getPersistentDataContainer().get(functionKey, PersistentDataType.STRING);
     }
 
     /** Das Basis-Item "Upgrade-Leder" mit konfigurierbarem Modell. */
@@ -121,8 +152,8 @@ public final class UpgradeItemFactory {
         return meta.getPersistentDataContainer().get(typeKey, PersistentDataType.STRING);
     }
 
-    /** Ist das Item irgendein Upgrade-Item (Basis oder Tier-Upgrade)? */
+    /** Ist das Item irgendein Upgrade-Item (Basis, Tier- oder Funktions-Upgrade)? */
     public boolean isAnyUpgrade(ItemStack item) {
-        return isUpgradeBase(item) || isTierUpgrade(item);
+        return isUpgradeBase(item) || isTierUpgrade(item) || isFunctionUpgrade(item);
     }
 }

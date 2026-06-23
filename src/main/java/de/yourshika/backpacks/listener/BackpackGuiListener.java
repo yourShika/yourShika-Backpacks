@@ -74,6 +74,17 @@ public final class BackpackGuiListener implements Listener {
             return;
         }
 
+        // 0c) Stations-Buttons (Crafting/Stonecutter/Smithing) – nur wenn das
+        //     passende Funktions-Upgrade verbaut ist.
+        if (clickedTop && raw >= BackpackMenuHolder.CONTROL_ROW_START) {
+            String station = BackpackMenuHolder.stationAt(raw);
+            if (station != null && manager.functionUpgradesOf(holder.backpackId()).contains(station)) {
+                event.setCancelled(true);
+                plugin.getServer().getScheduler().runTask(plugin, () -> manager.openStation(player, station));
+                return;
+            }
+        }
+
         // 1) Doppelklick (Items zusammenführen) komplett unterbinden.
         if (action == InventoryAction.COLLECT_TO_CURSOR) {
             event.setCancelled(true);

@@ -1,0 +1,77 @@
+# ============================================================================
+#  yourShika Backpack's – Messages (English)
+#  Supports MiniMessage AND legacy &-color codes. Placeholders: <name>
+# ============================================================================
+
+prefix: "<gradient:#6E5BC8:#5BE8D4><bold>Backpacks</bold></gradient> <dark_gray>»</dark_gray> "
+
+help:
+  header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Commands"
+  open: "<yellow>/bp open <gray>– Open the backpack in your hand"
+  info: "<yellow>/bp info <gray>– View backpacks, upgrades & recipes"
+  color: "<yellow>/bp color <color> [accent] <gray>– Dye a backpack (name or #RRGGBB)"
+  list: "<yellow>/bp list [player] <gray>– List backpacks"
+  give: "<yellow>/bp give <player> <tier> [amount] [color] [accent] <gray>– Give a backpack"
+  openid: "<yellow>/bp openid <id> <gray>– Open a backpack by ID"
+  modules: "<yellow>/bp modules <gray>– Toggle external modules"
+  update: "<yellow>/bp update <gray>– Download the latest version from GitHub"
+  reload: "<yellow>/bp reload <gray>– Reload the configuration"
+  footer: "<dark_gray>Inspired by Sophisticated Backpacks – a standalone server plugin."
+
+error:
+  no-permission: "<red>You don't have permission to do that."
+  players-only: "<red>This command is for players only."
+  hold-backpack: "<red>Hold a backpack in your hand."
+  invalid-backpack: "<red>This backpack is invalid or corrupted."
+  already-open: "<red>This backpack is already open."
+  id-not-found: "<red>No backpack found with that ID."
+  invalid-id: "<red>Invalid ID: <white><input></white>"
+  world-disabled: "<red>Backpacks are disabled in this world."
+  no-nesting: "<red>Backpacks cannot be placed inside backpacks."
+  unknown-subcommand: "<red>Unknown command: <white><input></white> <gray>– /bp help"
+  color-usage: "<red>Usage: /bp color <color> [accent] <gray>(name or #RRGGBB)"
+  give-usage: "<red>Usage: /bp give <player> <tier> [amount] [color] [accent]"
+  openid-usage: "<red>Usage: /bp openid <id>"
+  invalid-color: "<red>Unknown color: <white><input></white>"
+  invalid-tier: "<red>Unknown tier: <white><input></white>"
+  invalid-number: "<red>Not a valid number: <white><input></white>"
+  player-not-found: "<red>Player not found: <white><input></white>"
+  no-horse-armor: "<red>A backpack cannot be used as horse armor."
+  not-owner: "<red>This backpack does not belong to you."
+  no-place: "<red>You may not place backpacks here."
+  place-disabled: "<red>Placeable backpacks are disabled."
+  place-occupied: "<red>A backpack is already placed here."
+  place-needs-packetevents: "<red>Placing backpacks requires the PacketEvents module to be installed and enabled."
+  update-usage: "<red>Usage: /bp update <gray>(downloads the latest version from GitHub)"
+
+color:
+  success: "<green>Backpack dyed: <white><main></white> <gray>/</gray> <white><accent></white>"
+
+place:
+  success: "<green>Backpack placed. <gray>Right-click to open, sneak-right-click to pick up."
+  removed: "<green>Backpack picked up."
+
+upgrades:
+  title: "<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>(<tier>)"
+  no-upgrade-item: "<red>Only upgrade items can be placed here."
+
+update:
+  checking: "<gray>Checking GitHub for the latest version …"
+  up-to-date: "<green>Already up to date (v<version>)."
+  downloading: "<gray>Downloading <white><version></white> …"
+  success: "<green>Update <white><version></white> downloaded. <yellow>Restart the server to apply it."
+  failed: "<red>Update failed: <white><error></white>"
+
+list:
+  header: "<gold>Backpacks of <white><player></white>: <yellow><count></yellow>"
+  entry: "<dark_gray>• <gray>ID <white><id></white> <dark_gray>– <gray>Tier <white><tier></white>"
+
+give:
+  success: "<green>Gave <amount>x <white><tier></white> backpack to <white><player></white>."
+  received: "<green>You received <white><amount>x <tier></white> backpack."
+
+reload:
+  success: "<green>Configuration reloaded."
+
+version:
+  info: "<gray>yourShika Backpack's <white>v<version></white> <dark_gray>| <gray>Tiers: <white><tiers></white> <dark_gray>| <gray>stored: <white><count></white>"

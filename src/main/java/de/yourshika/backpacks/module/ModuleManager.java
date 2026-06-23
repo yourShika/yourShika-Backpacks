@@ -69,6 +69,14 @@ public final class ModuleManager {
         return Collections.unmodifiableList(modules);
     }
 
+    /** Ist das Modul mit dieser ID aktuell aktiv? */
+    public boolean isActive(String id) {
+        for (Module module : modules) {
+            if (module.id().equalsIgnoreCase(id)) return module.isActive();
+        }
+        return false;
+    }
+
     /** Aktuell aktiver externer Item-Anbieter (oder null = Vanilla). */
     public CustomItemProvider activeItemProvider() {
         for (ExternalItemModule module : itemModules) {

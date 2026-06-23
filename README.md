@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.4.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.5.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,30 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## ✨ v0.5.0 (English + Functional Upgrades)
+
+- 🌐 **Plugin is now English by default** (`language: en`, `messages_en.yml`).
+  German is still bundled (`messages_de.yml`) and comes back as a full option later.
+- 🧩 **Functional upgrades** you craft and install into a backpack (via its
+  **Upgrades** menu):
+  - **Pickup / Advanced Pickup** – picked-up items go straight into the backpack
+    (advanced also vacuums a small radius).
+  - **Magnet / Advanced Magnet** – pulls nearby dropped items towards you.
+  - **Crafting / Stonecutter / Smithing** – open that station from a button in
+    the backpack GUI.
+  - **Everlasting** – the dropped backpack is immune to fire, lava, explosions
+    and never despawns.
+  - Each has a **fair recipe** (`'U'` = Upgrade Leather) and appears in
+    **`/bp info` → Function Upgrades**.
+- 📖 **`/bp info`** fully English; smithing view reworked (inputs in a row, a
+  **centered arrow**, the **result above the Back button**).
+- 📦 **PacketEvents:** placement uses vanilla display entities and does **not**
+  require it. Optional `placeable.require-packetevents: true` only allows placing
+  while PacketEvents is installed & enabled.
+- 🗂️ **Config version 5** (auto-migrates; old file backed up).
 
 ---
 
@@ -426,7 +450,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.4.0.jar
+target/yourShika-Backpacks-0.5.0.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

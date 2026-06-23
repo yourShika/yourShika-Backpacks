@@ -46,6 +46,9 @@ public final class BackpackManager {
     /** backpackId -> Viewer-UUID (genau ein Betrachter pro Backpack). */
     private final Map<UUID, UUID> openBackpacks = new ConcurrentHashMap<>();
 
+    /** Cache: backpackId -> Set installierter Funktions-Upgrade-IDs. */
+    private final Map<UUID, java.util.Set<String>> functionCache = new ConcurrentHashMap<>();
+
     public BackpackManager(YourShikaBackpacks plugin, BackpackStorage storage,
                            BackpackItemFactory items, TierRegistry tiers) {
         this.plugin = plugin;
@@ -221,6 +224,21 @@ public final class BackpackManager {
             inv.setItem(BackpackMenuHolder.UPGRADE_BUTTON, upgradeButton(tier));
         }
 
+        // Stations-Buttons je nach verbauten Funktions-Upgrades.
+        java.util.Set<String> functions = functionUpgradesOf(holder.backpackId());
+        if (functions.contains("crafting")) {
+            inv.setItem(BackpackMenuHolder.STATION_CRAFTING,
+                    stationButton(Material.CRAFTING_TABLE, "<aqua>Crafting"));
+        }
+        if (functions.contains("stonecutter")) {
+            inv.setItem(BackpackMenuHolder.STATION_STONECUTTER,
+                    stationButton(Material.STONECUTTER, "<aqua>Stonecutter"));
+        }
+        if (functions.contains("smithing")) {
+            inv.setItem(BackpackMenuHolder.STATION_SMITHING,
+                    stationButton(Material.SMITHING_TABLE, "<aqua>Smithing Table"));
+        }
+
         // Info-Item.
         inv.setItem(BackpackMenuHolder.INFO_SLOT, infoItem(tier, holder));
 
@@ -297,6 +315,33 @@ public final class BackpackManager {
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
+    }
+
+    private ItemStack stationButton(Material material, String name) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line(name + " <gray>Upgrade"));
+        meta.lore(List.of(line("<yellow>Click to open")));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    /** Öffnet die Vanilla-Station (Crafting/Stonecutter/Smithing) für ein Stations-Upgrade. */
+    public void openStation(Player player, String station) {
+        try {
+            switch (station) {
+                case "crafting" -> player.openWorkbench(null, true);
+                case "stonecutter" -> player.openInventory(
+                        org.bukkit.inventory.MenuType.STONECUTTER.create(player,
+                                net.kyori.adventure.text.Component.text("Stonecutter")));
+                case "smithing" -> player.openInventory(
+                        org.bukkit.inventory.MenuType.SMITHING.create(player,
+                                net.kyori.adventure.text.Component.text("Smithing Table")));
+                default -> { }
+            }
+        } catch (Throwable t) {
+            plugin.getLogger().warning("Station '" + station + "' konnte nicht geöffnet werden: " + t.getMessage());
+        }
     }
 
     private ItemStack upgradeButton(BackpackTier tier) {
@@ -429,6 +474,109 @@ public final class BackpackManager {
         }
         data.upgrades(up);
         storage.save(data);
+        functionCache.put(holder.backpackId(), computeFunctions(up));
+    }
+
+    // ---- Funktions-Upgrades ----------------------------------------------
+
+    private java.util.Set<String> computeFunctions(ItemStack[] upgrades) {
+        java.util.Set<String> set = new java.util.HashSet<>();
+        if (upgrades != null) {
+            var factory = plugin.upgradeItems();
+            for (ItemStack it : upgrades) {
+                String fn = factory.getFunctionType(it);
+                if (fn != null) set.add(fn);
+            }
+        }
+        return set;
+    }
+
+    /** Installierte Funktions-Upgrade-IDs eines Backpacks (gecacht). */
+    public java.util.Set<String> functionUpgradesOf(UUID backpackId) {
+        java.util.Set<String> cached = functionCache.get(backpackId);
+        if (cached != null) return cached;
+        BackpackData data = storage.load(backpackId);
+        java.util.Set<String> set = computeFunctions(data == null ? null : data.upgrades());
+        functionCache.put(backpackId, set);
+        return set;
+    }
+
+    /** Größter Magnet-Radius unter den eingebauten radius-basierten Upgrades (0 = keiner). */
+    public int magnetRadius(Player player) {
+        int best = 0;
+        for (ItemStack it : player.getInventory().getContents()) {
+            if (!items.isBackpack(it)) continue;
+            UUID id = items.getId(it);
+            if (id == null) continue;
+            for (String fn : functionUpgradesOf(id)) {
+                var u = de.yourshika.backpacks.upgrade.FunctionUpgrade.byId(fn);
+                if (u != null && u.radius() > best) best = u.radius();
+            }
+        }
+        return best;
+    }
+
+    /** Liefert eine Backpack-ID im Inventar des Spielers mit dem Upgrade (oder null). */
+    public UUID findBackpackWithFunction(Player player, String functionId) {
+        for (ItemStack it : player.getInventory().getContents()) {
+            if (!items.isBackpack(it)) continue;
+            UUID id = items.getId(it);
+            if (id == null) continue;
+            if (functionUpgradesOf(id).contains(functionId)) return id;
+        }
+        return null;
+    }
+
+    /**
+     * Legt ein Item in den Lager-Inhalt eines (nicht geöffneten) Backpacks.
+     * Verändert {@code stack} (reduziert Menge). Gibt true zurück, wenn etwas
+     * untergebracht wurde. Geöffnete Backpacks werden übersprungen (der offene
+     * Puffer ist dann maßgeblich).
+     */
+    public boolean depositItem(UUID backpackId, ItemStack stack) {
+        if (stack == null || stack.getType().isAir()) return false;
+        if (isOpen(backpackId)) return false;
+        BackpackData data = storage.load(backpackId);
+        if (data == null) return false;
+        BackpackTier tier = tiers.get(data.tier());
+        if (tier == null) return false;
+
+        int capacity = tier.storageSlots();
+        ItemStack[] contents = data.contents();
+        if (contents == null || contents.length < capacity) {
+            ItemStack[] grown = new ItemStack[capacity];
+            if (contents != null) System.arraycopy(contents, 0, grown, 0, Math.min(contents.length, capacity));
+            contents = grown;
+        }
+
+        int before = stack.getAmount();
+        int max = stack.getMaxStackSize();
+        // 1) In passende Stacks einfügen.
+        for (int i = 0; i < capacity && stack.getAmount() > 0; i++) {
+            ItemStack slot = contents[i];
+            if (slot != null && slot.isSimilar(stack)) {
+                int space = slot.getMaxStackSize() - slot.getAmount();
+                if (space > 0) {
+                    int add = Math.min(space, stack.getAmount());
+                    slot.setAmount(slot.getAmount() + add);
+                    stack.setAmount(stack.getAmount() - add);
+                }
+            }
+        }
+        // 2) In leere Slots.
+        for (int i = 0; i < capacity && stack.getAmount() > 0; i++) {
+            if (contents[i] == null || contents[i].getType().isAir()) {
+                int add = Math.min(max, stack.getAmount());
+                ItemStack copy = stack.clone();
+                copy.setAmount(add);
+                contents[i] = copy;
+                stack.setAmount(stack.getAmount() - add);
+            }
+        }
+        if (stack.getAmount() == before) return false; // nichts ging rein
+        data.contents(contents);
+        storage.save(data);
+        return true;
     }
 
     private ItemStack backButton() {

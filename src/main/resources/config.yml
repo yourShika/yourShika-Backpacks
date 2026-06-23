@@ -8,10 +8,10 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 4
+config-version: 5
 
-# Sprache der messages_<sprache>.yml (Standard: de).
-language: de
+# Language file messages_<language>.yml (default: en). German (de) is bundled too.
+language: en
 
 # Debug-Ausgaben in der Server-Konsole.
 debug: false
@@ -82,6 +82,11 @@ worlds:
 placeable:
   enabled: true
   protect-from-explosions: true
+  # Placement uses vanilla display entities and does NOT require PacketEvents.
+  # If you set this to true, placing is only allowed while the PacketEvents
+  # module is installed AND enabled (useful if you later switch to a
+  # packet-based representation). Default: false.
+  require-packetevents: false
 
 # ---------------------------------------------------------------------------
 #  Backpack-Tiers
@@ -107,7 +112,7 @@ placeable:
 # ---------------------------------------------------------------------------
 tiers:
   leather:
-    display-name: "<#A0703C>Leder-Rucksack</#A0703C>"
+    display-name: "<#A0703C>Leather Backpack</#A0703C>"
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1001
     item-model: ""
@@ -118,13 +123,13 @@ tiers:
     default-accent-color: "#E08A2B"
     permission: ""
     lore:
-      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Storage: <white><storage> <gray>slots <dark_gray>(<pages> p.)"
       - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
-      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
-      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Color: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Owner: <white><owner>"
       - ""
-      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
-      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<yellow>➜ <gray>Right-click to <white>open"
+      - "<yellow>➜ <gray>Sneak-right-click to <white>place"
       - "<dark_gray><id>"
     recipe:
       enabled: true
@@ -137,7 +142,7 @@ tiers:
         C: CHEST
 
   copper:
-    display-name: "<#C87B53>Kupfer-Rucksack</#C87B53>"
+    display-name: "<#C87B53>Copper Backpack</#C87B53>"
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1002
     item-model: ""
@@ -148,13 +153,13 @@ tiers:
     default-accent-color: "#7A4A2B"
     permission: ""
     lore:
-      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Storage: <white><storage> <gray>slots <dark_gray>(<pages> p.)"
       - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
-      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
-      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Color: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Owner: <white><owner>"
       - ""
-      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
-      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<yellow>➜ <gray>Right-click to <white>open"
+      - "<yellow>➜ <gray>Sneak-right-click to <white>place"
       - "<dark_gray><id>"
     # Höhere Tiers werden NICHT direkt gecraftet, sondern über die Upgrade-Kette
     # (Smithing Table) erstellt. Daher ist das direkte Rezept deaktiviert.
@@ -169,7 +174,7 @@ tiers:
         H: CHEST
 
   iron:
-    display-name: "<#D8D8D8>Eisen-Rucksack</#D8D8D8>"
+    display-name: "<#D8D8D8>Iron Backpack</#D8D8D8>"
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1003
     item-model: ""
@@ -180,13 +185,13 @@ tiers:
     default-accent-color: "#8E8E8E"
     permission: ""
     lore:
-      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Storage: <white><storage> <gray>slots <dark_gray>(<pages> p.)"
       - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
-      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
-      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Color: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Owner: <white><owner>"
       - ""
-      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
-      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<yellow>➜ <gray>Right-click to <white>open"
+      - "<yellow>➜ <gray>Sneak-right-click to <white>place"
       - "<dark_gray><id>"
     recipe:
       enabled: false
@@ -199,7 +204,7 @@ tiers:
         H: CHEST
 
   gold:
-    display-name: "<#F2D14E>Gold-Rucksack</#F2D14E>"
+    display-name: "<#F2D14E>Gold Backpack</#F2D14E>"
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1004
     item-model: ""
@@ -210,13 +215,13 @@ tiers:
     default-accent-color: "#B8860B"
     permission: ""
     lore:
-      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Storage: <white><storage> <gray>slots <dark_gray>(<pages> p.)"
       - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
-      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
-      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Color: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Owner: <white><owner>"
       - ""
-      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
-      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<yellow>➜ <gray>Right-click to <white>open"
+      - "<yellow>➜ <gray>Sneak-right-click to <white>place"
       - "<dark_gray><id>"
     recipe:
       enabled: false
@@ -229,7 +234,7 @@ tiers:
         H: CHEST
 
   diamond:
-    display-name: "<#5BE8D4>Diamant-Rucksack</#5BE8D4>"
+    display-name: "<#5BE8D4>Diamond Backpack</#5BE8D4>"
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1005
     item-model: ""
@@ -240,13 +245,13 @@ tiers:
     default-accent-color: "#3FA9F5"
     permission: ""
     lore:
-      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Storage: <white><storage> <gray>slots <dark_gray>(<pages> p.)"
       - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
-      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
-      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Color: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Owner: <white><owner>"
       - ""
-      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
-      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<yellow>➜ <gray>Right-click to <white>open"
+      - "<yellow>➜ <gray>Sneak-right-click to <white>place"
       - "<dark_gray><id>"
     recipe:
       enabled: false
@@ -259,7 +264,7 @@ tiers:
         H: CHEST
 
   emerald:
-    display-name: "<#3BD16F>Smaragd-Rucksack</#3BD16F>"
+    display-name: "<#3BD16F>Emerald Backpack</#3BD16F>"
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1006
     item-model: ""
@@ -270,13 +275,13 @@ tiers:
     default-accent-color: "#1E7A3C"
     permission: ""
     lore:
-      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Storage: <white><storage> <gray>slots <dark_gray>(<pages> p.)"
       - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
-      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
-      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Color: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Owner: <white><owner>"
       - ""
-      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
-      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<yellow>➜ <gray>Right-click to <white>open"
+      - "<yellow>➜ <gray>Sneak-right-click to <white>place"
       - "<dark_gray><id>"
     recipe:
       enabled: false
@@ -289,7 +294,7 @@ tiers:
         H: CHEST
 
   netherite:
-    display-name: "<#6E5BC8>Netherite-Rucksack</#6E5BC8>"
+    display-name: "<#6E5BC8>Netherite Backpack</#6E5BC8>"
     material: LEATHER_HORSE_ARMOR
     custom-model-data: 1007
     item-model: ""
@@ -300,13 +305,13 @@ tiers:
     default-accent-color: "#1A1A1A"
     permission: ""
     lore:
-      - "<dark_gray>▏ <gray>Lager: <white><storage> <gray>Slots <dark_gray>(<pages> S.)"
+      - "<dark_gray>▏ <gray>Storage: <white><storage> <gray>slots <dark_gray>(<pages> p.)"
       - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
-      - "<dark_gray>▏ <gray>Farbe: <main_color> <dark_gray>·</dark_gray> <accent_color>"
-      - "<dark_gray>▏ <gray>Besitzer: <white><owner>"
+      - "<dark_gray>▏ <gray>Color: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Owner: <white><owner>"
       - ""
-      - "<yellow>➜ <gray>Rechtsklick zum <white>Öffnen"
-      - "<yellow>➜ <gray>Shift-Rechtsklick zum <white>Platzieren"
+      - "<yellow>➜ <gray>Right-click to <white>open"
+      - "<yellow>➜ <gray>Sneak-right-click to <white>place"
       - "<dark_gray><id>"
     recipe:
       enabled: false
@@ -353,6 +358,20 @@ upgrades:
     diamond:   { custom-model-data: 2004, item-model: "", provider-id: "ysbp_upgrade_diamond" }
     emerald:   { custom-model-data: 2005, item-model: "", provider-id: "ysbp_upgrade_emerald" }
     netherite: { custom-model-data: 2006, item-model: "", provider-id: "ysbp_upgrade_netherite" }
+  # Functional upgrades that are installed INTO a backpack (via its Upgrades menu).
+  # Each has a fair crafting recipe ('U' = Upgrade Leather). Models are prepared
+  # for Oraxen/Resourcepacks via custom-model-data / provider-id.
+  functions:
+    enabled: true
+    models:
+      pickup:          { custom-model-data: 2100, item-model: "", provider-id: "ysbp_upgrade_pickup" }
+      advanced_pickup: { custom-model-data: 2101, item-model: "", provider-id: "ysbp_upgrade_advanced_pickup" }
+      magnet:          { custom-model-data: 2102, item-model: "", provider-id: "ysbp_upgrade_magnet" }
+      advanced_magnet: { custom-model-data: 2103, item-model: "", provider-id: "ysbp_upgrade_advanced_magnet" }
+      crafting:        { custom-model-data: 2114, item-model: "", provider-id: "ysbp_upgrade_crafting" }
+      stonecutter:     { custom-model-data: 2123, item-model: "", provider-id: "ysbp_upgrade_stonecutter" }
+      smithing:        { custom-model-data: 2125, item-model: "", provider-id: "ysbp_upgrade_smithing" }
+      everlasting:     { custom-model-data: 2144, item-model: "", provider-id: "ysbp_upgrade_everlasting" }
 
 # ---------------------------------------------------------------------------
 #  Externe Module / Hooks

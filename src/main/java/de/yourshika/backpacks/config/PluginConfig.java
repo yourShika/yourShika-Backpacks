@@ -21,6 +21,7 @@ public final class PluginConfig {
     private int storageSlotsPerPage;
     private boolean recipesEnabled;
     private boolean placeableEnabled;
+    private boolean placeRequiresPacketEvents;
     private boolean allowNesting;
     private boolean ownerOnly;
     private boolean rightClickOpen;
@@ -34,7 +35,7 @@ public final class PluginConfig {
 
     public void load() {
         FileConfiguration c = plugin.getConfig();
-        language = c.getString("language", "de");
+        language = c.getString("language", "en");
         debug = c.getBoolean("debug", false);
         storageType = c.getString("storage.type", "SQLITE").toUpperCase(Locale.ROOT);
         autosaveEnabled = c.getBoolean("storage.autosave.enabled", true);
@@ -42,6 +43,7 @@ public final class PluginConfig {
         storageSlotsPerPage = Math.max(1, Math.min(45, c.getInt("gui.storage-slots-per-page", 45)));
         recipesEnabled = c.getBoolean("crafting.enabled", true);
         placeableEnabled = c.getBoolean("placeable.enabled", false);
+        placeRequiresPacketEvents = c.getBoolean("placeable.require-packetevents", false);
         allowNesting = c.getBoolean("security.allow-nesting", false);
         ownerOnly = c.getBoolean("security.owner-only", false);
         rightClickOpen = c.getBoolean("open.right-click", true);
@@ -73,6 +75,7 @@ public final class PluginConfig {
     public int storageSlotsPerPage() { return storageSlotsPerPage; }
     public boolean recipesEnabled() { return recipesEnabled; }
     public boolean placeableEnabled() { return placeableEnabled; }
+    public boolean placeRequiresPacketEvents() { return placeRequiresPacketEvents; }
     public boolean allowNesting() { return allowNesting; }
     public boolean ownerOnly() { return ownerOnly; }
     public boolean rightClickOpen() { return rightClickOpen; }

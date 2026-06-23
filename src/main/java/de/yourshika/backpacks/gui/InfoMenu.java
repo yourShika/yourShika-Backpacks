@@ -25,16 +25,19 @@ public final class InfoMenu {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
-    // Crafting-Grid-Slots (3x3) + Pfeil + Ergebnis.
+    // Crafting grid (3x3) + arrow + result.
     private static final int[] GRID = {10, 11, 12, 19, 20, 21, 28, 29, 30};
     private static final int ARROW = 24;
     private static final int RESULT = 25;
     private static final int BACK = 49;
 
-    // Smithing-Slots.
-    private static final int S_TEMPLATE = 11;
-    private static final int S_BASE = 13;
-    private static final int S_ADDITION = 15;
+    // Smithing layout: inputs in a row, a centered arrow below, the result
+    // directly above the Back button.
+    private static final int S_TEMPLATE = 20;
+    private static final int S_BASE = 22;
+    private static final int S_ADDITION = 24;
+    private static final int S_ARROW = 31;
+    private static final int S_RESULT = 40;
 
     private InfoMenu() {}
 
@@ -43,12 +46,12 @@ public final class InfoMenu {
     public static void openOverview(YourShikaBackpacks plugin, Player player) {
         InfoMenuHolder holder = new InfoMenuHolder();
         Inventory inv = Bukkit.createInventory(holder, 54,
-                line("<gradient:#6E5BC8:#5BE8D4><bold>Backpack-Übersicht</bold></gradient>"));
+                line("<gradient:#6E5BC8:#5BE8D4><bold>Backpack Overview</bold></gradient>"));
         holder.setInventory(inv);
         fill(inv);
 
-        inv.setItem(4, header("<gold><bold>Rücksäcke & Upgrades</bold></gold>",
-                List.of("<gray>Klicke ein Item, um sein", "<gray>Rezept anzuzeigen.")));
+        inv.setItem(4, header("<gold><bold>Backpacks & Upgrades</bold></gold>",
+                List.of("<gray>Click an item to view", "<gray>its recipe.")));
 
         // Rücksäcke (Reihe 2).
         int slot = 10;
@@ -61,8 +64,8 @@ public final class InfoMenu {
 
         // Upgrade-Items (Reihe 4).
         UpgradeManager um = plugin.upgradeManager();
-        inv.setItem(27, header("<#A0703C><bold>Upgrade-Items</bold></#A0703C>",
-                List.of("<gray>Die Bausteine der Upgrade-Kette.")));
+        inv.setItem(27, header("<#A0703C><bold>Upgrade Items</bold></#A0703C>",
+                List.of("<gray>The building blocks of the upgrade chain.")));
         int us = 28;
         ItemStack base = um.baseUpgradeItem();
         if (base != null) {
@@ -78,10 +81,18 @@ public final class InfoMenu {
             inv.setItem(us++, withHint(up));
         }
 
+        // Function upgrades entry.
+        ItemStack fnIcon = plugin.functionUpgrades().item("pickup");
+        if (fnIcon == null) fnIcon = icon(Material.HOPPER, "<aqua>Function Upgrades");
+        holder.mapAction(8, "functions");
+        inv.setItem(8, header("<aqua><bold>Function Upgrades</bold></aqua>",
+                List.of("<gray>Pickup, Magnet, Crafting,", "<gray>Smithing, Everlasting …",
+                        "", "<yellow>» Click to view")));
+
         player.openInventory(inv);
     }
 
-    // --- Rezept-Ansichten --------------------------------------------------
+    // --- Recipe views ------------------------------------------------------
 
     public static void openAction(YourShikaBackpacks plugin, Player player, String action) {
         if (action == null) return;
@@ -89,11 +100,57 @@ public final class InfoMenu {
             openOverview(plugin, player);
             return;
         }
-        if (action.startsWith("bp:")) {
+        if (action.equals("functions")) {
+            openFunctionList(plugin, player);
+        } else if (action.startsWith("bp:")) {
             openBackpackRecipe(plugin, player, action.substring(3));
         } else if (action.startsWith("up:")) {
             openUpgradeRecipe(plugin, player, action.substring(3));
+        } else if (action.startsWith("fn:")) {
+            openFunctionRecipe(plugin, player, action.substring(3));
         }
+    }
+
+    private static void openFunctionList(YourShikaBackpacks plugin, Player player) {
+        InfoMenuHolder holder = new InfoMenuHolder();
+        Inventory inv = Bukkit.createInventory(holder, 54,
+                line("<aqua><bold>Function Upgrades</bold></aqua>"));
+        holder.setInventory(inv);
+        fill(inv);
+        backButton(holder, inv);
+        inv.setItem(4, header("<aqua><bold>Function Upgrades</bold></aqua>",
+                List.of("<gray>Build these and place them in a", "<gray>backpack's Upgrades menu.")));
+
+        int slot = 10;
+        for (de.yourshika.backpacks.upgrade.FunctionUpgrade up
+                : de.yourshika.backpacks.upgrade.FunctionUpgrade.values()) {
+            if (slot > 43) break;
+            if (slot % 9 == 8) slot += 2; // Rand überspringen
+            ItemStack item = plugin.functionUpgrades().item(up.id());
+            if (item == null) continue;
+            holder.mapAction(slot, "fn:" + up.id());
+            inv.setItem(slot++, withHint(item));
+        }
+        player.openInventory(inv);
+    }
+
+    private static void openFunctionRecipe(YourShikaBackpacks plugin, Player player, String id) {
+        de.yourshika.backpacks.upgrade.FunctionUpgrade up =
+                de.yourshika.backpacks.upgrade.FunctionUpgrade.byId(id);
+        ItemStack result = plugin.functionUpgrades().item(id);
+        if (up == null || result == null) { openFunctionList(plugin, player); return; }
+
+        InfoMenuHolder holder = new InfoMenuHolder();
+        Inventory inv = Bukkit.createInventory(holder, 54, title(name(result)));
+        holder.setInventory(inv);
+        fill(inv);
+        backButtonTo(holder, inv, "functions");
+
+        renderFunctionGrid(inv, up.shape(), up.ingredients(), plugin.upgradeManager().baseUpgradeItem());
+        inv.setItem(RESULT, result);
+        inv.setItem(4, header("<yellow><bold>Crafting Table</bold></yellow>",
+                List.of("<gray>'U' = Upgrade Leather (required).")));
+        player.openInventory(inv);
     }
 
     private static void openBackpackRecipe(YourShikaBackpacks plugin, Player player, String tierKey) {
@@ -117,7 +174,7 @@ public final class InfoMenu {
             renderGrid(inv, tier.recipe().shape(), tier.recipe().ingredients());
             inv.setItem(RESULT, result);
             inv.setItem(4, header("<yellow><bold>Crafting Table</bold></yellow>",
-                    List.of("<gray>8× Leder um eine Truhe.")));
+                    List.of("<gray>8x Leather around a Chest.")));
         } else {
             // Smithing-Veredelung aus dem vorherigen Tier.
             int idx = order.indexOf(tierKey.toLowerCase());
@@ -143,7 +200,7 @@ public final class InfoMenu {
         InfoMenuHolder holder = new InfoMenuHolder();
 
         if (key.equals("base")) {
-            Inventory inv = Bukkit.createInventory(holder, 54, line("<#A0703C><bold>Upgrade-Leder</bold>"));
+            Inventory inv = Bukkit.createInventory(holder, 54, line("<#A0703C><bold>Upgrade Leather</bold>"));
             holder.setInventory(inv);
             fill(inv);
             backButton(holder, inv);
@@ -151,7 +208,7 @@ public final class InfoMenu {
                     java.util.Map.of('S', Material.STRING, 'L', Material.LEATHER));
             inv.setItem(RESULT, um.baseUpgradeItem());
             inv.setItem(4, header("<yellow><bold>Crafting Table</bold></yellow>",
-                    List.of("<gray>1× Leder + 4× Faden.")));
+                    List.of("<gray>1x Leather + 4x String.")));
             player.openInventory(inv);
             return;
         }
@@ -178,7 +235,7 @@ public final class InfoMenu {
             inv.setItem(GRID[4], label(um.baseUpgradeItem(), "<gray>Upgrade-Leder"));
             inv.setItem(RESULT, upgrade);
             inv.setItem(4, header("<yellow><bold>Crafting Table</bold></yellow>",
-                    List.of("<gray>Upgrade-Leder + 8× Tier-Material.")));
+                    List.of("<gray>Upgrade Leather + 8x tier material.")));
         }
         player.openInventory(inv);
     }
@@ -196,7 +253,7 @@ public final class InfoMenu {
                 }
             }
         }
-        inv.setItem(ARROW, icon(Material.ARROW, "<gray>ergibt"));
+        inv.setItem(ARROW, icon(Material.ARROW, "<gray>yields →"));
     }
 
     private static void renderSmithing(Inventory inv, ItemStack template, ItemStack base,
@@ -204,13 +261,34 @@ public final class InfoMenu {
         inv.setItem(S_TEMPLATE, template);
         inv.setItem(S_BASE, base);
         inv.setItem(S_ADDITION, addition);
-        inv.setItem(ARROW, icon(Material.ARROW, "<gray>ergibt"));
-        inv.setItem(RESULT, result);
+        inv.setItem(S_ARROW, icon(Material.SPECTRAL_ARROW, "<gray>yields ↓"));
+        inv.setItem(S_RESULT, label(result, "<yellow>Result"));
     }
 
     private static void backButton(InfoMenuHolder holder, Inventory inv) {
-        holder.mapAction(BACK, "back");
-        inv.setItem(BACK, icon(Material.BARRIER, "<red>◀ Zurück"));
+        backButtonTo(holder, inv, "back");
+    }
+
+    private static void backButtonTo(InfoMenuHolder holder, Inventory inv, String action) {
+        holder.mapAction(BACK, action);
+        inv.setItem(BACK, icon(Material.BARRIER, "<red>◀ Back"));
+    }
+
+    private static void renderFunctionGrid(Inventory inv, List<String> shape,
+                                           java.util.Map<Character, Material> ingredients, ItemStack base) {
+        for (int r = 0; r < 3; r++) {
+            String row = r < shape.size() ? shape.get(r) : "   ";
+            for (int c = 0; c < 3; c++) {
+                char ch = c < row.length() ? row.charAt(c) : ' ';
+                if (ch == 'U') {
+                    inv.setItem(GRID[r * 3 + c], base);
+                } else {
+                    Material mat = ingredients.get(ch);
+                    if (mat != null) inv.setItem(GRID[r * 3 + c], new ItemStack(mat));
+                }
+            }
+        }
+        inv.setItem(ARROW, icon(Material.ARROW, "<gray>yields →"));
     }
 
     private static void fill(Inventory inv) {
@@ -228,7 +306,7 @@ public final class InfoMenu {
         if (meta == null) return item;
         List<Component> lore = meta.lore() != null ? new ArrayList<>(meta.lore()) : new ArrayList<>();
         lore.add(Component.empty());
-        lore.add(line("<yellow>» Klicken für das Rezept"));
+        lore.add(line("<yellow>» Click to view recipe"));
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
@@ -276,7 +354,7 @@ public final class InfoMenu {
         if (meta != null && meta.displayName() != null) {
             return MINI.serialize(meta.displayName());
         }
-        return "<white>Rezept";
+        return "<white>Recipe";
     }
 
     private static Component line(String mini) {

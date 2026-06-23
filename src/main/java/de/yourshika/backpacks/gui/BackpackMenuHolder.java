@@ -30,6 +30,20 @@ public final class BackpackMenuHolder implements InventoryHolder {
     public static final int UPGRADE_BUTTON = 47; // öffnet die separate Upgrade-GUI
     public static final int INFO_SLOT = 49;
     public static final int NEXT_SLOT = 53;
+    // Stations-Buttons (nur sichtbar, wenn das passende Funktions-Upgrade verbaut ist).
+    public static final int STATION_CRAFTING = 50;
+    public static final int STATION_STONECUTTER = 51;
+    public static final int STATION_SMITHING = 52;
+
+    /** Liefert die Stations-ID eines Slots oder null. */
+    public static String stationAt(int rawSlot) {
+        return switch (rawSlot) {
+            case STATION_CRAFTING -> "crafting";
+            case STATION_STONECUTTER -> "stonecutter";
+            case STATION_SMITHING -> "smithing";
+            default -> null;
+        };
+    }
 
     private final UUID backpackId;
     private final String tierKey;
