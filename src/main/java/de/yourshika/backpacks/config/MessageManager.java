@@ -43,7 +43,29 @@ public final class MessageManager {
         }
         messages = YamlConfiguration.loadConfiguration(file);
 
-        // Hook in the bundled English defaults as a fallback (fills missing keys).
+        // Auto-update: merge any NEW keys from the bundled file of the SAME
+        // language into the user's file (and persist), so messages stay current
+        // across plugin updates without overwriting existing edits.
+        InputStream sameLang = plugin.getResource(fileName);
+        if (sameLang != null) {
+            YamlConfiguration bundled = YamlConfiguration.loadConfiguration(
+                    new InputStreamReader(sameLang, StandardCharsets.UTF_8));
+            boolean changed = false;
+            for (String key : bundled.getKeys(true)) {
+                if (!messages.contains(key)) {
+                    messages.set(key, bundled.get(key));
+                    changed = true;
+                }
+            }
+            if (changed) {
+                try {
+                    messages.save(file);
+                } catch (Exception ignored) {
+                }
+            }
+        }
+
+        // Runtime fallback to bundled English for anything still missing.
         InputStream def = plugin.getResource("messages_en.yml");
         if (def != null) {
             messages.setDefaults(YamlConfiguration.loadConfiguration(

@@ -45,7 +45,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BukkitTask autosaveTask;
 
     /** Aktuelle Struktur-Version der config.yml. */
-    private static final int CONFIG_VERSION = 5;
+    private static final int CONFIG_VERSION = 6;
 
     @Override
     public void onEnable() {
@@ -118,6 +118,8 @@ public final class YourShikaBackpacks extends JavaPlugin {
                 new de.yourshika.backpacks.listener.UpgradeEffectListener(this, manager), this);
         new de.yourshika.backpacks.listener.UpgradeMagnetTask(this, manager)
                 .runTaskTimer(this, 20L, 8L);
+        new de.yourshika.backpacks.listener.UpgradeSmeltTask(this, manager)
+                .runTaskTimer(this, 40L, 40L);
 
         // Befehle.
         BackpackCommand command = new BackpackCommand(this, manager, tiers);

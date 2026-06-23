@@ -31,6 +31,8 @@ public final class BackpackMenuHolder implements InventoryHolder {
     public static final int INFO_SLOT = 49;
     public static final int NEXT_SLOT = 53;
     // Stations-Buttons (nur sichtbar, wenn das passende Funktions-Upgrade verbaut ist).
+    public static final int STATION_TRASH = 46;
+    public static final int STATION_ENDER = 48;
     public static final int STATION_CRAFTING = 50;
     public static final int STATION_STONECUTTER = 51;
     public static final int STATION_SMITHING = 52;
@@ -38,6 +40,8 @@ public final class BackpackMenuHolder implements InventoryHolder {
     /** Liefert die Stations-ID eines Slots oder null. */
     public static String stationAt(int rawSlot) {
         return switch (rawSlot) {
+            case STATION_TRASH -> "trash";
+            case STATION_ENDER -> "ender_link";
             case STATION_CRAFTING -> "crafting";
             case STATION_STONECUTTER -> "stonecutter";
             case STATION_SMITHING -> "smithing";

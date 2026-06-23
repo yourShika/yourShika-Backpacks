@@ -59,6 +59,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "give" -> give(sender, args);
             case "openid" -> openId(sender, args);
             case "info", "recipes", "rezepte" -> info(sender);
+            case "recall" -> recall(sender);
             case "modules", "module" -> modules(sender);
             case "update" -> update(sender);
             case "reload" -> reload(sender);
@@ -73,6 +74,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "help.open");
         msg.sendRaw(sender, "help.info");
         msg.sendRaw(sender, "help.list");
+        msg.sendRaw(sender, "help.recall");
         if (sender.hasPermission("yourshika.backpack.admin.color")) msg.sendRaw(sender, "help.color");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
         if (sender.hasPermission("yourshika.backpack.admin.openid")) msg.sendRaw(sender, "help.openid");
@@ -234,32 +236,94 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             msg.send(sender, "error.player-not-found", ph("input", args[1]));
             return;
         }
-        BackpackTier tier = tiers.get(args[2]);
-        if (tier == null) {
-            msg.send(sender, "error.invalid-tier", ph("input", args[2]));
-            return;
-        }
+        String key = args[2].toLowerCase();
         int amount = 1;
         if (args.length >= 4) {
             try {
-                amount = Math.max(1, Math.min(36, Integer.parseInt(args[3])));
+                amount = Math.max(1, Math.min(64, Integer.parseInt(args[3])));
             } catch (NumberFormatException ex) {
                 msg.send(sender, "error.invalid-number", ph("input", args[3]));
                 return;
             }
         }
-        String main = args.length >= 5 ? colorTokenOrDefault(args[4], tier.defaultMainColor()) : tier.defaultMainColor();
-        String accent = args.length >= 6 ? colorTokenOrDefault(args[5], tier.defaultAccentColor()) : tier.defaultAccentColor();
 
-        for (int i = 0; i < amount; i++) {
-            ItemStack item = manager.createNew(tier, target.getUniqueId(), main, accent);
-            var leftover = target.getInventory().addItem(item);
-            leftover.values().forEach(rest -> target.getWorld().dropItemNaturally(target.getLocation(), rest));
+        // 1) Backpack-Tier (mit optionalen Farben).
+        BackpackTier tier = tiers.get(key);
+        if (tier != null) {
+            String main = args.length >= 5 ? colorTokenOrDefault(args[4], tier.defaultMainColor()) : tier.defaultMainColor();
+            String accent = args.length >= 6 ? colorTokenOrDefault(args[5], tier.defaultAccentColor()) : tier.defaultAccentColor();
+            for (int i = 0; i < amount; i++) {
+                ItemStack item = manager.createNew(tier, target.getUniqueId(), main, accent);
+                target.getInventory().addItem(item).values()
+                        .forEach(rest -> target.getWorld().dropItemNaturally(target.getLocation(), rest));
+            }
+            announceGive(sender, target, amount, tier.key());
+            return;
         }
+
+        // 2) Upgrade-/Funktions-Item.
+        ItemStack proto = resolveGiveItem(key);
+        if (proto == null) {
+            msg.send(sender, "error.invalid-tier", ph("input", args[2]));
+            return;
+        }
+        ItemStack stack = proto.clone();
+        stack.setAmount(amount);
+        target.getInventory().addItem(stack).values()
+                .forEach(rest -> target.getWorld().dropItemNaturally(target.getLocation(), rest));
+        announceGive(sender, target, amount, key);
+    }
+
+    private void recall(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        if (!player.hasPermission("yourshika.backpack.place")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        int n = plugin.placeableManager().recall(player);
+        if (n > 0) msg.send(player, "place.recalled", ph("count", String.valueOf(n)));
+        else msg.send(player, "place.recall-none");
+    }
+
+    private void announceGive(CommandSender sender, Player target, int amount, String what) {
         msg.send(sender, "give.success",
-                ph("amount", String.valueOf(amount)), ph("tier", tier.key()), ph("player", target.getName()));
+                ph("amount", String.valueOf(amount)), ph("tier", what), ph("player", target.getName()));
         msg.send(target, "give.received",
-                ph("amount", String.valueOf(amount)), ph("tier", tier.key()));
+                ph("amount", String.valueOf(amount)), ph("tier", what));
+    }
+
+    /** Löst einen Give-Schlüssel zu einem Upgrade-/Funktions-Item auf (oder null). */
+    private ItemStack resolveGiveItem(String key) {
+        if (key.equals("base") || key.equals("upgrade_base") || key.equals("upgrade_leather")) {
+            return plugin.upgradeManager().baseUpgradeItem();
+        }
+        if (key.startsWith("upgrade_")) {
+            ItemStack t = plugin.upgradeManager().upgradeItem(key.substring("upgrade_".length()));
+            if (t != null) return t;
+        }
+        if (key.endsWith("_upgrade")) {
+            ItemStack t = plugin.upgradeManager().upgradeItem(key.substring(0, key.length() - "_upgrade".length()));
+            if (t != null) return t;
+        }
+        if (de.yourshika.backpacks.upgrade.FunctionUpgrade.byId(key) != null) {
+            return plugin.functionUpgrades().item(key);
+        }
+        return null;
+    }
+
+    private List<String> giveKeys() {
+        List<String> keys = new ArrayList<>(tiers.keys());
+        keys.add("upgrade_base");
+        for (int i = 1; i < tiers.keys().size(); i++) {
+            keys.add("upgrade_" + tiers.keys().get(i));
+        }
+        for (var fu : de.yourshika.backpacks.upgrade.FunctionUpgrade.values()) {
+            keys.add(fu.id());
+        }
+        return keys;
     }
 
     private void openId(CommandSender sender, String[] args) {
@@ -319,7 +383,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "list", "version"));
+            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "list", "recall", "version"));
             if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
@@ -331,7 +395,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         String sub = args[0].toLowerCase();
         if (sub.equals("give")) {
             if (args.length == 2) return filter(onlinePlayers(), args[1]);
-            if (args.length == 3) return filter(tiers.keys(), args[2]);
+            if (args.length == 3) return filter(giveKeys(), args[2]);
             if (args.length == 4) return filter(List.of("1", "8", "16"), args[3]);
             if (args.length == 5 || args.length == 6) return filter(dyeNames(), args[args.length - 1]);
         }

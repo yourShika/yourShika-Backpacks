@@ -1,0 +1,80 @@
+# ============================================================================
+#  yourShika Backpack's – Wiadomości (Polski)
+#  Obsługuje MiniMessage ORAZ kody kolorów &. Zmienne: <name>
+#  Brakujące klucze są automatycznie uzupełniane z angielskiego.
+# ============================================================================
+
+prefix: "<gradient:#6E5BC8:#5BE8D4><bold>Backpacks</bold></gradient> <dark_gray>»</dark_gray> "
+
+help:
+  header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Komendy"
+  open: "<yellow>/bp open <gray>– Otwórz plecak trzymany w ręce"
+  info: "<yellow>/bp info <gray>– Zobacz plecaki, ulepszenia i przepisy"
+  color: "<yellow>/bp color <kolor> [akcent] <gray>– Farbuj plecak (nazwa lub #RRGGBB)"
+  list: "<yellow>/bp list [gracz] <gray>– Lista plecaków"
+  recall: "<yellow>/bp recall <gray>– Przywołaj postawione plecaki (wymaga ulepszenia Recall)"
+  give: "<yellow>/bp give <gracz> <przedmiot> [ilość] <gray>– Daj przedmiot"
+  openid: "<yellow>/bp openid <id> <gray>– Otwórz plecak po ID"
+  modules: "<yellow>/bp modules <gray>– Włącz/wyłącz moduły zewnętrzne"
+  update: "<yellow>/bp update <gray>– Pobierz najnowszą wersję z GitHub"
+  reload: "<yellow>/bp reload <gray>– Przeładuj konfigurację"
+  footer: "<dark_gray>Inspirowane Sophisticated Backpacks – samodzielny plugin serwerowy."
+
+error:
+  no-permission: "<red>Nie masz uprawnień, aby to zrobić."
+  players-only: "<red>Ta komenda jest tylko dla graczy."
+  hold-backpack: "<red>Trzymaj plecak w ręce."
+  invalid-backpack: "<red>Ten plecak jest nieprawidłowy lub uszkodzony."
+  already-open: "<red>Ten plecak jest już otwarty."
+  id-not-found: "<red>Nie znaleziono plecaka o tym ID."
+  invalid-id: "<red>Nieprawidłowe ID: <white><input></white>"
+  world-disabled: "<red>Plecaki są wyłączone na tym świecie."
+  no-nesting: "<red>Nie można umieszczać plecaków w plecakach."
+  unknown-subcommand: "<red>Nieznana komenda: <white><input></white> <gray>– /bp help"
+  color-usage: "<red>Użycie: /bp color <kolor> [akcent] <gray>(nazwa lub #RRGGBB)"
+  give-usage: "<red>Użycie: /bp give <gracz> <przedmiot> [ilość]"
+  openid-usage: "<red>Użycie: /bp openid <id>"
+  invalid-color: "<red>Nieznany kolor: <white><input></white>"
+  invalid-tier: "<red>Nieznany przedmiot: <white><input></white>"
+  invalid-number: "<red>Nieprawidłowa liczba: <white><input></white>"
+  player-not-found: "<red>Nie znaleziono gracza: <white><input></white>"
+  no-horse-armor: "<red>Plecaka nie można użyć jako zbroi dla konia."
+  not-owner: "<red>Ten plecak nie należy do ciebie."
+  no-place: "<red>Nie możesz tu postawić plecaków."
+  place-disabled: "<red>Stawianie plecaków jest wyłączone."
+  place-occupied: "<red>Tutaj już stoi plecak."
+  update-usage: "<red>Użycie: /bp update <gray>(pobiera najnowszą wersję z GitHub)"
+
+color:
+  success: "<green>Plecak ufarbowany: <white><main></white> <gray>/</gray> <white><accent></white>"
+
+place:
+  success: "<green>Plecak postawiony. <gray>PPM otwiera, Shift+PPM podnosi."
+  removed: "<green>Plecak podniesiony."
+  recalled: "<green>Przywołano <white><count></white> postawiony(ch) plecak(ów)."
+  recall-none: "<gray>Nie znaleziono postawionych plecaków z ulepszeniem Recall."
+
+upgrades:
+  title: "<gradient:#6E5BC8:#5BE8D4><bold>Ulepszenia</bold></gradient> <dark_gray>(<tier>)"
+  no-upgrade-item: "<red>Tutaj można umieszczać tylko ulepszenia."
+
+update:
+  checking: "<gray>Sprawdzanie najnowszej wersji na GitHub …"
+  up-to-date: "<green>Już aktualne (v<version>)."
+  downloading: "<gray>Pobieranie <white><version></white> …"
+  success: "<green>Pobrano aktualizację <white><version></white>. <yellow>Wymagany restart serwera."
+  failed: "<red>Aktualizacja nie powiodła się: <white><error></white>"
+
+list:
+  header: "<gold>Plecaki gracza <white><player></white>: <yellow><count></yellow>"
+  entry: "<dark_gray>• <gray>ID <white><id></white> <dark_gray>– <gray>Tier <white><tier></white>"
+
+give:
+  success: "<green>Dano <amount>x <white><tier></white> graczowi <white><player></white>."
+  received: "<green>Otrzymałeś <white><amount>x <tier></white>."
+
+reload:
+  success: "<green>Konfiguracja przeładowana."
+
+version:
+  info: "<gray>yourShika Backpack's <white>v<version></white> <dark_gray>| <gray>Tiery: <white><tiers></white> <dark_gray>| <gray>zapisane: <white><count></white>"

@@ -51,10 +51,19 @@ public final class FunctionUpgradeManager {
             try {
                 ShapedRecipe recipe = new ShapedRecipe(key, items.get(up.id()));
                 recipe.shape(up.shape().toArray(new String[0]));
+                String shapeStr = String.join("", up.shape());
                 for (Map.Entry<Character, Material> e : up.ingredients().entrySet()) {
                     recipe.setIngredient(e.getKey(), new RecipeChoice.MaterialChoice(e.getValue()));
                 }
-                recipe.setIngredient('U', new RecipeChoice.ExactChoice(base));
+                if (shapeStr.indexOf('U') >= 0) {
+                    recipe.setIngredient('U', new RecipeChoice.ExactChoice(base));
+                }
+                // Advanced-Varianten benötigen ihr Basis-Upgrade ('X').
+                if (up.requires() != null && shapeStr.indexOf('X') >= 0) {
+                    ItemStack required = items.get(up.requires());
+                    if (required == null) { continue; } // Basis noch nicht gebaut -> überspringen
+                    recipe.setIngredient('X', new RecipeChoice.ExactChoice(required));
+                }
                 recipe.setGroup("yourshika_upgrades");
                 Bukkit.addRecipe(recipe);
                 registered.add(key);

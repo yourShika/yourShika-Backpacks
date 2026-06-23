@@ -143,13 +143,18 @@ public final class OraxenAssetDeployer {
         return new TextureResult(false, true);
     }
 
+    /**
+     * Stellt sicher, dass die Textur im Oraxen-Pack mit unserer Quelle
+     * übereinstimmt – für ALLE Items, nicht nur geänderte. Der Oraxen-Pack-Ordner
+     * ist unsere verwaltete Ausgabe, daher wird hier KEIN Backup erstellt
+     * (das koppelte das Kopieren bisher an Backups).
+     */
     private boolean copyTextureToOraxen(Path source, Path target) throws Exception {
         if (!Files.exists(source)) return false;
         if (Files.exists(target)) {
             String sourceHash = sha256(Files.readAllBytes(source));
             String targetHash = sha256(Files.readAllBytes(target));
-            if (sourceHash.equals(targetHash)) return false;
-            backup(target);
+            if (sourceHash.equals(targetHash)) return false; // bereits aktuell
         }
         Files.createDirectories(target.getParent());
         Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);

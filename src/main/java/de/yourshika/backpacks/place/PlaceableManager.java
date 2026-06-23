@@ -144,6 +144,44 @@ public final class PlaceableManager {
         });
     }
 
+    /**
+     * Ruft alle platzierten Backpacks des Spielers mit Recall-Upgrade zurück:
+     * Entities entfernen, Persistenz aktualisieren, Item ins Inventar geben.
+     * Gibt die Anzahl zurückgeholter Backpacks zurück.
+     */
+    public int recall(Player player) {
+        int recalled = 0;
+        for (UUID id : manager.storage().listByOwner(player.getUniqueId())) {
+            BackpackData data = manager.storage().load(id);
+            if (data == null || !data.placed()) continue;
+            if (!manager.functionUpgradesOf(id).contains("recall")) continue;
+
+            org.bukkit.World world = data.world() == null ? null : org.bukkit.Bukkit.getWorld(data.world());
+            if (world == null) continue;
+            org.bukkit.Location loc = new org.bukkit.Location(world, data.x(), data.y(), data.z());
+            world.getChunkAt(loc).load();
+            for (Entity e : world.getNearbyEntities(loc, 0.8, 0.9, 0.8)) {
+                if (isPlacedEntity(e) && id.equals(backpackIdOf(e))) e.remove();
+            }
+
+            BackpackTier tier = tiers.get(data.tier());
+            if (tier == null) tier = tiers.all().iterator().next();
+            String main = data.mainColor() != null ? data.mainColor() : tier.defaultMainColor();
+            String accent = data.accentColor() != null ? data.accentColor() : tier.defaultAccentColor();
+            ItemStack item = items.create(tier, id, main, accent);
+            if (data.owner() != null) {
+                items.writeOwner(item, data.owner(), org.bukkit.Bukkit.getOfflinePlayer(data.owner()).getName());
+                items.applyDisplay(item, tier, id, main, accent);
+            }
+            data.placed(false);
+            manager.storage().save(data);
+            player.getInventory().addItem(item).values()
+                    .forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
+            recalled++;
+        }
+        return recalled;
+    }
+
     private void tag(Entity entity, UUID id) {
         PersistentDataContainer pdc = entity.getPersistentDataContainer();
         pdc.set(markerKey, PersistentDataType.BYTE, (byte) 1);

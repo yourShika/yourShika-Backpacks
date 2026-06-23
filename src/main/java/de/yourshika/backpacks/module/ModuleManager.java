@@ -26,7 +26,6 @@ public final class ModuleManager {
     public ModuleManager(YourShikaBackpacks plugin) {
         this.plugin = plugin;
         register(new PlaceholderModule(plugin));
-        register(new PacketEventsModule(plugin));
         // Custom-Item-Anbindung: bewusst nur Oraxen (frei nutzbar, reife API).
         // Nexo (kostenpflichtig) und ItemsAdder (Premium) wurden entfernt.
         register(new OraxenModule(plugin));

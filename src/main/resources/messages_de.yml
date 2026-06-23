@@ -1,6 +1,7 @@
 # ============================================================================
 #  yourShika Backpack's – Nachrichten (Deutsch)
 #  Unterstützt MiniMessage UND &-Farbcodes. Platzhalter: <name>
+#  Fehlende Schlüssel werden automatisch aus dem Englischen ergänzt.
 # ============================================================================
 
 prefix: "<gradient:#6E5BC8:#5BE8D4><bold>Backpacks</bold></gradient> <dark_gray>»</dark_gray> "
@@ -8,10 +9,11 @@ prefix: "<gradient:#6E5BC8:#5BE8D4><bold>Backpacks</bold></gradient> <dark_gray>
 help:
   header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Befehle"
   open: "<yellow>/bp open <gray>– Backpack in der Hand öffnen"
-  info: "<yellow>/bp info <gray>– Rücksäcke, Upgrades & Rezepte ansehen"
+  info: "<yellow>/bp info <gray>– Rucksäcke, Upgrades & Rezepte ansehen"
   color: "<yellow>/bp color <Farbe> [Akzent] <gray>– Backpack einfärben (Name oder #RRGGBB)"
   list: "<yellow>/bp list [Spieler] <gray>– Backpacks auflisten"
-  give: "<yellow>/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent] <gray>– Backpack geben"
+  recall: "<yellow>/bp recall <gray>– Platzierte Backpacks zurückholen (braucht Recall-Upgrade)"
+  give: "<yellow>/bp give <Spieler> <Item> [Anzahl] <gray>– Item geben"
   openid: "<yellow>/bp openid <ID> <gray>– Backpack per ID öffnen"
   modules: "<yellow>/bp modules <gray>– Externe Module an/aus schalten"
   update: "<yellow>/bp update <gray>– Neueste Version von GitHub laden"
@@ -30,10 +32,10 @@ error:
   no-nesting: "<red>Backpacks dürfen nicht in Backpacks gelegt werden."
   unknown-subcommand: "<red>Unbekannter Befehl: <white><input></white> <gray>– /bp help"
   color-usage: "<red>Verwendung: /bp color <Farbe> [Akzent] <gray>(Name oder #RRGGBB)"
-  give-usage: "<red>Verwendung: /bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent]"
+  give-usage: "<red>Verwendung: /bp give <Spieler> <Item> [Anzahl]"
   openid-usage: "<red>Verwendung: /bp openid <ID>"
   invalid-color: "<red>Unbekannte Farbe: <white><input></white>"
-  invalid-tier: "<red>Unbekannter Tier: <white><input></white>"
+  invalid-tier: "<red>Unbekanntes Item: <white><input></white>"
   invalid-number: "<red>Keine gültige Zahl: <white><input></white>"
   player-not-found: "<red>Spieler nicht gefunden: <white><input></white>"
   no-horse-armor: "<red>Ein Backpack kann nicht als Pferderüstung verwendet werden."
@@ -49,6 +51,8 @@ color:
 place:
   success: "<green>Backpack platziert. <gray>Rechtsklick öffnet, Sneak-Rechtsklick hebt auf."
   removed: "<green>Backpack aufgehoben."
+  recalled: "<green><white><count></white> platzierte(s) Backpack(s) zurückgeholt."
+  recall-none: "<gray>Keine platzierten Backpacks mit Recall-Upgrade gefunden."
 
 upgrades:
   title: "<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>(<tier>)"
@@ -56,9 +60,9 @@ upgrades:
 
 update:
   checking: "<gray>Suche nach der neuesten Version auf GitHub …"
-  up-to-date: "<green>Bereits aktuell (v<version></white>)."
+  up-to-date: "<green>Bereits aktuell (v<version>)."
   downloading: "<gray>Lade <white><version></white> herunter …"
-  success: "<green>Update auf <white><version></white> heruntergeladen. <yellow>Server-Neustart nötig, um es zu übernehmen."
+  success: "<green>Update auf <white><version></white> heruntergeladen. <yellow>Server-Neustart nötig."
   failed: "<red>Update fehlgeschlagen: <white><error></white>"
 
 list:
@@ -66,8 +70,8 @@ list:
   entry: "<dark_gray>• <gray>ID <white><id></white> <dark_gray>– <gray>Tier <white><tier></white>"
 
 give:
-  success: "<green><amount>x <white><tier></white> Backpack an <white><player></white> gegeben."
-  received: "<green>Du hast <white><amount>x <tier></white> Backpack erhalten."
+  success: "<green><amount>x <white><tier></white> an <white><player></white> gegeben."
+  received: "<green>Du hast <white><amount>x <tier></white> erhalten."
 
 reload:
   success: "<green>Konfiguration neu geladen."

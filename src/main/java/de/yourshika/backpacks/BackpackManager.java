@@ -226,6 +226,14 @@ public final class BackpackManager {
 
         // Stations-Buttons je nach verbauten Funktions-Upgrades.
         java.util.Set<String> functions = functionUpgradesOf(holder.backpackId());
+        if (functions.contains("trash")) {
+            inv.setItem(BackpackMenuHolder.STATION_TRASH,
+                    stationButton(Material.LAVA_BUCKET, "<gray>Trash"));
+        }
+        if (functions.contains("ender_link")) {
+            inv.setItem(BackpackMenuHolder.STATION_ENDER,
+                    stationButton(Material.ENDER_CHEST, "<dark_purple>Ender Chest"));
+        }
         if (functions.contains("crafting")) {
             inv.setItem(BackpackMenuHolder.STATION_CRAFTING,
                     stationButton(Material.CRAFTING_TABLE, "<aqua>Crafting"));
@@ -337,6 +345,16 @@ public final class BackpackManager {
                 case "smithing" -> player.openInventory(
                         org.bukkit.inventory.MenuType.SMITHING.create(player,
                                 net.kyori.adventure.text.Component.text("Smithing Table")));
+                case "ender_link" -> player.openInventory(player.getEnderChest());
+                case "trash" -> {
+                    de.yourshika.backpacks.gui.TrashMenuHolder holder =
+                            new de.yourshika.backpacks.gui.TrashMenuHolder();
+                    Inventory trash = Bukkit.createInventory(holder, 27,
+                            mini.deserialize("<dark_gray><bold>Trash</bold> <gray>(items here are deleted)")
+                                    .decoration(TextDecoration.ITALIC, false));
+                    holder.setInventory(trash);
+                    player.openInventory(trash);
+                }
                 default -> { }
             }
         } catch (Throwable t) {
@@ -388,6 +406,10 @@ public final class BackpackManager {
     public void saveAndRelease(BackpackMenuHolder holder) {
         try {
             flushVisiblePage(holder);
+            // Compacting-Upgrade: 9er-Stacks zu Blöcken verdichten.
+            if (functionUpgradesOf(holder.backpackId()).contains("compacting")) {
+                compact(holder.buffer());
+            }
             BackpackData data = storage.load(holder.backpackId());
             if (data == null) {
                 data = new BackpackData(holder.backpackId());
@@ -401,6 +423,145 @@ public final class BackpackManager {
         } finally {
             openBackpacks.remove(holder.backpackId());
         }
+    }
+
+    /** Items, die sich aus 9 Stück zu einem Block verdichten lassen. */
+    private static final Map<Material, Material> COMPACT = java.util.Map.ofEntries(
+            Map.entry(Material.IRON_INGOT, Material.IRON_BLOCK),
+            Map.entry(Material.GOLD_INGOT, Material.GOLD_BLOCK),
+            Map.entry(Material.DIAMOND, Material.DIAMOND_BLOCK),
+            Map.entry(Material.EMERALD, Material.EMERALD_BLOCK),
+            Map.entry(Material.NETHERITE_INGOT, Material.NETHERITE_BLOCK),
+            Map.entry(Material.COPPER_INGOT, Material.COPPER_BLOCK),
+            Map.entry(Material.COAL, Material.COAL_BLOCK),
+            Map.entry(Material.REDSTONE, Material.REDSTONE_BLOCK),
+            Map.entry(Material.LAPIS_LAZULI, Material.LAPIS_BLOCK),
+            Map.entry(Material.RAW_IRON, Material.RAW_IRON_BLOCK),
+            Map.entry(Material.RAW_GOLD, Material.RAW_GOLD_BLOCK),
+            Map.entry(Material.RAW_COPPER, Material.RAW_COPPER_BLOCK),
+            Map.entry(Material.SLIME_BALL, Material.SLIME_BLOCK),
+            Map.entry(Material.WHEAT, Material.HAY_BLOCK),
+            Map.entry(Material.DRIED_KELP, Material.DRIED_KELP_BLOCK),
+            Map.entry(Material.BONE_MEAL, Material.BONE_BLOCK),
+            Map.entry(Material.NETHER_WART, Material.NETHER_WART_BLOCK));
+
+    /** Verdichtet 9er-Mengen verdichtbarer Items im Buffer zu Blöcken. */
+    private void compact(ItemStack[] buffer) {
+        java.util.Map<Material, Integer> totals = new java.util.HashMap<>();
+        for (ItemStack it : buffer) {
+            if (it == null) continue;
+            Material block = COMPACT.get(it.getType());
+            if (block == null || block == it.getType()) continue;          // nicht verdichtbar
+            if (!it.isSimilar(new ItemStack(it.getType()))) continue;      // nur "plain" Items
+            totals.merge(it.getType(), it.getAmount(), Integer::sum);
+        }
+        for (var e : totals.entrySet()) {
+            Material mat = e.getKey();
+            int total = e.getValue();
+            int blocks = total / 9;
+            if (blocks == 0) continue;
+            int remainder = total % 9;
+            // Alle "plain" Items dieses Typs aus dem Buffer entfernen.
+            for (int i = 0; i < buffer.length; i++) {
+                ItemStack it = buffer[i];
+                if (it != null && it.getType() == mat && it.isSimilar(new ItemStack(mat))) {
+                    buffer[i] = null;
+                }
+            }
+            addToBuffer(buffer, new ItemStack(COMPACT.get(mat), blocks));
+            if (remainder > 0) addToBuffer(buffer, new ItemStack(mat, remainder));
+        }
+    }
+
+    /** Legt einen Stack in freie/passende Buffer-Slots (für Compacting). */
+    private void addToBuffer(ItemStack[] buffer, ItemStack stack) {
+        int max = stack.getMaxStackSize();
+        for (int i = 0; i < buffer.length && stack.getAmount() > 0; i++) {
+            ItemStack slot = buffer[i];
+            if (slot != null && slot.isSimilar(stack)) {
+                int space = slot.getMaxStackSize() - slot.getAmount();
+                if (space > 0) {
+                    int add = Math.min(space, stack.getAmount());
+                    slot.setAmount(slot.getAmount() + add);
+                    stack.setAmount(stack.getAmount() - add);
+                }
+            }
+        }
+        for (int i = 0; i < buffer.length && stack.getAmount() > 0; i++) {
+            if (buffer[i] == null || buffer[i].getType().isAir()) {
+                int add = Math.min(max, stack.getAmount());
+                ItemStack copy = stack.clone();
+                copy.setAmount(add);
+                buffer[i] = copy;
+                stack.setAmount(stack.getAmount() - add);
+            }
+        }
+    }
+
+    /** Wie viele Items eine Einheit dieses Brennstoffs schmilzt (0 = kein Brennstoff). */
+    private static int fuelValue(Material m) {
+        if (m == null) return 0;
+        return switch (m) {
+            case COAL, CHARCOAL -> 8;
+            case COAL_BLOCK -> 72;
+            case BLAZE_ROD -> 12;
+            case DRIED_KELP_BLOCK -> 20;
+            case LAVA_BUCKET -> 100;
+            case BLAST_FURNACE, FURNACE -> 0;
+            default -> {
+                String n = m.name();
+                if (n.endsWith("_PLANKS") || n.endsWith("_LOG") || n.endsWith("_WOOD")
+                        || n.endsWith("_SLAB") || n.endsWith("_STAIRS") || n.endsWith("_SAPLING")) yield 1;
+                if (m == Material.STICK || m == Material.BAMBOO) yield 1;
+                yield 0;
+            }
+        };
+    }
+
+    /**
+     * Führt eine Schmelz-Operation an einem (nicht geöffneten) Backpack aus:
+     * verbraucht eine Brennstoff-Einheit und schmilzt bis zu deren Wert an Items
+     * eines passenden Typs. Gibt true zurück, wenn etwas geschmolzen wurde.
+     */
+    public boolean smelt(UUID backpackId, Map<Material, ItemStack> recipes) {
+        if (isOpen(backpackId)) return false;
+        BackpackData data = storage.load(backpackId);
+        if (data == null) return false;
+        ItemStack[] contents = data.contents();
+        if (contents == null) return false;
+
+        int fuelSlot = -1, inputSlot = -1;
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack it = contents[i];
+            if (it == null || it.getType().isAir()) continue;
+            if (fuelSlot < 0 && fuelValue(it.getType()) > 0) fuelSlot = i;
+            if (inputSlot < 0 && recipes.containsKey(it.getType())
+                    && it.isSimilar(new ItemStack(it.getType()))) inputSlot = i;
+        }
+        if (fuelSlot < 0 || inputSlot < 0) return false;
+
+        ItemStack input = contents[inputSlot];
+        int batch = Math.min(input.getAmount(), Math.min(8, fuelValue(contents[fuelSlot].getType())));
+        if (batch <= 0) return false;
+
+        ItemStack result = recipes.get(input.getType()).clone();
+        result.setAmount(result.getAmount() * batch);
+
+        // Input verringern.
+        input.setAmount(input.getAmount() - batch);
+        if (input.getAmount() <= 0) contents[inputSlot] = null;
+        // Eine Brennstoff-Einheit verbrauchen (Lava-Eimer -> leerer Eimer).
+        ItemStack fuel = contents[fuelSlot];
+        if (fuel.getType() == Material.LAVA_BUCKET) {
+            contents[fuelSlot] = new ItemStack(Material.BUCKET);
+        } else {
+            fuel.setAmount(fuel.getAmount() - 1);
+            if (fuel.getAmount() <= 0) contents[fuelSlot] = null;
+        }
+        addToBuffer(contents, result);
+        data.contents(contents);
+        storage.save(data);
+        return true;
     }
 
     /** Speichert alle aktuell offenen Backpacks (Autosave / Shutdown), ohne sie zu schließen. */

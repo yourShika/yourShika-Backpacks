@@ -11,6 +11,7 @@ help:
   info: "<yellow>/bp info <gray>– View backpacks, upgrades & recipes"
   color: "<yellow>/bp color <color> [accent] <gray>– Dye a backpack (name or #RRGGBB)"
   list: "<yellow>/bp list [player] <gray>– List backpacks"
+  recall: "<yellow>/bp recall <gray>– Recall your placed backpacks (needs Recall Upgrade)"
   give: "<yellow>/bp give <player> <tier> [amount] [color] [accent] <gray>– Give a backpack"
   openid: "<yellow>/bp openid <id> <gray>– Open a backpack by ID"
   modules: "<yellow>/bp modules <gray>– Toggle external modules"
@@ -33,7 +34,7 @@ error:
   give-usage: "<red>Usage: /bp give <player> <tier> [amount] [color] [accent]"
   openid-usage: "<red>Usage: /bp openid <id>"
   invalid-color: "<red>Unknown color: <white><input></white>"
-  invalid-tier: "<red>Unknown tier: <white><input></white>"
+  invalid-tier: "<red>Unknown item: <white><input></white>"
   invalid-number: "<red>Not a valid number: <white><input></white>"
   player-not-found: "<red>Player not found: <white><input></white>"
   no-horse-armor: "<red>A backpack cannot be used as horse armor."
@@ -41,7 +42,6 @@ error:
   no-place: "<red>You may not place backpacks here."
   place-disabled: "<red>Placeable backpacks are disabled."
   place-occupied: "<red>A backpack is already placed here."
-  place-needs-packetevents: "<red>Placing backpacks requires the PacketEvents module to be installed and enabled."
   update-usage: "<red>Usage: /bp update <gray>(downloads the latest version from GitHub)"
 
 color:
@@ -50,6 +50,8 @@ color:
 place:
   success: "<green>Backpack placed. <gray>Right-click to open, sneak-right-click to pick up."
   removed: "<green>Backpack picked up."
+  recalled: "<green>Recalled <white><count></white> placed backpack(s)."
+  recall-none: "<gray>No placed backpacks with a Recall Upgrade found."
 
 upgrades:
   title: "<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>(<tier>)"

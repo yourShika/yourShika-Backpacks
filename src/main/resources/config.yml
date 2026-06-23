@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 5
+config-version: 6
 
 # Language file messages_<language>.yml (default: en). German (de) is bundled too.
 language: en
@@ -82,11 +82,6 @@ worlds:
 placeable:
   enabled: true
   protect-from-explosions: true
-  # Placement uses vanilla display entities and does NOT require PacketEvents.
-  # If you set this to true, placing is only allowed while the PacketEvents
-  # module is installed AND enabled (useful if you later switch to a
-  # packet-based representation). Default: false.
-  require-packetevents: false
 
 # ---------------------------------------------------------------------------
 #  Backpack-Tiers
@@ -386,5 +381,4 @@ upgrades:
 hooks:
   modules:
     placeholderapi: true    # Platzhalter (%ysbp_*%)
-    packetevents: true      # Packet-Darstellung platzierter Backpacks (Roadmap)
     oraxen: true            # Custom-Modelle/Texturen (einziger Item-Hook)

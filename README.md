@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.5.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.6.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,28 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## ✨ v0.6.0 (more upgrades, languages, /bp give all)
+
+- 🌍 **Languages:** bundled **English, German, Polish** (`messages_en/de/pl.yml`).
+  Message files **auto-update** on plugin updates (new keys are merged in,
+  your edits are kept).
+- 🎒 **`/bp give` now gives everything** – backpacks, Upgrade Leather, tier
+  upgrades (`upgrade_copper` …) and every function upgrade (`pickup`, `magnet` …).
+- 🧩 **New functional upgrades:**
+  - **Ender-Link** – opens your **ender chest** from the backpack.
+  - **Compacting** – compacts 9× stacks into blocks on close (iron → iron block, …).
+  - **Smelting / Blasting / Smoking** – auto-cooks items in the backpack using
+    **fuel** placed inside it.
+  - **Recall** – `/bp recall` returns your placed backpacks (needs the upgrade).
+  - **Trash** – a button opens a trash menu; items left inside are deleted.
+- 🔗 **Advanced upgrades require their base** to craft (e.g. Advanced Pickup needs
+  a Pickup Upgrade).
+- 🧹 **PacketEvents removed** – placement uses vanilla display entities and never
+  needed it.
+- 🖼️ **Oraxen textures** now deploy for **all items** (decoupled from backups).
 
 ---
 
@@ -450,7 +472,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.5.0.jar
+target/yourShika-Backpacks-0.6.0.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der
