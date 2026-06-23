@@ -307,19 +307,35 @@ public final class BackpackManager {
     private ItemStack infoItem(BackpackTier tier, BackpackMenuHolder holder) {
         ItemStack item = new ItemStack(Material.NAME_TAG);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(line("<gold><bold>Backpack-Info</bold></gold>"));
+        meta.displayName(line("<gold><bold>Backpack Info</bold></gold>"));
         List<Component> lore = new ArrayList<>();
         if (tier != null) {
             lore.add(line("<gray>Tier: <white>" + tier.key()));
-            lore.add(line("<gray>Lager gesamt: <white>" + tier.storageSlots() + " Slots"));
-            lore.add(line("<gray>Upgrade-Slots: <white>" + tier.upgradeSlots()));
+            lore.add(line("<gray>Storage: <white>" + tier.storageSlots() + " slots"));
+            lore.add(line("<gray>Upgrade slots: <white>" + tier.upgradeSlots()));
         }
         lore.add(line("<gray>ID: <white>" + holder.backpackId().toString().substring(0, 8)));
-        lore.add(line("<gray>Haupt: " + ColorUtil.pretty(holder.mainColor())
-                + " <dark_gray>/</dark_gray> <gray>Akzent: " + ColorUtil.pretty(holder.accentColor())));
+        lore.add(line("<gray>Main: " + ColorUtil.pretty(holder.mainColor())
+                + " <dark_gray>/</dark_gray> <gray>Accent: " + ColorUtil.pretty(holder.accentColor())));
         if (holder.hasPaging()) {
-            lore.add(line("<gray>Seite: <white>" + (holder.currentPage() + 1) + "/" + holder.pageCount()));
+            lore.add(line("<gray>Page: <white>" + (holder.currentPage() + 1) + "/" + holder.pageCount()));
         }
+
+        // Smelting-Status, wenn ein Schmelz-Upgrade verbaut ist.
+        java.util.Set<String> fns = functionUpgradesOf(holder.backpackId());
+        int[] st = computeSmeltStatus(holder.buffer(), fns);
+        if (st != null) {
+            String kind = fns.contains("blasting") ? "Blasting"
+                    : fns.contains("smoking") ? "Smoking" : "Smelting";
+            lore.add(Component.empty());
+            lore.add(line("<gold>" + kind + " status"));
+            lore.add(line("<gray>To smelt: <white>" + st[0] + " <gray>items"));
+            lore.add(line("<gray>Fuel can smelt: <white>" + st[1] + " <gray>items"));
+            String time = st[2] <= 0 ? "<dark_gray>idle"
+                    : "<white>~" + st[2] + "s <dark_gray>(paused while open)";
+            lore.add(line("<gray>Est. time: " + time));
+        }
+
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
@@ -496,6 +512,67 @@ public final class BackpackManager {
                 stack.setAmount(stack.getAmount() - add);
             }
         }
+    }
+
+    // Schmelz-Rezeptkarten (lazy aus den Server-Rezepten gebaut).
+    private Map<Material, ItemStack> furnaceMap, blastMap, smokerMap;
+
+    private void ensureSmeltMaps() {
+        if (furnaceMap != null) return;
+        furnaceMap = new java.util.HashMap<>();
+        blastMap = new java.util.HashMap<>();
+        smokerMap = new java.util.HashMap<>();
+        java.util.Iterator<org.bukkit.inventory.Recipe> it = Bukkit.recipeIterator();
+        while (it.hasNext()) {
+            org.bukkit.inventory.Recipe r = it.next();
+            if (r instanceof org.bukkit.inventory.BlastingRecipe b) putCook(blastMap, b);
+            else if (r instanceof org.bukkit.inventory.SmokingRecipe s) putCook(smokerMap, s);
+            else if (r instanceof org.bukkit.inventory.FurnaceRecipe f) putCook(furnaceMap, f);
+        }
+    }
+
+    private void putCook(Map<Material, ItemStack> map, org.bukkit.inventory.CookingRecipe<?> r) {
+        if (r.getInputChoice() instanceof org.bukkit.inventory.RecipeChoice.MaterialChoice mc) {
+            for (Material m : mc.getChoices()) map.putIfAbsent(m, r.getResult());
+        }
+    }
+
+    public Map<Material, ItemStack> smeltMap(String type) {
+        ensureSmeltMaps();
+        return switch (type) {
+            case "blast" -> blastMap;
+            case "smoker" -> smokerMap;
+            default -> furnaceMap;
+        };
+    }
+
+    /**
+     * Schmelz-Status eines Backpacks aus seinem aktuellen Inhalt:
+     * {@code [toSmelt, fuelCapacity, estSeconds]} oder null ohne Schmelz-Upgrade.
+     * (Während das Backpack geöffnet ist, pausiert das Schmelzen.)
+     */
+    public int[] computeSmeltStatus(ItemStack[] contents, java.util.Set<String> fns) {
+        if (contents == null) return null;
+        boolean any = fns.contains("smelting") || fns.contains("blasting") || fns.contains("smoking");
+        if (!any) return null;
+        ensureSmeltMaps();
+        java.util.Set<Material> inputs = new java.util.HashSet<>();
+        if (fns.contains("smelting")) inputs.addAll(furnaceMap.keySet());
+        if (fns.contains("blasting")) inputs.addAll(blastMap.keySet());
+        if (fns.contains("smoking")) inputs.addAll(smokerMap.keySet());
+
+        int toSmelt = 0, fuelCap = 0;
+        for (ItemStack it : contents) {
+            if (it == null || it.getType().isAir()) continue;
+            int fv = fuelValue(it.getType());
+            if (fv > 0) fuelCap += fv * it.getAmount();
+            if (inputs.contains(it.getType()) && it.isSimilar(new ItemStack(it.getType()))) {
+                toSmelt += it.getAmount();
+            }
+        }
+        int processable = Math.min(toSmelt, fuelCap);
+        int estSeconds = (int) Math.ceil(processable / 8.0) * 2;
+        return new int[]{toSmelt, fuelCap, estSeconds};
     }
 
     /** Wie viele Items eine Einheit dieses Brennstoffs schmilzt (0 = kein Brennstoff). */

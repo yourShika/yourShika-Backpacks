@@ -6,14 +6,15 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -55,13 +56,14 @@ public final class BackpackSecurityListener implements Listener {
     }
 
     /**
-     * Verhindert, dass ein Backpack in das Pferde-Rüstungs-Inventar
-     * ({@link HorseInventory}) gelegt wird. Lade-Inventare von Eseln/Lamas
-     * (Truhen) bleiben unberührt – dort dürfen Backpacks normal gelagert werden.
+     * Verhindert, dass ein Backpack in IRGENDEIN Pferde-/Reittier-Inventar
+     * ({@link AbstractHorseInventory}) gelegt wird – also auch Zombie-, Skelett-,
+     * Esel-, Maultier-, Lama- und Kamel-Inventare. So kann ein Backpack bei keiner
+     * Reittier-Art als Rüstung „verschwinden“.
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onHorseInventoryClick(InventoryClickEvent event) {
-        if (!(event.getView().getTopInventory() instanceof HorseInventory)) return;
+        if (!(event.getView().getTopInventory() instanceof AbstractHorseInventory)) return;
 
         if (items.isBackpack(event.getCursor())) {
             event.setCancelled(true);
@@ -74,8 +76,6 @@ public final class BackpackSecurityListener implements Listener {
                 return;
             }
         }
-        // Shift-Click eines Backpacks aus dem Spieler-Inventar würde es als
-        // Rüstung anlegen.
         if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY
                 && items.isBackpack(event.getCurrentItem())) {
             event.setCancelled(true);
@@ -84,13 +84,21 @@ public final class BackpackSecurityListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onHorseInventoryDrag(InventoryDragEvent event) {
-        if (!(event.getView().getTopInventory() instanceof HorseInventory)) return;
+        if (!(event.getView().getTopInventory() instanceof AbstractHorseInventory)) return;
         if (!items.isBackpack(event.getOldCursor())) return;
         for (int raw : event.getRawSlots()) {
             if (raw < event.getView().getTopInventory().getSize()) {
                 event.setCancelled(true);
                 return;
             }
+        }
+    }
+
+    /** Ein Spender darf ein Backpack nicht als Rüstung auf ein Pferd legen. */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onDispenseArmor(BlockDispenseArmorEvent event) {
+        if (items.isBackpack(event.getItem())) {
+            event.setCancelled(true);
         }
     }
 
