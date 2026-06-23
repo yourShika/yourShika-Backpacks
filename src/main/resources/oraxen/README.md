@@ -1,8 +1,10 @@
 # Oraxen-Assets fuer yourShika Backpack's
 
 Diese Dateien sind eine vorkonfigurierte Oraxen-Beilage fuer die Backpack-,
-Tier-Upgrade- und Funktions-Upgrade-Texturen. Alle Texturen sind 16x16-PNGs im
-Vanilla-nahen Pixelart-Stil.
+Tier-Upgrade- und Funktions-Upgrade-Texturen. Alle Pack-Texturen sind 64x64-PNGs,
+aber bewusst aus 16x16-Pixelart hochskaliert, damit sie zu Minecrafts
+Vanilla-Item-Stil passen. Die Backpack-Form basiert auf
+`source/bundle_reference.png`.
 
 ## Installation
 
@@ -20,7 +22,7 @@ Vanilla-nahen Pixelart-Stil.
 Hinweis fuer bestehende Installationen: Der automatische Deployer ist
 versioniert. Beim ersten Lauf dieser Version werden bestehende Plugin-Texturen
 unter `plugins/yourShika Backpack's/Textures/` gesichert und auf die neuen
-16x16-Defaults aktualisiert. Danach bleiben selbst angepasste Texturen erhalten,
+64x64-Vanilla-like-Defaults aktualisiert. Danach bleiben selbst angepasste Texturen erhalten,
 solange sie nicht mehr dem zuletzt verwalteten Default entsprechen. Vor jedem
 Ueberschreiben legt das Plugin ein Backup unter
 `plugins/yourShika Backpack's/AssetBackups/` an. Die Oraxen-Item-YAMLs werden

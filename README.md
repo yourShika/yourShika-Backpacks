@@ -26,6 +26,10 @@ ein Paper/Spigot-Plugin.**
 
 ## 🐞 v0.4.0 (Stabilität & Module)
 
+- **Vanilla-like Oraxen-Defaults:** Backpack-Texturen nutzen jetzt die
+  mitgelieferte Bundle-Referenz als Stilbasis. Alle Pack-PNGs sind 64x64, aber
+  aus echter 16x16-Pixelart hochskaliert, damit sie in Minecraft natürlicher
+  wirken.
 - **Kein Freeze/Crash mehr beim Modul-Umschalten.** Ursache war das wiederholte
   Neu-Registrieren von Rezepten (`Bukkit.removeRecipe` löst je Aufruf einen
   vollen Rezept-/Advancement-Reload aus). Rezepte werden jetzt **idempotent**
@@ -291,9 +295,10 @@ ideal als Backpack-Basis.
 ### Oraxen-Assets
 
 Unter `src/main/resources/oraxen/` liegt eine fertige Oraxen-Beilage mit
-16x16-Vanilla-Style-Texturen für alle Backpack-Tiers, Tier-Upgrade-Items und
+64x64-PNGs im Vanilla-Style für alle Backpack-Tiers, Tier-Upgrade-Items und
 52 vorbereitete Funktions-Upgrades (Pickup, Magnet, Filter, Void, Transfer,
-Crafting/Processing, Stack, Utility, Tank/Energy/XP). Die Backpack-Texturen
+Crafting/Processing, Stack, Utility, Tank/Energy/XP). Die Texturen sind bewusst
+aus 16x16-Pixelart hochskaliert, damit sie zu Minecraft-Items passen. Die Backpack-Texturen
 nutzen drei Layer: dyebare Basis (`*_base.png`), feste Akzentvarianten
 (`accents/<tier>_<dye>.png`) und Overlay für Outline, Tier-Metall und
 Glanzdetails. Die Plugin-Config verweist per `provider-id` auf die Basis-IDs;

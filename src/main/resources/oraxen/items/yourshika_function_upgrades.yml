@@ -1,5 +1,5 @@
 # Prepared functional backpack upgrade items.
-# These are texture/model providers only; gameplay logic can bind to the IDs later.
+# Texture/model providers only; gameplay logic can bind to these IDs later.
 
 ysbp_upgrade_pickup:
   displayname: "<#58c96a><bold>Pickup Upgrade</bold>"
