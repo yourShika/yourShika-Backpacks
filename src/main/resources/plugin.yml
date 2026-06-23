@@ -7,9 +7,9 @@ description: Eigenständiges, serverseitiges Backpack-System (inspiriert von Sop
 website: https://github.com/yourShika/yourShika-Backpacks
 folia-supported: false
 
-# Optionale, EXPERIMENTELLE Module – brechen das Plugin nicht, wenn nicht
-# vorhanden. Sie laden zur Laufzeit nur, wenn hooks.experimental: true gesetzt
-# ist (siehe config.yml) und das jeweilige Modul aktiviert wurde. Vault wird
+# Optionale Module – brechen das Plugin nicht, wenn sie nicht vorhanden sind.
+# Sie laden zur Laufzeit automatisch, sobald das jeweilige Plugin installiert
+# und das Modul in config.yml unter hooks.modules aktiviert ist. Vault wird
 # bewusst NICHT mehr unterstützt.
 softdepend:
   - PlaceholderAPI

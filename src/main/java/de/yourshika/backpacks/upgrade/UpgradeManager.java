@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
+import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
@@ -230,46 +231,60 @@ public final class UpgradeManager implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onPrepareSmithing(PrepareSmithingEvent event) {
-        SmithingInventory inv = event.getInventory();
+        SmithingUpgrade upgrade = computeSmithingUpgrade(event.getInventory(), event.getViewers(), false);
+        if (upgrade == null) {
+            if (hasTierUpgradeAddition(event.getInventory())) event.setResult(null);
+            return;
+        }
+        event.setResult(upgrade.result());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onSmithItem(SmithItemEvent event) {
+        SmithingUpgrade upgrade = computeSmithingUpgrade(event.getInventory(), event.getViewers(), true);
+        if (upgrade == null) {
+            if (hasTierUpgradeAddition(event.getInventory())) event.setCancelled(true);
+            return;
+        }
+        event.setCurrentItem(upgrade.result());
+        saveSmithingUpgrade(upgrade);
+    }
+
+    private boolean hasTierUpgradeAddition(SmithingInventory inv) {
+        return upgrades.getUpgradeTarget(inv.getItem(2)) != null;
+    }
+
+    private SmithingUpgrade computeSmithingUpgrade(SmithingInventory inv,
+                                                   List<HumanEntity> viewers,
+                                                   boolean assignMissingId) {
         ItemStack template = inv.getItem(0);
         ItemStack base = inv.getItem(1);
         ItemStack addition = inv.getItem(2);
 
         String target = upgrades.getUpgradeTarget(addition);
-        if (target == null) return;                          // nicht unser Rezept -> Vanilla unberührt
-        if (!backpacks.isBackpack(base)) {                   // unsere Zugabe, aber Basis ist kein Backpack
-            event.setResult(null);
-            return;
-        }
-        // In den Vorlage-Slot gehört NORMALES Leder – kein Upgrade-Leder.
+        if (target == null) return null;                          // nicht unser Rezept -> Vanilla unberührt
+        if (!backpacks.isBackpack(base)) return null;              // unsere Zugabe, aber Basis ist kein Backpack
         if (template == null || template.getType() != Material.LEATHER
-                || upgrades.isUpgradeBase(template)) {
-            event.setResult(null);
-            return;
-        }
+                || upgrades.isUpgradeBase(template)) return null;  // Vorlage muss normales Leder sein
 
         BackpackTier targetTier = tiers.get(target);
-        if (targetTier == null) {
-            event.setResult(null);
-            return;
-        }
-        // Quell-Tier muss exakt das vorherige Tier in der Kette sein.
+        if (targetTier == null) return null;
+
         String baseTierKey = backpacks.getTierKey(base);
         String expectedFrom = previousTier(target);
-        if (expectedFrom == null || !expectedFrom.equalsIgnoreCase(baseTierKey)) {
-            event.setResult(null);
-            return;
-        }
-        // Permission auf das Ziel-Tier.
+        if (expectedFrom == null || !expectedFrom.equalsIgnoreCase(baseTierKey)) return null;
+
         String perm = "yourshika.backpack.craft." + target;
-        for (HumanEntity viewer : event.getViewers()) {
-            if (!viewer.hasPermission(perm)) {
-                event.setResult(null);
-                return;
-            }
+        for (HumanEntity viewer : viewers) {
+            if (!viewer.hasPermission(perm)) return null;
         }
 
         UUID id = backpacks.getId(base);
+        if (id == null && assignMissingId) {
+            id = UUID.randomUUID();
+            backpacks.writeId(base, id);
+        }
+
         BackpackTier prevTier = tiers.get(expectedFrom);
         String prevMain = prevTier != null ? prevTier.defaultMainColor() : targetTier.defaultMainColor();
         String prevAccent = prevTier != null ? prevTier.defaultAccentColor() : targetTier.defaultAccentColor();
@@ -277,32 +292,28 @@ public final class UpgradeManager implements Listener {
         String baseMain = backpacks.getMainColor(base, prevMain);
         String baseAccent = backpacks.getAccentColor(base, prevAccent);
 
-        // Standard-Farben des Vorgänger-Tiers werden auf die Standard-Farben des
-        // neuen Tiers angehoben; individuell gefärbte Backpacks behalten ihre Farbe.
         String main = isSameColor(baseMain, prevMain) ? targetTier.defaultMainColor() : baseMain;
         String accent = isSameColor(baseAccent, prevAccent) ? targetTier.defaultAccentColor() : baseAccent;
 
         ItemStack result = backpacks.create(targetTier, id, main, accent);
-        // Besitzer des Ausgangs-Backpacks übernehmen.
         UUID ownerUuid = backpacks.getOwner(base);
         if (ownerUuid != null) {
             backpacks.writeOwner(result, ownerUuid, backpacks.getOwnerName(base));
             backpacks.applyDisplay(result, targetTier, id, main, accent);
         }
-        event.setResult(result);
+        return new SmithingUpgrade(id, target, main, accent, result);
+    }
 
-        // DB-Tier und -Farben sofort nachziehen, damit /bp list und platzierte
-        // Backpacks konsistent bleiben (Inhalt bleibt durch die ID ohnehin erhalten).
-        if (id != null) {
-            BackpackData data = manager.storage().load(id);
-            if (data != null) {
-                boolean changed = false;
-                if (!target.equalsIgnoreCase(data.tier())) { data.tier(target); changed = true; }
-                if (!main.equals(data.mainColor())) { data.mainColor(main); changed = true; }
-                if (!accent.equals(data.accentColor())) { data.accentColor(accent); changed = true; }
-                if (changed) manager.storage().save(data);
-            }
-        }
+    private void saveSmithingUpgrade(SmithingUpgrade upgrade) {
+        UUID id = upgrade.id();
+        if (id == null) return;
+        BackpackData data = manager.storage().load(id);
+        if (data == null) return;
+        boolean changed = false;
+        if (!upgrade.target().equalsIgnoreCase(data.tier())) { data.tier(upgrade.target()); changed = true; }
+        if (!upgrade.main().equals(data.mainColor())) { data.mainColor(upgrade.main()); changed = true; }
+        if (!upgrade.accent().equals(data.accentColor())) { data.accentColor(upgrade.accent()); changed = true; }
+        if (changed) manager.storage().save(data);
     }
 
     /** Vergleicht zwei Farb-Tokens unabhängig von Schreibweise/Hex-Format. */
@@ -339,5 +350,8 @@ public final class UpgradeManager implements Listener {
 
     private static String capitalize(String s) {
         return s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    private record SmithingUpgrade(UUID id, String target, String main, String accent, ItemStack result) {
     }
 }

@@ -84,6 +84,32 @@ public final class ColorUtil {
         return token.toUpperCase(Locale.ROOT);
     }
 
+    /**
+     * Liefert den naechstliegenden Vanilla-Dye-Key in lower_case. Das ist fuer
+     * Resourcepack-Varianten gedacht, wenn Minecraft nur eine feste Textur pro
+     * Akzentfarbe rendern kann.
+     */
+    public static String nearestDyeKey(String token, String fallback) {
+        Color source = toBukkitColor(token, toBukkitColor(fallback, Color.WHITE));
+        DyeColor best = DyeColor.WHITE;
+        double bestScore = Double.MAX_VALUE;
+        for (DyeColor dye : DyeColor.values()) {
+            Color c = dye.getColor();
+            double score = squared(source.getRed() - c.getRed())
+                    + squared(source.getGreen() - c.getGreen())
+                    + squared(source.getBlue() - c.getBlue());
+            if (score < bestScore) {
+                best = dye;
+                bestScore = score;
+            }
+        }
+        return best.name().toLowerCase(Locale.ROOT);
+    }
+
+    private static int squared(int value) {
+        return value * value;
+    }
+
     private static Color parseHex(String token) {
         if (token == null) return null;
         String s = token.trim();

@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.3.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.3.5-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,21 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## ✨ Neu in v0.3.5
+
+- 🎨 **Echte zweite Akzentfarbe** über Oraxen-Varianten (z. B.
+  `ysbp_leather_backpack_accent_red`). Die **Hauptfarbe** bleibt echtes
+  `LEATHER_HORSE_ARMOR`-Tinting.
+- 🧩 **Oraxen-YAMLs** mit **178 eindeutigen** Provider-/CustomModelData-Werten.
+- 📦 **Versionierter Asset-Deployer:** aktualisiert alte Defaults und legt
+  Backups unter `AssetBackups/` an.
+- 🛟 **Oraxen-Item-YAMLs** werden **vor dem Überschreiben gesichert**.
+- ⚒️ **Smithing-Fix:** Tier & Farbe werden erst beim `SmithItemEvent` geschrieben,
+  nicht mehr in der Vorschau.
+- 🧹 Alter `hooks.experimental`-Kommentar aus der `plugin.yml` entfernt.
 
 ---
 
@@ -259,13 +274,16 @@ ideal als Backpack-Basis.
 ### Oraxen-Assets
 
 Unter `src/main/resources/oraxen/` liegt eine fertige Oraxen-Beilage mit
-64×64-Vanilla-Style-Texturen für alle Backpack-Tiers, Tier-Upgrade-Items und
+16x16-Vanilla-Style-Texturen für alle Backpack-Tiers, Tier-Upgrade-Items und
 52 vorbereitete Funktions-Upgrades (Pickup, Magnet, Filter, Void, Transfer,
 Crafting/Processing, Stack, Utility, Tank/Energy/XP). Die Backpack-Texturen
-nutzen eine dyebare Basis (`*_base.png`) plus festes Overlay für Gurte,
-Tier-Metall und Akzentdetails. Die Plugin-Config verweist per `provider-id` auf
-diese Oraxen-IDs; erzeugt werden echte Backpacks weiterhin über Plugin-Crafting,
-Smithing oder `/bp give`, damit ID, Inhalt, Besitzer und Farbe erhalten bleiben.
+nutzen drei Layer: dyebare Basis (`*_base.png`), feste Akzentvarianten
+(`accents/<tier>_<dye>.png`) und Overlay für Outline, Tier-Metall und
+Glanzdetails. Die Plugin-Config verweist per `provider-id` auf die Basis-IDs;
+für abweichende Akzentfarben nutzt das Plugin automatisch Provider-IDs wie
+`ysbp_leather_backpack_accent_red`. Erzeugt werden echte Backpacks weiterhin
+über Plugin-Crafting, Smithing oder `/bp give`, damit ID, Inhalt, Besitzer und
+Farbe erhalten bleiben.
 
 Die Funktions-Upgrades sind als Modell-/Textur-Provider vorbereitet
 (`ysbp_upgrade_<upgrade_key>`, CustomModelData `2100-2151`); ihre Gameplay-Logik

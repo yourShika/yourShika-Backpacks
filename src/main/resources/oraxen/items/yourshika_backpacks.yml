@@ -1,3 +1,6 @@
+# Prepared backpack and tier-upgrade item model providers.
+# Backpack base layer is dye-tinted by the leather color; accent layers are generated variants.
+
 ysbp_leather_backpack:
   displayname: "<#A0703C>Leder-Rucksack"
   material: LEATHER_HORSE_ARMOR
@@ -7,8 +10,217 @@ ysbp_leather_backpack:
     parent_model: "item/generated"
     textures:
       - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_orange.png
       - ysbp/backpacks/leather_overlay.png
     custom_model_data: 1001
+
+ysbp_leather_backpack_accent_white:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_white.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11000
+
+ysbp_leather_backpack_accent_light_gray:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_light_gray.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11001
+
+ysbp_leather_backpack_accent_gray:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_gray.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11002
+
+ysbp_leather_backpack_accent_black:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_black.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11003
+
+ysbp_leather_backpack_accent_brown:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_brown.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11004
+
+ysbp_leather_backpack_accent_red:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_red.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11005
+
+ysbp_leather_backpack_accent_orange:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_orange.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11006
+
+ysbp_leather_backpack_accent_yellow:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_yellow.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11007
+
+ysbp_leather_backpack_accent_lime:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_lime.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11008
+
+ysbp_leather_backpack_accent_green:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_green.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11009
+
+ysbp_leather_backpack_accent_cyan:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_cyan.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11010
+
+ysbp_leather_backpack_accent_light_blue:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_light_blue.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11011
+
+ysbp_leather_backpack_accent_blue:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_blue.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11012
+
+ysbp_leather_backpack_accent_purple:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_purple.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11013
+
+ysbp_leather_backpack_accent_magenta:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_magenta.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11014
+
+ysbp_leather_backpack_accent_pink:
+  displayname: "<#A0703C>Leder-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/leather_base.png
+      - ysbp/backpacks/accents/leather_pink.png
+      - ysbp/backpacks/leather_overlay.png
+    custom_model_data: 11015
 
 ysbp_copper_backpack:
   displayname: "<#C87B53>Kupfer-Rucksack"
@@ -19,8 +231,217 @@ ysbp_copper_backpack:
     parent_model: "item/generated"
     textures:
       - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_brown.png
       - ysbp/backpacks/copper_overlay.png
     custom_model_data: 1002
+
+ysbp_copper_backpack_accent_white:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_white.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11100
+
+ysbp_copper_backpack_accent_light_gray:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_light_gray.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11101
+
+ysbp_copper_backpack_accent_gray:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_gray.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11102
+
+ysbp_copper_backpack_accent_black:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_black.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11103
+
+ysbp_copper_backpack_accent_brown:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_brown.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11104
+
+ysbp_copper_backpack_accent_red:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_red.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11105
+
+ysbp_copper_backpack_accent_orange:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_orange.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11106
+
+ysbp_copper_backpack_accent_yellow:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_yellow.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11107
+
+ysbp_copper_backpack_accent_lime:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_lime.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11108
+
+ysbp_copper_backpack_accent_green:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_green.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11109
+
+ysbp_copper_backpack_accent_cyan:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_cyan.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11110
+
+ysbp_copper_backpack_accent_light_blue:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_light_blue.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11111
+
+ysbp_copper_backpack_accent_blue:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_blue.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11112
+
+ysbp_copper_backpack_accent_purple:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_purple.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11113
+
+ysbp_copper_backpack_accent_magenta:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_magenta.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11114
+
+ysbp_copper_backpack_accent_pink:
+  displayname: "<#C87B53>Kupfer-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/copper_base.png
+      - ysbp/backpacks/accents/copper_pink.png
+      - ysbp/backpacks/copper_overlay.png
+    custom_model_data: 11115
 
 ysbp_iron_backpack:
   displayname: "<#D8D8D8>Eisen-Rucksack"
@@ -31,8 +452,217 @@ ysbp_iron_backpack:
     parent_model: "item/generated"
     textures:
       - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_light_gray.png
       - ysbp/backpacks/iron_overlay.png
     custom_model_data: 1003
+
+ysbp_iron_backpack_accent_white:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_white.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11200
+
+ysbp_iron_backpack_accent_light_gray:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_light_gray.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11201
+
+ysbp_iron_backpack_accent_gray:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_gray.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11202
+
+ysbp_iron_backpack_accent_black:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_black.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11203
+
+ysbp_iron_backpack_accent_brown:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_brown.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11204
+
+ysbp_iron_backpack_accent_red:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_red.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11205
+
+ysbp_iron_backpack_accent_orange:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_orange.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11206
+
+ysbp_iron_backpack_accent_yellow:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_yellow.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11207
+
+ysbp_iron_backpack_accent_lime:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_lime.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11208
+
+ysbp_iron_backpack_accent_green:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_green.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11209
+
+ysbp_iron_backpack_accent_cyan:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_cyan.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11210
+
+ysbp_iron_backpack_accent_light_blue:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_light_blue.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11211
+
+ysbp_iron_backpack_accent_blue:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_blue.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11212
+
+ysbp_iron_backpack_accent_purple:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_purple.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11213
+
+ysbp_iron_backpack_accent_magenta:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_magenta.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11214
+
+ysbp_iron_backpack_accent_pink:
+  displayname: "<#D8D8D8>Eisen-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/iron_base.png
+      - ysbp/backpacks/accents/iron_pink.png
+      - ysbp/backpacks/iron_overlay.png
+    custom_model_data: 11215
 
 ysbp_gold_backpack:
   displayname: "<#F2D14E>Gold-Rucksack"
@@ -43,8 +673,217 @@ ysbp_gold_backpack:
     parent_model: "item/generated"
     textures:
       - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_orange.png
       - ysbp/backpacks/gold_overlay.png
     custom_model_data: 1004
+
+ysbp_gold_backpack_accent_white:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_white.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11300
+
+ysbp_gold_backpack_accent_light_gray:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_light_gray.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11301
+
+ysbp_gold_backpack_accent_gray:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_gray.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11302
+
+ysbp_gold_backpack_accent_black:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_black.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11303
+
+ysbp_gold_backpack_accent_brown:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_brown.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11304
+
+ysbp_gold_backpack_accent_red:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_red.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11305
+
+ysbp_gold_backpack_accent_orange:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_orange.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11306
+
+ysbp_gold_backpack_accent_yellow:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_yellow.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11307
+
+ysbp_gold_backpack_accent_lime:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_lime.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11308
+
+ysbp_gold_backpack_accent_green:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_green.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11309
+
+ysbp_gold_backpack_accent_cyan:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_cyan.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11310
+
+ysbp_gold_backpack_accent_light_blue:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_light_blue.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11311
+
+ysbp_gold_backpack_accent_blue:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_blue.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11312
+
+ysbp_gold_backpack_accent_purple:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_purple.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11313
+
+ysbp_gold_backpack_accent_magenta:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_magenta.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11314
+
+ysbp_gold_backpack_accent_pink:
+  displayname: "<#F2D14E>Gold-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/gold_base.png
+      - ysbp/backpacks/accents/gold_pink.png
+      - ysbp/backpacks/gold_overlay.png
+    custom_model_data: 11315
 
 ysbp_diamond_backpack:
   displayname: "<#5BE8D4>Diamant-Rucksack"
@@ -55,8 +894,217 @@ ysbp_diamond_backpack:
     parent_model: "item/generated"
     textures:
       - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_light_blue.png
       - ysbp/backpacks/diamond_overlay.png
     custom_model_data: 1005
+
+ysbp_diamond_backpack_accent_white:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_white.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11400
+
+ysbp_diamond_backpack_accent_light_gray:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_light_gray.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11401
+
+ysbp_diamond_backpack_accent_gray:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_gray.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11402
+
+ysbp_diamond_backpack_accent_black:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_black.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11403
+
+ysbp_diamond_backpack_accent_brown:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_brown.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11404
+
+ysbp_diamond_backpack_accent_red:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_red.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11405
+
+ysbp_diamond_backpack_accent_orange:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_orange.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11406
+
+ysbp_diamond_backpack_accent_yellow:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_yellow.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11407
+
+ysbp_diamond_backpack_accent_lime:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_lime.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11408
+
+ysbp_diamond_backpack_accent_green:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_green.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11409
+
+ysbp_diamond_backpack_accent_cyan:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_cyan.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11410
+
+ysbp_diamond_backpack_accent_light_blue:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_light_blue.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11411
+
+ysbp_diamond_backpack_accent_blue:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_blue.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11412
+
+ysbp_diamond_backpack_accent_purple:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_purple.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11413
+
+ysbp_diamond_backpack_accent_magenta:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_magenta.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11414
+
+ysbp_diamond_backpack_accent_pink:
+  displayname: "<#5BE8D4>Diamant-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/diamond_base.png
+      - ysbp/backpacks/accents/diamond_pink.png
+      - ysbp/backpacks/diamond_overlay.png
+    custom_model_data: 11415
 
 ysbp_emerald_backpack:
   displayname: "<#3BD16F>Smaragd-Rucksack"
@@ -67,8 +1115,217 @@ ysbp_emerald_backpack:
     parent_model: "item/generated"
     textures:
       - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_gray.png
       - ysbp/backpacks/emerald_overlay.png
     custom_model_data: 1006
+
+ysbp_emerald_backpack_accent_white:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_white.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11500
+
+ysbp_emerald_backpack_accent_light_gray:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_light_gray.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11501
+
+ysbp_emerald_backpack_accent_gray:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_gray.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11502
+
+ysbp_emerald_backpack_accent_black:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_black.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11503
+
+ysbp_emerald_backpack_accent_brown:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_brown.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11504
+
+ysbp_emerald_backpack_accent_red:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_red.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11505
+
+ysbp_emerald_backpack_accent_orange:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_orange.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11506
+
+ysbp_emerald_backpack_accent_yellow:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_yellow.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11507
+
+ysbp_emerald_backpack_accent_lime:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_lime.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11508
+
+ysbp_emerald_backpack_accent_green:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_green.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11509
+
+ysbp_emerald_backpack_accent_cyan:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_cyan.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11510
+
+ysbp_emerald_backpack_accent_light_blue:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_light_blue.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11511
+
+ysbp_emerald_backpack_accent_blue:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_blue.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11512
+
+ysbp_emerald_backpack_accent_purple:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_purple.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11513
+
+ysbp_emerald_backpack_accent_magenta:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_magenta.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11514
+
+ysbp_emerald_backpack_accent_pink:
+  displayname: "<#3BD16F>Smaragd-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/emerald_base.png
+      - ysbp/backpacks/accents/emerald_pink.png
+      - ysbp/backpacks/emerald_overlay.png
+    custom_model_data: 11515
 
 ysbp_netherite_backpack:
   displayname: "<#6E5BC8>Netherite-Rucksack"
@@ -79,8 +1336,217 @@ ysbp_netherite_backpack:
     parent_model: "item/generated"
     textures:
       - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_black.png
       - ysbp/backpacks/netherite_overlay.png
     custom_model_data: 1007
+
+ysbp_netherite_backpack_accent_white:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_white.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11600
+
+ysbp_netherite_backpack_accent_light_gray:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_light_gray.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11601
+
+ysbp_netherite_backpack_accent_gray:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_gray.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11602
+
+ysbp_netherite_backpack_accent_black:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_black.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11603
+
+ysbp_netherite_backpack_accent_brown:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_brown.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11604
+
+ysbp_netherite_backpack_accent_red:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_red.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11605
+
+ysbp_netherite_backpack_accent_orange:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_orange.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11606
+
+ysbp_netherite_backpack_accent_yellow:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_yellow.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11607
+
+ysbp_netherite_backpack_accent_lime:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_lime.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11608
+
+ysbp_netherite_backpack_accent_green:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_green.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11609
+
+ysbp_netherite_backpack_accent_cyan:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_cyan.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11610
+
+ysbp_netherite_backpack_accent_light_blue:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_light_blue.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11611
+
+ysbp_netherite_backpack_accent_blue:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_blue.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11612
+
+ysbp_netherite_backpack_accent_purple:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_purple.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11613
+
+ysbp_netherite_backpack_accent_magenta:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_magenta.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11614
+
+ysbp_netherite_backpack_accent_pink:
+  displayname: "<#6E5BC8>Netherite-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/netherite_base.png
+      - ysbp/backpacks/accents/netherite_pink.png
+      - ysbp/backpacks/netherite_overlay.png
+    custom_model_data: 11615
 
 ysbp_upgrade_base:
   displayname: "<#A0703C><bold>Upgrade-Leder</bold>"

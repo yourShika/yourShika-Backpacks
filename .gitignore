@@ -28,3 +28,7 @@ run/
 
 # Claude Code local settings
 .claude/
+
+# Python (Asset-Generator)
+__pycache__/
+*.pyc

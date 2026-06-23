@@ -84,7 +84,7 @@ public final class BackpackItemFactory {
 
         // Optionales externes Modell (Nexo/ItemsAdder/Oraxen) überlagern.
         if (plugin.moduleManager() != null) {
-            plugin.moduleManager().applyExternalModel(item, tier);
+            applyExternalBackpackModel(item, tier, accent);
         }
         return item;
     }
@@ -169,8 +169,27 @@ public final class BackpackItemFactory {
         }
         applyDisplay(item, tier, id, main, accent);
         if (plugin.moduleManager() != null) {
-            plugin.moduleManager().applyExternalModel(item, tier);
+            applyExternalBackpackModel(item, tier, accent);
         }
+    }
+
+    private void applyExternalBackpackModel(ItemStack item, BackpackTier tier, String accent) {
+        String providerId = accentProviderId(tier, accent);
+        if (providerId == null) {
+            plugin.moduleManager().applyExternalModel(item, tier);
+        } else {
+            plugin.moduleManager().applyExternalModel(item, providerId);
+        }
+    }
+
+    private String accentProviderId(BackpackTier tier, String accent) {
+        String base = tier.providerId();
+        if (base == null || base.isBlank()) return null;
+        String fallback = tier.defaultAccentColor();
+        String variant = ColorUtil.nearestDyeKey(accent, fallback);
+        String defaultVariant = ColorUtil.nearestDyeKey(fallback, fallback);
+        if (variant.equals(defaultVariant)) return base;
+        return base + "_accent_" + variant;
     }
 
     public boolean isBackpack(ItemStack item) {
