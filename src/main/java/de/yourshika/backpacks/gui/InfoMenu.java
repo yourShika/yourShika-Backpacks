@@ -126,14 +126,14 @@ public final class InfoMenu {
                     ? plugin.itemFactory().createTemplate(plugin.tiers().get(prev)) : icon(Material.LEATHER_HORSE_ARMOR, "<gray>Backpack");
             ItemStack upgrade = plugin.upgradeManager().upgradeItem(tierKey);
             renderSmithing(inv,
-                    icon(Material.LEATHER, "<white>Leder <gray>(Vorlage)"),
-                    label(prevPack, "<gray>vorheriges Backpack (Basis)"),
-                    upgrade != null ? label(upgrade, "<gray>Tier-Upgrade (Zugabe)")
-                            : icon(Material.PAPER, "<gray>Tier-Upgrade"),
+                    icon(Material.LEATHER, "<white>Leather <gray>(Template)"),
+                    label(prevPack, "<gray>Previous backpack (Base)"),
+                    upgrade != null ? label(upgrade, "<gray>Tier upgrade (Addition)")
+                            : icon(Material.PAPER, "<gray>Tier upgrade"),
                     result);
             inv.setItem(4, header("<aqua><bold>Smithing Table</bold></aqua>",
-                    List.of("<gray>Leder + vorheriges Backpack + Upgrade.",
-                            "<gray>ID, Inhalt & Farbe bleiben erhalten.")));
+                    List.of("<gray>Leather + previous backpack + tier upgrade.",
+                            "<gray>Keeps ID, contents & color.")));
         }
         player.openInventory(inv);
     }
@@ -166,12 +166,12 @@ public final class InfoMenu {
         if (um.isSmithingUpgrade(key)) {
             // Netherite-Upgrade per Smithing.
             renderSmithing(inv,
-                    label(um.baseUpgradeItem(), "<gray>Upgrade-Leder (Vorlage)"),
-                    icon(um.materialFor(key), "<gray>Netherite-Ingot (Basis)"),
-                    icon(Material.STRING, "<gray>Faden (Zugabe)"),
+                    label(um.baseUpgradeItem(), "<gray>Upgrade Leather (Template)"),
+                    icon(um.materialFor(key), "<gray>Netherite Ingot (Base)"),
+                    icon(Material.STRING, "<gray>String (Addition)"),
                     upgrade);
             inv.setItem(4, header("<aqua><bold>Smithing Table</bold></aqua>",
-                    List.of("<gray>Upgrade-Leder + Netherite-Ingot + Faden.")));
+                    List.of("<gray>Upgrade Leather + Netherite Ingot + String.")));
         } else {
             renderGrid(inv, List.of("MMM", "MUM", "MMM"),
                     java.util.Map.of('M', um.materialFor(key)));

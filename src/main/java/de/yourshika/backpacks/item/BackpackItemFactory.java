@@ -94,18 +94,23 @@ public final class BackpackItemFactory {
         return create(tier, null, tier.defaultMainColor(), tier.defaultAccentColor());
     }
 
-    /** Setzt die CustomModelData- und item_model-Component (für Resourcepacks). */
+    /**
+     * Setzt die CustomModelData- und item_model-Component auf den Tier-Standard
+     * zurück. Wichtig: {@code item_model} wird hier auch <em>geleert</em>, wenn der
+     * Tier keins definiert – so kehrt ein Backpack nach dem Abschalten eines
+     * Custom-Item-Hooks (z.B. Oraxen) zur normalen Pferderüstung zurück. Ein
+     * aktiver externer Anbieter überschreibt das Modell danach wieder.
+     */
     private void applyModel(ItemMeta meta, BackpackTier tier) {
-        if (tier.customModelData() > 0) {
-            CustomModelDataComponent component = meta.getCustomModelDataComponent();
-            component.setFloats(List.of((float) tier.customModelData()));
-            meta.setCustomModelDataComponent(component);
-        }
+        CustomModelDataComponent component = meta.getCustomModelDataComponent();
+        component.setFloats(tier.customModelData() > 0
+                ? List.of((float) tier.customModelData()) : List.of());
+        meta.setCustomModelDataComponent(component);
+
         if (tier.itemModel() != null && !tier.itemModel().isBlank()) {
-            NamespacedKey model = NamespacedKey.fromString(tier.itemModel());
-            if (model != null) {
-                meta.setItemModel(model);
-            }
+            meta.setItemModel(NamespacedKey.fromString(tier.itemModel()));
+        } else {
+            meta.setItemModel(null); // zurücksetzen -> Vanilla-Optik
         }
     }
 

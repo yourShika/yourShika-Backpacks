@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.3.5-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.4.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,23 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## 🐞 v0.4.0 (Stabilität & Module)
+
+- **Kein Freeze/Crash mehr beim Modul-Umschalten.** Ursache war das wiederholte
+  Neu-Registrieren von Rezepten (`Bukkit.removeRecipe` löst je Aufruf einen
+  vollen Rezept-/Advancement-Reload aus). Rezepte werden jetzt **idempotent**
+  registriert und beim Umschalten **gar nicht** mehr angefasst.
+- **Oraxen aus = zurück zu normaler Pferderüstung.** Beim Abschalten des
+  Oraxen-Moduls wird das Custom-Modell sauber **entfernt**; beim Einschalten
+  werden die Backpacks online befindlicher Spieler **automatisch aktualisiert**
+  (danach ggf. `/oraxen reload`).
+- **Module-/Info-GUIs:** Items lassen sich nicht mehr entnehmen/verschieben
+  (war eine Folge des Freezes).
+- **`/bp info`:** Smithing-Rezepte sauberer dargestellt, Slot-Beschriftungen auf
+  Englisch (Template / Base / Addition) – passend zum Smithing Table.
 
 ---
 
@@ -404,7 +421,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.3.0.jar
+target/yourShika-Backpacks-0.4.0.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

@@ -72,8 +72,21 @@ public final class UpgradeManager implements Listener {
         return upgrades;
     }
 
+    /**
+     * Idempotente Registrierung: bereits vorhandene Rezepte werden NICHT entfernt
+     * und neu angelegt. {@code Bukkit.removeRecipe} ist extrem teuer (voller
+     * Rezept-/Advancement-Reload) und würde den Server zur Laufzeit – etwa beim
+     * Umschalten eines Moduls – einfrieren lassen.
+     */
+    private boolean ensureAbsent(NamespacedKey key) {
+        if (Bukkit.getRecipe(key) != null) {
+            if (!registered.contains(key)) registered.add(key);
+            return false;
+        }
+        return true;
+    }
+
     public void registerAll() {
-        unregisterAll();
         if (!plugin.getConfig().getBoolean("upgrades.enabled", true)) {
             plugin.getLogger().info("Upgrade-System deaktiviert (config: upgrades.enabled).");
             return;
@@ -86,14 +99,16 @@ public final class UpgradeManager implements Listener {
         int count = 0;
         // a) Upgrade-Leder: Leder mittig, von Faden umgeben.
         try {
-            ShapedRecipe base = new ShapedRecipe(key("upgrade_base"), baseItem);
-            base.shape(" S ", "SLS", " S ");
-            base.setIngredient('S', Material.STRING);
-            base.setIngredient('L', Material.LEATHER);
-            base.setGroup("yourshika_upgrades");
-            Bukkit.addRecipe(base);
-            registered.add(base.getKey());
-            count++;
+            if (ensureAbsent(key("upgrade_base"))) {
+                ShapedRecipe base = new ShapedRecipe(key("upgrade_base"), baseItem);
+                base.shape(" S ", "SLS", " S ");
+                base.setIngredient('S', Material.STRING);
+                base.setIngredient('L', Material.LEATHER);
+                base.setGroup("yourshika_upgrades");
+                Bukkit.addRecipe(base);
+                registered.add(base.getKey());
+                count++;
+            }
         } catch (Exception ex) {
             plugin.getLogger().warning("Rezept 'upgrade_base' fehlerhaft: " + ex.getMessage());
         }
@@ -104,6 +119,7 @@ public final class UpgradeManager implements Listener {
             String target = order.get(i);
             ItemStack result = upgradeItems.get(target);
             if (result == null) continue;
+            if (!ensureAbsent(key("upgrade_" + target))) continue;
             Material mat = tierMaterial(target);
             try {
                 if (mat == Material.NETHERITE_INGOT || target.equalsIgnoreCase("netherite")) {
@@ -140,6 +156,7 @@ public final class UpgradeManager implements Listener {
             BackpackTier targetTier = tiers.get(target);
             ItemStack upgrade = upgradeItems.get(target);
             if (targetTier == null || upgrade == null) continue;
+            if (!ensureAbsent(key("smith_" + target))) continue;
             try {
                 ItemStack placeholder = backpacks.createTemplate(targetTier);
                 SmithingTransformRecipe r = new SmithingTransformRecipe(

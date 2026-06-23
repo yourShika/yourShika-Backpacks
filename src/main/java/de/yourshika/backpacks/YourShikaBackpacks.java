@@ -225,14 +225,40 @@ public final class YourShikaBackpacks extends JavaPlugin {
         }
     }
 
-    /** Schaltet ein einzelnes Modul um (persistiert + Live-Reload). */
+    /**
+     * Schaltet ein einzelnes Modul um (persistiert + Live-Reload). Es werden
+     * BEWUSST keine Rezepte neu registriert – {@code Bukkit.removeRecipe} ist
+     * extrem teuer und würde den Server einfrieren. Stattdessen werden nur die
+     * sichtbaren Backpack-Items online befindlicher Spieler aktualisiert
+     * (Texturen an/aus).
+     */
     public void setModuleEnabled(String id, boolean value) {
         getConfig().set("hooks.modules." + id, value);
         saveConfig();
         pluginConfig.load();
         moduleManager.reload();
-        if (recipeManager != null) recipeManager.registerAll();
-        if (upgradeManager != null) upgradeManager.registerAll();
+        refreshOnlineBackpacks();
+    }
+
+    /** Aktualisiert Modell/Textur aller Backpack-Items online befindlicher Spieler. */
+    public void refreshOnlineBackpacks() {
+        if (itemFactory == null) return;
+        for (org.bukkit.entity.Player player : Bukkit.getOnlinePlayers()) {
+            org.bukkit.inventory.ItemStack[] contents = player.getInventory().getContents();
+            boolean changed = false;
+            for (org.bukkit.inventory.ItemStack item : contents) {
+                if (!itemFactory.isBackpack(item)) continue;
+                var tier = tiers.get(itemFactory.getTierKey(item));
+                if (tier != null) {
+                    itemFactory.refresh(item, tier);
+                    changed = true;
+                }
+            }
+            if (changed) {
+                player.getInventory().setContents(contents);
+                player.updateInventory();
+            }
+        }
     }
 
     public void debug(String message) {

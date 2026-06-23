@@ -39,7 +39,6 @@ public final class RecipeManager implements Listener {
     }
 
     public void registerAll() {
-        unregisterAll();
         if (!plugin.pluginConfig().recipesEnabled()) {
             plugin.getLogger().info("Crafting global deaktiviert (config: crafting.enabled).");
             return;
@@ -51,6 +50,13 @@ public final class RecipeManager implements Listener {
             if (def.shape() == null || def.shape().isEmpty()) continue;
             try {
                 NamespacedKey key = new NamespacedKey(plugin, "backpack_" + tier.key());
+                // Idempotent: bereits registrierte Rezepte NICHT erneut entfernen/anlegen.
+                // Bukkit.removeRecipe ist sehr teuer (voller Rezept-/Advancement-Reload)
+                // und darf nicht zur Laufzeit (z.B. beim Modul-Umschalten) laufen.
+                if (Bukkit.getRecipe(key) != null) {
+                    if (!registered.contains(key)) registered.add(key);
+                    continue;
+                }
                 ItemStack result = items.createTemplate(tier);
                 ShapedRecipe recipe = new ShapedRecipe(key, result);
                 recipe.shape(def.shape().toArray(new String[0]));
