@@ -52,14 +52,21 @@ public final class PlaceableListener implements Listener {
             }
             UUID id = placeable.backpackIdOf(entity);
             if (id != null) {
+                if (manager.isOpen(id)) {
+                    plugin.messages().send(player, "error.already-open");
+                    return;
+                }
                 var data = manager.storage().load(id);
                 if (data != null && !manager.canAccess(player, data.owner())) {
                     plugin.messages().send(player, "error.not-owner");
                     return;
                 }
             }
-            placeable.pickup(entity);
-            plugin.messages().send(player, "place.removed");
+            if (placeable.pickup(entity)) {
+                plugin.messages().send(player, "place.removed");
+            } else {
+                plugin.messages().send(player, "error.invalid-backpack");
+            }
             return;
         }
         if (!player.hasPermission("yourshika.backpack.open")) {

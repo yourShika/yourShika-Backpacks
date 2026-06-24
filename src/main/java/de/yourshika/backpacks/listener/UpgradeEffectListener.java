@@ -14,8 +14,6 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.UUID;
-
 /**
  * Setzt die funktionalen Upgrades um, die auf Events reagieren:
  *
@@ -44,16 +42,13 @@ public final class UpgradeEffectListener implements Listener {
     public void onPickup(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
 
-        UUID id = manager.findBackpackWithFunction(player, "pickup");
-        if (id == null) id = manager.findBackpackWithFunction(player, "advanced_pickup");
-        if (id == null) return;
-
         Item entity = event.getItem();
         ItemStack stack = entity.getItemStack();
         if (items.isBackpack(stack)) return; // Backpacks selbst nicht einsaugen.
 
         ItemStack work = stack.clone();
-        if (!manager.depositItem(id, work)) return; // nichts ging rein -> normal aufsammeln
+        if (!manager.depositItemWithFunction(player, work,
+                java.util.Set.of("pickup", "advanced_pickup"))) return; // nichts ging rein -> normal aufsammeln
 
         event.setCancelled(true);
         if (work.getAmount() <= 0) {
@@ -94,7 +89,7 @@ public final class UpgradeEffectListener implements Listener {
 
     private boolean isEverlasting(ItemStack stack) {
         if (!items.isBackpack(stack)) return false;
-        UUID id = items.getId(stack);
+        java.util.UUID id = items.getId(stack);
         return id != null && manager.functionUpgradesOf(id).contains("everlasting");
     }
 }

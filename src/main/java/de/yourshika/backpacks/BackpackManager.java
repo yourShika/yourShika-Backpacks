@@ -477,41 +477,61 @@ public final class BackpackManager {
             int blocks = total / 9;
             if (blocks == 0) continue;
             int remainder = total % 9;
-            // Alle "plain" Items dieses Typs aus dem Buffer entfernen.
-            for (int i = 0; i < buffer.length; i++) {
-                ItemStack it = buffer[i];
+
+            ItemStack[] trial = cloneBuffer(buffer);
+            for (int i = 0; i < trial.length; i++) {
+                ItemStack it = trial[i];
                 if (it != null && it.getType() == mat && it.isSimilar(new ItemStack(mat))) {
-                    buffer[i] = null;
+                    trial[i] = null;
                 }
             }
-            addToBuffer(buffer, new ItemStack(COMPACT.get(mat), blocks));
-            if (remainder > 0) addToBuffer(buffer, new ItemStack(mat, remainder));
+
+            ItemStack blockLeftover = addToBuffer(trial, new ItemStack(COMPACT.get(mat), blocks));
+            ItemStack itemLeftover = remainder > 0 ? addToBuffer(trial, new ItemStack(mat, remainder)) : null;
+            if (blockLeftover == null && itemLeftover == null) {
+                copyBuffer(trial, buffer);
+            }
         }
     }
 
     /** Legt einen Stack in freie/passende Buffer-Slots (für Compacting). */
-    private void addToBuffer(ItemStack[] buffer, ItemStack stack) {
-        int max = stack.getMaxStackSize();
-        for (int i = 0; i < buffer.length && stack.getAmount() > 0; i++) {
+    private ItemStack addToBuffer(ItemStack[] buffer, ItemStack stack) {
+        if (stack == null || stack.getType().isAir()) return null;
+        ItemStack moving = stack.clone();
+        int max = moving.getMaxStackSize();
+        for (int i = 0; i < buffer.length && moving.getAmount() > 0; i++) {
             ItemStack slot = buffer[i];
-            if (slot != null && slot.isSimilar(stack)) {
+            if (slot != null && slot.isSimilar(moving)) {
                 int space = slot.getMaxStackSize() - slot.getAmount();
                 if (space > 0) {
-                    int add = Math.min(space, stack.getAmount());
+                    int add = Math.min(space, moving.getAmount());
                     slot.setAmount(slot.getAmount() + add);
-                    stack.setAmount(stack.getAmount() - add);
+                    moving.setAmount(moving.getAmount() - add);
                 }
             }
         }
-        for (int i = 0; i < buffer.length && stack.getAmount() > 0; i++) {
+        for (int i = 0; i < buffer.length && moving.getAmount() > 0; i++) {
             if (buffer[i] == null || buffer[i].getType().isAir()) {
-                int add = Math.min(max, stack.getAmount());
-                ItemStack copy = stack.clone();
+                int add = Math.min(max, moving.getAmount());
+                ItemStack copy = moving.clone();
                 copy.setAmount(add);
                 buffer[i] = copy;
-                stack.setAmount(stack.getAmount() - add);
+                moving.setAmount(moving.getAmount() - add);
             }
         }
+        return moving.getAmount() > 0 ? moving : null;
+    }
+
+    private ItemStack[] cloneBuffer(ItemStack[] buffer) {
+        ItemStack[] copy = new ItemStack[buffer.length];
+        for (int i = 0; i < buffer.length; i++) {
+            copy[i] = buffer[i] == null ? null : buffer[i].clone();
+        }
+        return copy;
+    }
+
+    private void copyBuffer(ItemStack[] source, ItemStack[] target) {
+        System.arraycopy(source, 0, target, 0, Math.min(source.length, target.length));
     }
 
     // Schmelz-Rezeptkarten (lazy aus den Server-Rezepten gebaut).
@@ -607,38 +627,54 @@ public final class BackpackManager {
         ItemStack[] contents = data.contents();
         if (contents == null) return false;
 
-        int fuelSlot = -1, inputSlot = -1;
+        int inputSlot = -1;
         for (int i = 0; i < contents.length; i++) {
             ItemStack it = contents[i];
             if (it == null || it.getType().isAir()) continue;
-            if (fuelSlot < 0 && fuelValue(it.getType()) > 0) fuelSlot = i;
             if (inputSlot < 0 && recipes.containsKey(it.getType())
                     && it.isSimilar(new ItemStack(it.getType()))) inputSlot = i;
         }
-        if (fuelSlot < 0 || inputSlot < 0) return false;
+        if (inputSlot < 0) return false;
+
+        int fuelSlot = -1;
+        for (int i = 0; i < contents.length; i++) {
+            if (i == inputSlot) continue;
+            ItemStack it = contents[i];
+            if (it == null || it.getType().isAir()) continue;
+            if (fuelValue(it.getType()) > 0) {
+                fuelSlot = i;
+                break;
+            }
+        }
+        if (fuelSlot < 0) return false;
 
         ItemStack input = contents[inputSlot];
-        int batch = Math.min(input.getAmount(), Math.min(8, fuelValue(contents[fuelSlot].getType())));
-        if (batch <= 0) return false;
+        int maxBatch = Math.min(input.getAmount(), fuelValue(contents[fuelSlot].getType()));
+        if (maxBatch <= 0) return false;
 
-        ItemStack result = recipes.get(input.getType()).clone();
-        result.setAmount(result.getAmount() * batch);
+        for (int batch = maxBatch; batch > 0; batch--) {
+            ItemStack[] trial = cloneBuffer(contents);
+            ItemStack trialInput = trial[inputSlot];
+            trialInput.setAmount(trialInput.getAmount() - batch);
+            if (trialInput.getAmount() <= 0) trial[inputSlot] = null;
 
-        // Input verringern.
-        input.setAmount(input.getAmount() - batch);
-        if (input.getAmount() <= 0) contents[inputSlot] = null;
-        // Eine Brennstoff-Einheit verbrauchen (Lava-Eimer -> leerer Eimer).
-        ItemStack fuel = contents[fuelSlot];
-        if (fuel.getType() == Material.LAVA_BUCKET) {
-            contents[fuelSlot] = new ItemStack(Material.BUCKET);
-        } else {
-            fuel.setAmount(fuel.getAmount() - 1);
-            if (fuel.getAmount() <= 0) contents[fuelSlot] = null;
+            ItemStack fuel = trial[fuelSlot];
+            if (fuel.getType() == Material.LAVA_BUCKET) {
+                trial[fuelSlot] = new ItemStack(Material.BUCKET);
+            } else {
+                fuel.setAmount(fuel.getAmount() - 1);
+                if (fuel.getAmount() <= 0) trial[fuelSlot] = null;
+            }
+
+            ItemStack result = recipes.get(input.getType()).clone();
+            result.setAmount(result.getAmount() * batch);
+            if (addToBuffer(trial, result) != null) continue;
+
+            data.contents(trial);
+            storage.save(data);
+            return true;
         }
-        addToBuffer(contents, result);
-        data.contents(contents);
-        storage.save(data);
-        return true;
+        return false;
     }
 
     /** Speichert alle aktuell offenen Backpacks (Autosave / Shutdown), ohne sie zu schließen. */
@@ -763,6 +799,53 @@ public final class BackpackManager {
             if (functionUpgradesOf(id).contains(functionId)) return id;
         }
         return null;
+    }
+
+    public boolean depositItemWithFunction(Player player, ItemStack stack, java.util.Set<String> functionIds) {
+        if (stack == null || stack.getType().isAir()) return false;
+        boolean moved = false;
+        for (ItemStack it : player.getInventory().getContents()) {
+            if (stack.getAmount() <= 0) break;
+            if (!items.isBackpack(it)) continue;
+            UUID id = items.getId(it);
+            if (id == null) continue;
+
+            java.util.Set<String> functions = functionUpgradesOf(id);
+            boolean matches = false;
+            for (String functionId : functionIds) {
+                if (functions.contains(functionId)) {
+                    matches = true;
+                    break;
+                }
+            }
+            if (!matches) continue;
+
+            int before = stack.getAmount();
+            if (depositItem(id, stack) && stack.getAmount() < before) {
+                moved = true;
+            }
+        }
+        return moved;
+    }
+
+    public boolean canStoreBackpackInside(UUID targetBackpackId, ItemStack candidate) {
+        if (!items.isBackpack(candidate)) return true;
+        if (!plugin.pluginConfig().allowNesting()) return false;
+
+        UUID nestedId = items.getId(candidate);
+        if (nestedId != null && nestedId.equals(targetBackpackId)) return false;
+        if (nestedId == null) return true;
+
+        BackpackData nested = storage.load(nestedId);
+        return nested == null || !containsBackpack(nested.contents());
+    }
+
+    private boolean containsBackpack(ItemStack[] contents) {
+        if (contents == null) return false;
+        for (ItemStack item : contents) {
+            if (items.isBackpack(item)) return true;
+        }
+        return false;
     }
 
     /**

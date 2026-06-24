@@ -172,6 +172,7 @@ public final class PlaceableManager {
         for (UUID id : manager.storage().listByOwner(player.getUniqueId())) {
             BackpackData data = manager.storage().load(id);
             if (data == null || !data.placed()) continue;
+            if (manager.isOpen(id)) continue;
             if (!manager.functionUpgradesOf(id).contains("recall")) continue;
 
             org.bukkit.World world = data.world() == null ? null : org.bukkit.Bukkit.getWorld(data.world());
@@ -210,20 +211,14 @@ public final class PlaceableManager {
      * Hebt ein platziertes Backpack wieder auf: Entities entfernen, Backpack-Item
      * droppen, Persistenz aktualisieren. Der Inhalt bleibt über die ID erhalten.
      */
-    public void pickup(Entity clickedEntity) {
+    public boolean pickup(Entity clickedEntity) {
         UUID id = backpackIdOf(clickedEntity);
         if (id == null) {
             clickedEntity.remove();
-            return;
+            return true;
         }
+        if (manager.isOpen(id)) return false;
         Location loc = clickedEntity.getLocation();
-
-        // Beide getaggten Entities mit gleicher ID entfernen.
-        for (Entity e : loc.getWorld().getNearbyEntities(loc, 0.6, 0.8, 0.6)) {
-            if (isPlacedEntity(e) && id.equals(backpackIdOf(e))) {
-                e.remove();
-            }
-        }
 
         BackpackData data = manager.storage().load(id);
         ItemStack drop;
@@ -241,8 +236,16 @@ public final class PlaceableManager {
             data.placed(false);
             manager.storage().save(data);
         } else {
-            return;
+            return false;
+        }
+
+        // Beide getaggten Entities mit gleicher ID entfernen.
+        for (Entity e : loc.getWorld().getNearbyEntities(loc, 0.6, 0.8, 0.6)) {
+            if (isPlacedEntity(e) && id.equals(backpackIdOf(e))) {
+                e.remove();
+            }
         }
         loc.getWorld().dropItemNaturally(loc, drop);
+        return true;
     }
 }

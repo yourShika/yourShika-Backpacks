@@ -104,7 +104,7 @@ public final class BackpackGuiListener implements Listener {
                 return;
             }
             ItemStack hotbar = event.getView().getBottomInventory().getItem(event.getHotbarButton());
-            if (clickedTop && items.isBackpack(hotbar)) {
+            if (clickedTop && !canStoreBackpack(holder, hotbar)) {
                 event.setCancelled(true);
                 denyNesting(player);
                 return;
@@ -112,14 +112,16 @@ public final class BackpackGuiListener implements Listener {
         }
         if (click == ClickType.SWAP_OFFHAND) {
             ItemStack offhand = player.getInventory().getItemInOffHand();
-            if (clickedTop && (holder.isLocked(raw) || items.isBackpack(offhand))) {
+            boolean invalidBackpack = !canStoreBackpack(holder, offhand);
+            if (clickedTop && (holder.isLocked(raw) || invalidBackpack)) {
                 event.setCancelled(true);
+                if (invalidBackpack) denyNesting(player);
                 return;
             }
         }
 
         // 4) Anti-Nesting: kein Backpack auf den Cursor in das Lager legen.
-        if (clickedTop && items.isBackpack(event.getCursor())) {
+        if (clickedTop && !canStoreBackpack(holder, event.getCursor())) {
             event.setCancelled(true);
             denyNesting(player);
             return;
@@ -131,7 +133,7 @@ public final class BackpackGuiListener implements Listener {
             if (fromPlayer) {
                 ItemStack moving = event.getCurrentItem();
                 if (moving == null || moving.getType().isAir()) return;
-                if (items.isBackpack(moving)) {
+                if (!canStoreBackpack(holder, moving)) {
                     event.setCancelled(true);
                     denyNesting(player);
                     return;
@@ -209,10 +211,10 @@ public final class BackpackGuiListener implements Listener {
         Inventory top = event.getView().getTopInventory();
         if (!(top.getHolder() instanceof BackpackMenuHolder holder)) return;
 
-        boolean draggingBackpack = items.isBackpack(event.getOldCursor());
+        boolean badBackpack = !canStoreBackpack(holder, event.getOldCursor());
         for (int raw : event.getRawSlots()) {
             if (raw >= top.getSize()) continue; // Slot im Spieler-Inventar – egal.
-            if (holder.isLocked(raw) || draggingBackpack) {
+            if (holder.isLocked(raw) || badBackpack) {
                 event.setCancelled(true);
                 return;
             }
@@ -228,8 +230,9 @@ public final class BackpackGuiListener implements Listener {
         if (raw < top.getSize() && holder.isLocked(raw)) {
             event.setCancelled(true);
         }
-        if (raw < top.getSize() && items.isBackpack(event.getCursor())) {
+        if (raw < top.getSize() && !canStoreBackpack(holder, event.getCursor())) {
             event.setCancelled(true);
+            if (event.getWhoClicked() instanceof Player player) denyNesting(player);
         }
     }
 
@@ -347,6 +350,10 @@ public final class BackpackGuiListener implements Listener {
 
     private void denyNesting(Player player) {
         plugin.messages().send(player, "error.no-nesting");
+    }
+
+    private boolean canStoreBackpack(BackpackMenuHolder holder, ItemStack item) {
+        return !items.isBackpack(item) || manager.canStoreBackpackInside(holder.backpackId(), item);
     }
 
     /**
