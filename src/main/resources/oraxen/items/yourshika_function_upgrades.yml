@@ -22,7 +22,7 @@ ysbp_upgrade_advanced_pickup:
     custom_model_data: 2101
 
 ysbp_upgrade_magnet:
-  displayname: "<#5aa7ff><bold>Magnet Upgrade</bold>"
+  displayname: "<#ff6b6b><bold>Magnet Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -32,7 +32,7 @@ ysbp_upgrade_magnet:
     custom_model_data: 2102
 
 ysbp_upgrade_advanced_magnet:
-  displayname: "<#5aa7ff><bold>Advanced Magnet Upgrade</bold>"
+  displayname: "<#ff6b6b><bold>Advanced Magnet Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -142,7 +142,7 @@ ysbp_upgrade_advanced_deposit:
     custom_model_data: 2113
 
 ysbp_upgrade_crafting:
-  displayname: "<#9b7447><bold>Crafting Upgrade</bold>"
+  displayname: "<#7fd7ff><bold>Crafting Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -152,7 +152,7 @@ ysbp_upgrade_crafting:
     custom_model_data: 2114
 
 ysbp_upgrade_compacting:
-  displayname: "<#8f9ca8><bold>Compacting Upgrade</bold>"
+  displayname: "<#d2b48c><bold>Compacting Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -162,7 +162,7 @@ ysbp_upgrade_compacting:
     custom_model_data: 2115
 
 ysbp_upgrade_advanced_compacting:
-  displayname: "<#8f9ca8><bold>Advanced Compacting Upgrade</bold>"
+  displayname: "<#d2b48c><bold>Advanced Compacting Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -172,7 +172,7 @@ ysbp_upgrade_advanced_compacting:
     custom_model_data: 2116
 
 ysbp_upgrade_smelting:
-  displayname: "<#e46b37><bold>Smelting Upgrade</bold>"
+  displayname: "<#ff8c42><bold>Smelting Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -182,7 +182,7 @@ ysbp_upgrade_smelting:
     custom_model_data: 2117
 
 ysbp_upgrade_auto_smelting:
-  displayname: "<#e46b37><bold>Auto-Smelting Upgrade</bold>"
+  displayname: "<#ff8c42><bold>Auto-Smelting Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -192,7 +192,7 @@ ysbp_upgrade_auto_smelting:
     custom_model_data: 2118
 
 ysbp_upgrade_smoking:
-  displayname: "<#9a7b5c><bold>Smoking Upgrade</bold>"
+  displayname: "<#ffd27f><bold>Smoking Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -202,7 +202,7 @@ ysbp_upgrade_smoking:
     custom_model_data: 2119
 
 ysbp_upgrade_auto_smoking:
-  displayname: "<#9a7b5c><bold>Auto-Smoking Upgrade</bold>"
+  displayname: "<#ffd27f><bold>Auto-Smoking Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -212,7 +212,7 @@ ysbp_upgrade_auto_smoking:
     custom_model_data: 2120
 
 ysbp_upgrade_blasting:
-  displayname: "<#d8d8d8><bold>Blasting Upgrade</bold>"
+  displayname: "<#ffb36b><bold>Blasting Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -222,7 +222,7 @@ ysbp_upgrade_blasting:
     custom_model_data: 2121
 
 ysbp_upgrade_auto_blasting:
-  displayname: "<#d8d8d8><bold>Auto-Blasting Upgrade</bold>"
+  displayname: "<#ffb36b><bold>Auto-Blasting Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -232,7 +232,7 @@ ysbp_upgrade_auto_blasting:
     custom_model_data: 2122
 
 ysbp_upgrade_stonecutter:
-  displayname: "<#b7b7b7><bold>Stonecutter Upgrade</bold>"
+  displayname: "<#c0c0c0><bold>Stonecutter Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -252,7 +252,7 @@ ysbp_upgrade_anvil:
     custom_model_data: 2124
 
 ysbp_upgrade_smithing:
-  displayname: "<#7f8ea3><bold>Smithing Upgrade</bold>"
+  displayname: "<#8ab4f8><bold>Smithing Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -442,7 +442,7 @@ ysbp_upgrade_inception:
     custom_model_data: 2143
 
 ysbp_upgrade_everlasting:
-  displayname: "<#cfcfcf><bold>Everlasting Upgrade</bold>"
+  displayname: "<#b388ff><bold>Everlasting Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
@@ -501,6 +501,36 @@ ysbp_upgrade_advanced_pump:
       - ysbp/upgrades/functions/advanced_pump.png
     custom_model_data: 2149
 
+ysbp_upgrade_ender_link:
+  displayname: "<#a66bff><bold>Ender-Link Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/ender_link.png
+    custom_model_data: 2150
+
+ysbp_upgrade_recall:
+  displayname: "<#5bc8ff><bold>Recall Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/recall.png
+    custom_model_data: 2151
+
+ysbp_upgrade_trash:
+  displayname: "<#8b8b8b><bold>Trash Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/trash.png
+    custom_model_data: 2152
+
 ysbp_upgrade_xp_pump:
   displayname: "<#5bd75b><bold>XP Pump Upgrade</bold>"
   material: PAPER
@@ -509,7 +539,7 @@ ysbp_upgrade_xp_pump:
     parent_model: "item/generated"
     textures:
       - ysbp/upgrades/functions/xp_pump.png
-    custom_model_data: 2150
+    custom_model_data: 2153
 
 ysbp_upgrade_battery:
   displayname: "<#f2d14e><bold>Battery Upgrade</bold>"
@@ -519,4 +549,4 @@ ysbp_upgrade_battery:
     parent_model: "item/generated"
     textures:
       - ysbp/upgrades/functions/battery.png
-    custom_model_data: 2151
+    custom_model_data: 2154

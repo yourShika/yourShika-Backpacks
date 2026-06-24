@@ -100,7 +100,7 @@ placeable:
 #  - item-model:        moderne item_model-Component (z.B. "yourshika:leather_backpack").
 #  - provider-id:       optionale Custom-Item-ID für ein externes Modul
 #                       (Nexo/ItemsAdder/Oraxen) – greift nur, wenn das Modul
-#                       experimentell aktiviert ist (siehe modules unten).
+#                       unter hooks.modules aktiviert ist.
 #  - recipe:            optionales, eigenes Crafting-Rezept.
 #
 #  Lore-/Name-Platzhalter: <storage> <pages> <upgrades> <id> <main_color> <accent_color>
@@ -364,8 +364,15 @@ upgrades:
       magnet:          { custom-model-data: 2102, item-model: "", provider-id: "ysbp_upgrade_magnet" }
       advanced_magnet: { custom-model-data: 2103, item-model: "", provider-id: "ysbp_upgrade_advanced_magnet" }
       crafting:        { custom-model-data: 2114, item-model: "", provider-id: "ysbp_upgrade_crafting" }
+      compacting:      { custom-model-data: 2115, item-model: "", provider-id: "ysbp_upgrade_compacting" }
+      smelting:        { custom-model-data: 2117, item-model: "", provider-id: "ysbp_upgrade_smelting" }
+      smoking:         { custom-model-data: 2119, item-model: "", provider-id: "ysbp_upgrade_smoking" }
+      blasting:        { custom-model-data: 2121, item-model: "", provider-id: "ysbp_upgrade_blasting" }
       stonecutter:     { custom-model-data: 2123, item-model: "", provider-id: "ysbp_upgrade_stonecutter" }
       smithing:        { custom-model-data: 2125, item-model: "", provider-id: "ysbp_upgrade_smithing" }
+      ender_link:      { custom-model-data: 2150, item-model: "", provider-id: "ysbp_upgrade_ender_link" }
+      recall:          { custom-model-data: 2151, item-model: "", provider-id: "ysbp_upgrade_recall" }
+      trash:           { custom-model-data: 2152, item-model: "", provider-id: "ysbp_upgrade_trash" }
       everlasting:     { custom-model-data: 2144, item-model: "", provider-id: "ysbp_upgrade_everlasting" }
 
 # ---------------------------------------------------------------------------

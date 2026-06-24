@@ -219,6 +219,142 @@ ysbp_leather_backpack_accent_black:
       - ysbp/backpacks/leather_overlay.png
     custom_model_data: 11015
 
+ysbp_leather_backpack_placed:
+  displayname: "<#a0703c>Leder-Rucksack (placed visual)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_orange.json
+    custom_model_data: 12000
+
+ysbp_leather_backpack_placed_accent_white:
+  displayname: "<#a0703c>Leder-Rucksack placed (white)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_white.json
+    custom_model_data: 12001
+
+ysbp_leather_backpack_placed_accent_orange:
+  displayname: "<#a0703c>Leder-Rucksack placed (orange)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_orange.json
+    custom_model_data: 12002
+
+ysbp_leather_backpack_placed_accent_magenta:
+  displayname: "<#a0703c>Leder-Rucksack placed (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_magenta.json
+    custom_model_data: 12003
+
+ysbp_leather_backpack_placed_accent_light_blue:
+  displayname: "<#a0703c>Leder-Rucksack placed (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_light_blue.json
+    custom_model_data: 12004
+
+ysbp_leather_backpack_placed_accent_yellow:
+  displayname: "<#a0703c>Leder-Rucksack placed (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_yellow.json
+    custom_model_data: 12005
+
+ysbp_leather_backpack_placed_accent_lime:
+  displayname: "<#a0703c>Leder-Rucksack placed (lime)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_lime.json
+    custom_model_data: 12006
+
+ysbp_leather_backpack_placed_accent_pink:
+  displayname: "<#a0703c>Leder-Rucksack placed (pink)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_pink.json
+    custom_model_data: 12007
+
+ysbp_leather_backpack_placed_accent_gray:
+  displayname: "<#a0703c>Leder-Rucksack placed (gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_gray.json
+    custom_model_data: 12008
+
+ysbp_leather_backpack_placed_accent_light_gray:
+  displayname: "<#a0703c>Leder-Rucksack placed (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_light_gray.json
+    custom_model_data: 12009
+
+ysbp_leather_backpack_placed_accent_cyan:
+  displayname: "<#a0703c>Leder-Rucksack placed (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_cyan.json
+    custom_model_data: 12010
+
+ysbp_leather_backpack_placed_accent_purple:
+  displayname: "<#a0703c>Leder-Rucksack placed (purple)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_purple.json
+    custom_model_data: 12011
+
+ysbp_leather_backpack_placed_accent_blue:
+  displayname: "<#a0703c>Leder-Rucksack placed (blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_blue.json
+    custom_model_data: 12012
+
+ysbp_leather_backpack_placed_accent_brown:
+  displayname: "<#a0703c>Leder-Rucksack placed (brown)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_brown.json
+    custom_model_data: 12013
+
+ysbp_leather_backpack_placed_accent_green:
+  displayname: "<#a0703c>Leder-Rucksack placed (green)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_green.json
+    custom_model_data: 12014
+
+ysbp_leather_backpack_placed_accent_red:
+  displayname: "<#a0703c>Leder-Rucksack placed (red)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_red.json
+    custom_model_data: 12015
+
+ysbp_leather_backpack_placed_accent_black:
+  displayname: "<#a0703c>Leder-Rucksack placed (black)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/leather_black.json
+    custom_model_data: 12016
+
 ysbp_copper_backpack:
   displayname: "<#c87b53>Kupfer-Rucksack"
   material: LEATHER_HORSE_ARMOR
@@ -439,6 +575,142 @@ ysbp_copper_backpack_accent_black:
       - ysbp/backpacks/accents/copper_black.png
       - ysbp/backpacks/copper_overlay.png
     custom_model_data: 11115
+
+ysbp_copper_backpack_placed:
+  displayname: "<#c87b53>Kupfer-Rucksack (placed visual)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_light_blue.json
+    custom_model_data: 12100
+
+ysbp_copper_backpack_placed_accent_white:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (white)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_white.json
+    custom_model_data: 12101
+
+ysbp_copper_backpack_placed_accent_orange:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (orange)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_orange.json
+    custom_model_data: 12102
+
+ysbp_copper_backpack_placed_accent_magenta:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_magenta.json
+    custom_model_data: 12103
+
+ysbp_copper_backpack_placed_accent_light_blue:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_light_blue.json
+    custom_model_data: 12104
+
+ysbp_copper_backpack_placed_accent_yellow:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_yellow.json
+    custom_model_data: 12105
+
+ysbp_copper_backpack_placed_accent_lime:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (lime)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_lime.json
+    custom_model_data: 12106
+
+ysbp_copper_backpack_placed_accent_pink:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (pink)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_pink.json
+    custom_model_data: 12107
+
+ysbp_copper_backpack_placed_accent_gray:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_gray.json
+    custom_model_data: 12108
+
+ysbp_copper_backpack_placed_accent_light_gray:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_light_gray.json
+    custom_model_data: 12109
+
+ysbp_copper_backpack_placed_accent_cyan:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_cyan.json
+    custom_model_data: 12110
+
+ysbp_copper_backpack_placed_accent_purple:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (purple)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_purple.json
+    custom_model_data: 12111
+
+ysbp_copper_backpack_placed_accent_blue:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_blue.json
+    custom_model_data: 12112
+
+ysbp_copper_backpack_placed_accent_brown:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (brown)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_brown.json
+    custom_model_data: 12113
+
+ysbp_copper_backpack_placed_accent_green:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (green)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_green.json
+    custom_model_data: 12114
+
+ysbp_copper_backpack_placed_accent_red:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (red)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_red.json
+    custom_model_data: 12115
+
+ysbp_copper_backpack_placed_accent_black:
+  displayname: "<#c87b53>Kupfer-Rucksack placed (black)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/copper_black.json
+    custom_model_data: 12116
 
 ysbp_iron_backpack:
   displayname: "<#d8d8d8>Eisen-Rucksack"
@@ -661,6 +933,142 @@ ysbp_iron_backpack_accent_black:
       - ysbp/backpacks/iron_overlay.png
     custom_model_data: 11215
 
+ysbp_iron_backpack_placed:
+  displayname: "<#d8d8d8>Eisen-Rucksack (placed visual)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_light_gray.json
+    custom_model_data: 12200
+
+ysbp_iron_backpack_placed_accent_white:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (white)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_white.json
+    custom_model_data: 12201
+
+ysbp_iron_backpack_placed_accent_orange:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (orange)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_orange.json
+    custom_model_data: 12202
+
+ysbp_iron_backpack_placed_accent_magenta:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_magenta.json
+    custom_model_data: 12203
+
+ysbp_iron_backpack_placed_accent_light_blue:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_light_blue.json
+    custom_model_data: 12204
+
+ysbp_iron_backpack_placed_accent_yellow:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_yellow.json
+    custom_model_data: 12205
+
+ysbp_iron_backpack_placed_accent_lime:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (lime)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_lime.json
+    custom_model_data: 12206
+
+ysbp_iron_backpack_placed_accent_pink:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (pink)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_pink.json
+    custom_model_data: 12207
+
+ysbp_iron_backpack_placed_accent_gray:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_gray.json
+    custom_model_data: 12208
+
+ysbp_iron_backpack_placed_accent_light_gray:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_light_gray.json
+    custom_model_data: 12209
+
+ysbp_iron_backpack_placed_accent_cyan:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_cyan.json
+    custom_model_data: 12210
+
+ysbp_iron_backpack_placed_accent_purple:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (purple)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_purple.json
+    custom_model_data: 12211
+
+ysbp_iron_backpack_placed_accent_blue:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_blue.json
+    custom_model_data: 12212
+
+ysbp_iron_backpack_placed_accent_brown:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (brown)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_brown.json
+    custom_model_data: 12213
+
+ysbp_iron_backpack_placed_accent_green:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (green)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_green.json
+    custom_model_data: 12214
+
+ysbp_iron_backpack_placed_accent_red:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (red)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_red.json
+    custom_model_data: 12215
+
+ysbp_iron_backpack_placed_accent_black:
+  displayname: "<#d8d8d8>Eisen-Rucksack placed (black)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/iron_black.json
+    custom_model_data: 12216
+
 ysbp_gold_backpack:
   displayname: "<#f2d14e>Gold-Rucksack"
   material: LEATHER_HORSE_ARMOR
@@ -881,6 +1289,142 @@ ysbp_gold_backpack_accent_black:
       - ysbp/backpacks/accents/gold_black.png
       - ysbp/backpacks/gold_overlay.png
     custom_model_data: 11315
+
+ysbp_gold_backpack_placed:
+  displayname: "<#f2d14e>Gold-Rucksack (placed visual)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_white.json
+    custom_model_data: 12300
+
+ysbp_gold_backpack_placed_accent_white:
+  displayname: "<#f2d14e>Gold-Rucksack placed (white)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_white.json
+    custom_model_data: 12301
+
+ysbp_gold_backpack_placed_accent_orange:
+  displayname: "<#f2d14e>Gold-Rucksack placed (orange)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_orange.json
+    custom_model_data: 12302
+
+ysbp_gold_backpack_placed_accent_magenta:
+  displayname: "<#f2d14e>Gold-Rucksack placed (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_magenta.json
+    custom_model_data: 12303
+
+ysbp_gold_backpack_placed_accent_light_blue:
+  displayname: "<#f2d14e>Gold-Rucksack placed (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_light_blue.json
+    custom_model_data: 12304
+
+ysbp_gold_backpack_placed_accent_yellow:
+  displayname: "<#f2d14e>Gold-Rucksack placed (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_yellow.json
+    custom_model_data: 12305
+
+ysbp_gold_backpack_placed_accent_lime:
+  displayname: "<#f2d14e>Gold-Rucksack placed (lime)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_lime.json
+    custom_model_data: 12306
+
+ysbp_gold_backpack_placed_accent_pink:
+  displayname: "<#f2d14e>Gold-Rucksack placed (pink)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_pink.json
+    custom_model_data: 12307
+
+ysbp_gold_backpack_placed_accent_gray:
+  displayname: "<#f2d14e>Gold-Rucksack placed (gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_gray.json
+    custom_model_data: 12308
+
+ysbp_gold_backpack_placed_accent_light_gray:
+  displayname: "<#f2d14e>Gold-Rucksack placed (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_light_gray.json
+    custom_model_data: 12309
+
+ysbp_gold_backpack_placed_accent_cyan:
+  displayname: "<#f2d14e>Gold-Rucksack placed (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_cyan.json
+    custom_model_data: 12310
+
+ysbp_gold_backpack_placed_accent_purple:
+  displayname: "<#f2d14e>Gold-Rucksack placed (purple)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_purple.json
+    custom_model_data: 12311
+
+ysbp_gold_backpack_placed_accent_blue:
+  displayname: "<#f2d14e>Gold-Rucksack placed (blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_blue.json
+    custom_model_data: 12312
+
+ysbp_gold_backpack_placed_accent_brown:
+  displayname: "<#f2d14e>Gold-Rucksack placed (brown)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_brown.json
+    custom_model_data: 12313
+
+ysbp_gold_backpack_placed_accent_green:
+  displayname: "<#f2d14e>Gold-Rucksack placed (green)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_green.json
+    custom_model_data: 12314
+
+ysbp_gold_backpack_placed_accent_red:
+  displayname: "<#f2d14e>Gold-Rucksack placed (red)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_red.json
+    custom_model_data: 12315
+
+ysbp_gold_backpack_placed_accent_black:
+  displayname: "<#f2d14e>Gold-Rucksack placed (black)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/gold_black.json
+    custom_model_data: 12316
 
 ysbp_diamond_backpack:
   displayname: "<#5be8d4>Diamant-Rucksack"
@@ -1103,6 +1647,142 @@ ysbp_diamond_backpack_accent_black:
       - ysbp/backpacks/diamond_overlay.png
     custom_model_data: 11415
 
+ysbp_diamond_backpack_placed:
+  displayname: "<#5be8d4>Diamant-Rucksack (placed visual)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_light_blue.json
+    custom_model_data: 12400
+
+ysbp_diamond_backpack_placed_accent_white:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (white)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_white.json
+    custom_model_data: 12401
+
+ysbp_diamond_backpack_placed_accent_orange:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (orange)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_orange.json
+    custom_model_data: 12402
+
+ysbp_diamond_backpack_placed_accent_magenta:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_magenta.json
+    custom_model_data: 12403
+
+ysbp_diamond_backpack_placed_accent_light_blue:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_light_blue.json
+    custom_model_data: 12404
+
+ysbp_diamond_backpack_placed_accent_yellow:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_yellow.json
+    custom_model_data: 12405
+
+ysbp_diamond_backpack_placed_accent_lime:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (lime)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_lime.json
+    custom_model_data: 12406
+
+ysbp_diamond_backpack_placed_accent_pink:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (pink)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_pink.json
+    custom_model_data: 12407
+
+ysbp_diamond_backpack_placed_accent_gray:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_gray.json
+    custom_model_data: 12408
+
+ysbp_diamond_backpack_placed_accent_light_gray:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_light_gray.json
+    custom_model_data: 12409
+
+ysbp_diamond_backpack_placed_accent_cyan:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_cyan.json
+    custom_model_data: 12410
+
+ysbp_diamond_backpack_placed_accent_purple:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (purple)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_purple.json
+    custom_model_data: 12411
+
+ysbp_diamond_backpack_placed_accent_blue:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_blue.json
+    custom_model_data: 12412
+
+ysbp_diamond_backpack_placed_accent_brown:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (brown)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_brown.json
+    custom_model_data: 12413
+
+ysbp_diamond_backpack_placed_accent_green:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (green)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_green.json
+    custom_model_data: 12414
+
+ysbp_diamond_backpack_placed_accent_red:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (red)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_red.json
+    custom_model_data: 12415
+
+ysbp_diamond_backpack_placed_accent_black:
+  displayname: "<#5be8d4>Diamant-Rucksack placed (black)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/diamond_black.json
+    custom_model_data: 12416
+
 ysbp_emerald_backpack:
   displayname: "<#3bd16f>Smaragd-Rucksack"
   material: LEATHER_HORSE_ARMOR
@@ -1324,6 +2004,142 @@ ysbp_emerald_backpack_accent_black:
       - ysbp/backpacks/emerald_overlay.png
     custom_model_data: 11515
 
+ysbp_emerald_backpack_placed:
+  displayname: "<#3bd16f>Smaragd-Rucksack (placed visual)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_white.json
+    custom_model_data: 12500
+
+ysbp_emerald_backpack_placed_accent_white:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (white)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_white.json
+    custom_model_data: 12501
+
+ysbp_emerald_backpack_placed_accent_orange:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (orange)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_orange.json
+    custom_model_data: 12502
+
+ysbp_emerald_backpack_placed_accent_magenta:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_magenta.json
+    custom_model_data: 12503
+
+ysbp_emerald_backpack_placed_accent_light_blue:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_light_blue.json
+    custom_model_data: 12504
+
+ysbp_emerald_backpack_placed_accent_yellow:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_yellow.json
+    custom_model_data: 12505
+
+ysbp_emerald_backpack_placed_accent_lime:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (lime)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_lime.json
+    custom_model_data: 12506
+
+ysbp_emerald_backpack_placed_accent_pink:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (pink)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_pink.json
+    custom_model_data: 12507
+
+ysbp_emerald_backpack_placed_accent_gray:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_gray.json
+    custom_model_data: 12508
+
+ysbp_emerald_backpack_placed_accent_light_gray:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_light_gray.json
+    custom_model_data: 12509
+
+ysbp_emerald_backpack_placed_accent_cyan:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_cyan.json
+    custom_model_data: 12510
+
+ysbp_emerald_backpack_placed_accent_purple:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (purple)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_purple.json
+    custom_model_data: 12511
+
+ysbp_emerald_backpack_placed_accent_blue:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_blue.json
+    custom_model_data: 12512
+
+ysbp_emerald_backpack_placed_accent_brown:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (brown)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_brown.json
+    custom_model_data: 12513
+
+ysbp_emerald_backpack_placed_accent_green:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (green)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_green.json
+    custom_model_data: 12514
+
+ysbp_emerald_backpack_placed_accent_red:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (red)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_red.json
+    custom_model_data: 12515
+
+ysbp_emerald_backpack_placed_accent_black:
+  displayname: "<#3bd16f>Smaragd-Rucksack placed (black)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/emerald_black.json
+    custom_model_data: 12516
+
 ysbp_netherite_backpack:
   displayname: "<#6e5bc8>Netherite-Rucksack"
   material: LEATHER_HORSE_ARMOR
@@ -1544,6 +2360,142 @@ ysbp_netherite_backpack_accent_black:
       - ysbp/backpacks/accents/netherite_black.png
       - ysbp/backpacks/netherite_overlay.png
     custom_model_data: 11615
+
+ysbp_netherite_backpack_placed:
+  displayname: "<#6e5bc8>Netherite-Rucksack (placed visual)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_magenta.json
+    custom_model_data: 12600
+
+ysbp_netherite_backpack_placed_accent_white:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (white)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_white.json
+    custom_model_data: 12601
+
+ysbp_netherite_backpack_placed_accent_orange:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (orange)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_orange.json
+    custom_model_data: 12602
+
+ysbp_netherite_backpack_placed_accent_magenta:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_magenta.json
+    custom_model_data: 12603
+
+ysbp_netherite_backpack_placed_accent_light_blue:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_light_blue.json
+    custom_model_data: 12604
+
+ysbp_netherite_backpack_placed_accent_yellow:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_yellow.json
+    custom_model_data: 12605
+
+ysbp_netherite_backpack_placed_accent_lime:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (lime)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_lime.json
+    custom_model_data: 12606
+
+ysbp_netherite_backpack_placed_accent_pink:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (pink)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_pink.json
+    custom_model_data: 12607
+
+ysbp_netherite_backpack_placed_accent_gray:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_gray.json
+    custom_model_data: 12608
+
+ysbp_netherite_backpack_placed_accent_light_gray:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_light_gray.json
+    custom_model_data: 12609
+
+ysbp_netherite_backpack_placed_accent_cyan:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_cyan.json
+    custom_model_data: 12610
+
+ysbp_netherite_backpack_placed_accent_purple:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (purple)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_purple.json
+    custom_model_data: 12611
+
+ysbp_netherite_backpack_placed_accent_blue:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_blue.json
+    custom_model_data: 12612
+
+ysbp_netherite_backpack_placed_accent_brown:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (brown)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_brown.json
+    custom_model_data: 12613
+
+ysbp_netherite_backpack_placed_accent_green:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (green)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_green.json
+    custom_model_data: 12614
+
+ysbp_netherite_backpack_placed_accent_red:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (red)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_red.json
+    custom_model_data: 12615
+
+ysbp_netherite_backpack_placed_accent_black:
+  displayname: "<#6e5bc8>Netherite-Rucksack placed (black)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/netherite_black.json
+    custom_model_data: 12616
 
 ysbp_upgrade_base:
   displayname: "<#A0703C><bold>Upgrade-Leder</bold>"

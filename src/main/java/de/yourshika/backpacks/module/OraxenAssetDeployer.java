@@ -33,6 +33,7 @@ public final class OraxenAssetDeployer {
 
     private static final String BUNDLE_PREFIX = "oraxen/";
     private static final String TEX_PREFIX = "oraxen/pack/textures/";
+    private static final String MODEL_PREFIX = "oraxen/pack/models/";
     private static final String ITEMS_PREFIX = "oraxen/items/";
     private static final String MANIFEST_ENTRY = "oraxen/asset-manifest.properties";
     private static final String STATE_FILE = ".oraxen-asset-state.properties";
@@ -51,12 +52,14 @@ public final class OraxenAssetDeployer {
         if (oraxen == null) return;
 
         File texturesDir = new File(plugin.getDataFolder(), "Textures");
+        File modelsDir = new File(plugin.getDataFolder(), "Models");
         File oraxenData = oraxen.getDataFolder();
         File oraxenItems = new File(oraxenData, "items");
         File oraxenTextures = new File(oraxenData, "pack/textures");
+        File oraxenModels = new File(oraxenData, "pack/models");
         Path statePath = new File(plugin.getDataFolder(), STATE_FILE).toPath();
 
-        int extracted = 0, items = 0, copied = 0, preserved = 0, backedUp = 0;
+        int extracted = 0, models = 0, items = 0, copied = 0, preserved = 0, backedUp = 0;
         Properties state = loadState(statePath);
 
         try (ZipFile zip = new ZipFile(plugin.pluginJarFile())) {
@@ -86,7 +89,17 @@ public final class OraxenAssetDeployer {
                     if (result.preserved) preserved++;
 
                     File oraxenTex = new File(oraxenTextures, rel);
-                    if (copyTextureToOraxen(pluginTex.toPath(), oraxenTex.toPath())) copied++;
+                    if (copyAssetToOraxen(pluginTex.toPath(), oraxenTex.toPath())) copied++;
+                } else if (name.startsWith(MODEL_PREFIX)) {
+                    String rel = name.substring(MODEL_PREFIX.length());
+                    File pluginModel = new File(modelsDir, rel);
+                    TextureResult result = deployPluginTexture(pluginModel.toPath(), name,
+                            bundledBytes, bundledHash, state);
+                    if (result.extracted) models++;
+                    if (result.preserved) preserved++;
+
+                    File oraxenModel = new File(oraxenModels, rel);
+                    if (copyAssetToOraxen(pluginModel.toPath(), oraxenModel.toPath())) copied++;
                 }
             }
             backedUp = backupRoot == null || !Files.exists(backupRoot) ? 0 : countFiles(backupRoot);
@@ -97,8 +110,9 @@ public final class OraxenAssetDeployer {
         }
 
         plugin.getLogger().info("Oraxen-Assets bereitgestellt: " + items + " Item-Dateien, "
-                + extracted + " Texturen aktualisiert, " + preserved + " eigene Texturen behalten, "
-                + copied + " Texturen kopiert, " + backedUp + " Backups.");
+                + extracted + " Texturen aktualisiert, " + models + " Modelle aktualisiert, "
+                + preserved + " eigene Assets behalten, "
+                + copied + " Pack-Dateien kopiert, " + backedUp + " Backups.");
         plugin.getLogger().info("Bitte einmalig '/oraxen reload' ausfuehren, damit das Resourcepack neu gebaut wird.");
     }
 
@@ -149,7 +163,7 @@ public final class OraxenAssetDeployer {
      * ist unsere verwaltete Ausgabe, daher wird hier KEIN Backup erstellt
      * (das koppelte das Kopieren bisher an Backups).
      */
-    private boolean copyTextureToOraxen(Path source, Path target) throws Exception {
+    private boolean copyAssetToOraxen(Path source, Path target) throws Exception {
         if (!Files.exists(source)) return false;
         if (Files.exists(target)) {
             String sourceHash = sha256(Files.readAllBytes(source));
@@ -213,7 +227,7 @@ public final class OraxenAssetDeployer {
     private void saveState(Path path, Properties state, Properties bundled) {
         try {
             Files.createDirectories(path.getParent());
-            state.setProperty("asset-version", bundled.getProperty("asset-version", "3"));
+            state.setProperty("asset-version", bundled.getProperty("asset-version", "5"));
             try (var out = Files.newOutputStream(path)) {
                 state.store(out, "yourShika Backpack's Oraxen asset state");
             }

@@ -6,6 +6,7 @@ import de.yourshika.backpacks.item.BackpackItemFactory;
 import de.yourshika.backpacks.storage.BackpackData;
 import de.yourshika.backpacks.tier.BackpackTier;
 import de.yourshika.backpacks.tier.TierRegistry;
+import de.yourshika.backpacks.util.ColorUtil;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -110,6 +111,7 @@ public final class PlaceableManager {
         manager.storage().save(data);
 
         ItemStack visual = items.create(tier, id, main, accent);
+        applyPlacedVisualModel(visual, tier, accent);
         spawnEntities(loc, id, visual);
 
         // Ein Backpack aus der Hand entfernen.
@@ -127,10 +129,11 @@ public final class PlaceableManager {
             display.setItemStack(visual);
             display.setPersistent(true);
             display.setBillboard(org.bukkit.entity.Display.Billboard.FIXED);
+            display.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.GROUND);
             try {
                 display.setTransformation(new Transformation(
-                        new Vector3f(0f, 0.25f, 0f), new Quaternionf(),
-                        new Vector3f(0.6f, 0.6f, 0.6f), new Quaternionf()));
+                        new Vector3f(0f, 0.08f, 0f), new Quaternionf(),
+                        new Vector3f(0.82f, 0.82f, 0.82f), new Quaternionf()));
             } catch (Throwable ignored) {
             }
             tag(display, id);
@@ -142,6 +145,21 @@ public final class PlaceableManager {
             interaction.setPersistent(true);
             tag(interaction, id);
         });
+    }
+
+    private void applyPlacedVisualModel(ItemStack visual, BackpackTier tier, String accent) {
+        if (plugin.moduleManager() == null || !plugin.moduleManager().isActive("oraxen")) return;
+        String base = tier.providerId();
+        if (base == null || base.isBlank()) {
+            base = "ysbp_" + tier.key().toLowerCase() + "_backpack";
+        }
+        String fallback = tier.defaultAccentColor();
+        String variant = ColorUtil.nearestDyeKey(accent, fallback);
+        String defaultVariant = ColorUtil.nearestDyeKey(fallback, fallback);
+        String provider = variant.equals(defaultVariant)
+                ? base + "_placed"
+                : base + "_placed_accent_" + variant;
+        plugin.moduleManager().applyExternalModel(visual, provider);
     }
 
     /**
