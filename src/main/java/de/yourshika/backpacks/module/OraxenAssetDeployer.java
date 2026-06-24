@@ -33,6 +33,7 @@ public final class OraxenAssetDeployer {
 
     private static final String BUNDLE_PREFIX = "oraxen/";
     private static final String TEX_PREFIX = "oraxen/pack/textures/";
+    private static final String MODELS_PREFIX = "oraxen/pack/models/";
     private static final String ITEMS_PREFIX = "oraxen/items/";
     private static final String MANIFEST_ENTRY = "oraxen/asset-manifest.properties";
     private static final String STATE_FILE = ".oraxen-asset-state.properties";
@@ -54,9 +55,10 @@ public final class OraxenAssetDeployer {
         File oraxenData = oraxen.getDataFolder();
         File oraxenItems = new File(oraxenData, "items");
         File oraxenTextures = new File(oraxenData, "pack/textures");
+        File oraxenModels = new File(oraxenData, "pack/models");
         Path statePath = new File(plugin.getDataFolder(), STATE_FILE).toPath();
 
-        int extracted = 0, items = 0, copied = 0, preserved = 0, backedUp = 0;
+        int extracted = 0, items = 0, copied = 0, preserved = 0, backedUp = 0, models = 0;
         Properties state = loadState(statePath);
 
         try (ZipFile zip = new ZipFile(plugin.pluginJarFile())) {
@@ -87,6 +89,11 @@ public final class OraxenAssetDeployer {
 
                     File oraxenTex = new File(oraxenTextures, rel);
                     if (copyTextureToOraxen(pluginTex.toPath(), oraxenTex.toPath())) copied++;
+                } else if (name.startsWith(MODELS_PREFIX)) {
+                    // 3D-Modelle direkt in den Oraxen-Pack legen (verwaltete Ausgabe).
+                    String rel = name.substring(MODELS_PREFIX.length());
+                    File oraxenModel = new File(oraxenModels, rel);
+                    if (copyManagedBytes(bundledBytes, oraxenModel.toPath())) models++;
                 }
             }
             backedUp = backupRoot == null || !Files.exists(backupRoot) ? 0 : countFiles(backupRoot);
@@ -98,7 +105,7 @@ public final class OraxenAssetDeployer {
 
         plugin.getLogger().info("Oraxen-Assets bereitgestellt: " + items + " Item-Dateien, "
                 + extracted + " Texturen aktualisiert, " + preserved + " eigene Texturen behalten, "
-                + copied + " Texturen kopiert, " + backedUp + " Backups.");
+                + copied + " Texturen kopiert, " + models + " 3D-Modelle, " + backedUp + " Backups.");
         plugin.getLogger().info("Bitte einmalig '/oraxen reload' ausfuehren, damit das Resourcepack neu gebaut wird.");
     }
 
@@ -149,6 +156,17 @@ public final class OraxenAssetDeployer {
      * ist unsere verwaltete Ausgabe, daher wird hier KEIN Backup erstellt
      * (das koppelte das Kopieren bisher an Backups).
      */
+    /** Schreibt verwaltete Bytes (z.B. ein 3D-Modell) in den Oraxen-Pack, falls geändert. */
+    private boolean copyManagedBytes(byte[] bytes, Path target) throws Exception {
+        if (Files.exists(target)) {
+            String sourceHash = sha256(bytes);
+            String targetHash = sha256(Files.readAllBytes(target));
+            if (sourceHash.equals(targetHash)) return false; // bereits aktuell
+        }
+        writeBytes(target, bytes);
+        return true;
+    }
+
     private boolean copyTextureToOraxen(Path source, Path target) throws Exception {
         if (!Files.exists(source)) return false;
         if (Files.exists(target)) {

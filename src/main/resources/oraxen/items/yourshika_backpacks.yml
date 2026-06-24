@@ -4,7 +4,7 @@ ysbp_leather_backpack:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/leather_accent.png
@@ -17,7 +17,7 @@ ysbp_leather_backpack_accent_white:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_white.png
@@ -30,7 +30,7 @@ ysbp_leather_backpack_accent_orange:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_orange.png
@@ -43,7 +43,7 @@ ysbp_leather_backpack_accent_magenta:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_magenta.png
@@ -56,7 +56,7 @@ ysbp_leather_backpack_accent_light_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_light_blue.png
@@ -69,7 +69,7 @@ ysbp_leather_backpack_accent_yellow:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_yellow.png
@@ -82,7 +82,7 @@ ysbp_leather_backpack_accent_lime:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_lime.png
@@ -95,7 +95,7 @@ ysbp_leather_backpack_accent_pink:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_pink.png
@@ -108,7 +108,7 @@ ysbp_leather_backpack_accent_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_gray.png
@@ -121,7 +121,7 @@ ysbp_leather_backpack_accent_light_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_light_gray.png
@@ -134,7 +134,7 @@ ysbp_leather_backpack_accent_cyan:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_cyan.png
@@ -147,7 +147,7 @@ ysbp_leather_backpack_accent_purple:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_purple.png
@@ -160,7 +160,7 @@ ysbp_leather_backpack_accent_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_blue.png
@@ -173,7 +173,7 @@ ysbp_leather_backpack_accent_brown:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_brown.png
@@ -186,7 +186,7 @@ ysbp_leather_backpack_accent_green:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_green.png
@@ -199,7 +199,7 @@ ysbp_leather_backpack_accent_red:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_red.png
@@ -212,7 +212,7 @@ ysbp_leather_backpack_accent_black:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/leather_base.png
       - ysbp/backpacks/accents/leather_black.png
@@ -225,7 +225,7 @@ ysbp_copper_backpack:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/copper_accent.png
@@ -238,7 +238,7 @@ ysbp_copper_backpack_accent_white:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_white.png
@@ -251,7 +251,7 @@ ysbp_copper_backpack_accent_orange:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_orange.png
@@ -264,7 +264,7 @@ ysbp_copper_backpack_accent_magenta:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_magenta.png
@@ -277,7 +277,7 @@ ysbp_copper_backpack_accent_light_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_light_blue.png
@@ -290,7 +290,7 @@ ysbp_copper_backpack_accent_yellow:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_yellow.png
@@ -303,7 +303,7 @@ ysbp_copper_backpack_accent_lime:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_lime.png
@@ -316,7 +316,7 @@ ysbp_copper_backpack_accent_pink:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_pink.png
@@ -329,7 +329,7 @@ ysbp_copper_backpack_accent_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_gray.png
@@ -342,7 +342,7 @@ ysbp_copper_backpack_accent_light_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_light_gray.png
@@ -355,7 +355,7 @@ ysbp_copper_backpack_accent_cyan:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_cyan.png
@@ -368,7 +368,7 @@ ysbp_copper_backpack_accent_purple:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_purple.png
@@ -381,7 +381,7 @@ ysbp_copper_backpack_accent_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_blue.png
@@ -394,7 +394,7 @@ ysbp_copper_backpack_accent_brown:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_brown.png
@@ -407,7 +407,7 @@ ysbp_copper_backpack_accent_green:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_green.png
@@ -420,7 +420,7 @@ ysbp_copper_backpack_accent_red:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_red.png
@@ -433,7 +433,7 @@ ysbp_copper_backpack_accent_black:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/copper_base.png
       - ysbp/backpacks/accents/copper_black.png
@@ -446,7 +446,7 @@ ysbp_iron_backpack:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/iron_accent.png
@@ -459,7 +459,7 @@ ysbp_iron_backpack_accent_white:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_white.png
@@ -472,7 +472,7 @@ ysbp_iron_backpack_accent_orange:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_orange.png
@@ -485,7 +485,7 @@ ysbp_iron_backpack_accent_magenta:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_magenta.png
@@ -498,7 +498,7 @@ ysbp_iron_backpack_accent_light_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_light_blue.png
@@ -511,7 +511,7 @@ ysbp_iron_backpack_accent_yellow:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_yellow.png
@@ -524,7 +524,7 @@ ysbp_iron_backpack_accent_lime:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_lime.png
@@ -537,7 +537,7 @@ ysbp_iron_backpack_accent_pink:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_pink.png
@@ -550,7 +550,7 @@ ysbp_iron_backpack_accent_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_gray.png
@@ -563,7 +563,7 @@ ysbp_iron_backpack_accent_light_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_light_gray.png
@@ -576,7 +576,7 @@ ysbp_iron_backpack_accent_cyan:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_cyan.png
@@ -589,7 +589,7 @@ ysbp_iron_backpack_accent_purple:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_purple.png
@@ -602,7 +602,7 @@ ysbp_iron_backpack_accent_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_blue.png
@@ -615,7 +615,7 @@ ysbp_iron_backpack_accent_brown:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_brown.png
@@ -628,7 +628,7 @@ ysbp_iron_backpack_accent_green:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_green.png
@@ -641,7 +641,7 @@ ysbp_iron_backpack_accent_red:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_red.png
@@ -654,7 +654,7 @@ ysbp_iron_backpack_accent_black:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/iron_base.png
       - ysbp/backpacks/accents/iron_black.png
@@ -667,7 +667,7 @@ ysbp_gold_backpack:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/gold_accent.png
@@ -680,7 +680,7 @@ ysbp_gold_backpack_accent_white:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_white.png
@@ -693,7 +693,7 @@ ysbp_gold_backpack_accent_orange:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_orange.png
@@ -706,7 +706,7 @@ ysbp_gold_backpack_accent_magenta:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_magenta.png
@@ -719,7 +719,7 @@ ysbp_gold_backpack_accent_light_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_light_blue.png
@@ -732,7 +732,7 @@ ysbp_gold_backpack_accent_yellow:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_yellow.png
@@ -745,7 +745,7 @@ ysbp_gold_backpack_accent_lime:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_lime.png
@@ -758,7 +758,7 @@ ysbp_gold_backpack_accent_pink:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_pink.png
@@ -771,7 +771,7 @@ ysbp_gold_backpack_accent_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_gray.png
@@ -784,7 +784,7 @@ ysbp_gold_backpack_accent_light_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_light_gray.png
@@ -797,7 +797,7 @@ ysbp_gold_backpack_accent_cyan:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_cyan.png
@@ -810,7 +810,7 @@ ysbp_gold_backpack_accent_purple:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_purple.png
@@ -823,7 +823,7 @@ ysbp_gold_backpack_accent_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_blue.png
@@ -836,7 +836,7 @@ ysbp_gold_backpack_accent_brown:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_brown.png
@@ -849,7 +849,7 @@ ysbp_gold_backpack_accent_green:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_green.png
@@ -862,7 +862,7 @@ ysbp_gold_backpack_accent_red:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_red.png
@@ -875,7 +875,7 @@ ysbp_gold_backpack_accent_black:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/gold_base.png
       - ysbp/backpacks/accents/gold_black.png
@@ -888,7 +888,7 @@ ysbp_diamond_backpack:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/diamond_accent.png
@@ -901,7 +901,7 @@ ysbp_diamond_backpack_accent_white:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_white.png
@@ -914,7 +914,7 @@ ysbp_diamond_backpack_accent_orange:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_orange.png
@@ -927,7 +927,7 @@ ysbp_diamond_backpack_accent_magenta:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_magenta.png
@@ -940,7 +940,7 @@ ysbp_diamond_backpack_accent_light_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_light_blue.png
@@ -953,7 +953,7 @@ ysbp_diamond_backpack_accent_yellow:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_yellow.png
@@ -966,7 +966,7 @@ ysbp_diamond_backpack_accent_lime:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_lime.png
@@ -979,7 +979,7 @@ ysbp_diamond_backpack_accent_pink:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_pink.png
@@ -992,7 +992,7 @@ ysbp_diamond_backpack_accent_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_gray.png
@@ -1005,7 +1005,7 @@ ysbp_diamond_backpack_accent_light_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_light_gray.png
@@ -1018,7 +1018,7 @@ ysbp_diamond_backpack_accent_cyan:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_cyan.png
@@ -1031,7 +1031,7 @@ ysbp_diamond_backpack_accent_purple:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_purple.png
@@ -1044,7 +1044,7 @@ ysbp_diamond_backpack_accent_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_blue.png
@@ -1057,7 +1057,7 @@ ysbp_diamond_backpack_accent_brown:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_brown.png
@@ -1070,7 +1070,7 @@ ysbp_diamond_backpack_accent_green:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_green.png
@@ -1083,7 +1083,7 @@ ysbp_diamond_backpack_accent_red:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_red.png
@@ -1096,7 +1096,7 @@ ysbp_diamond_backpack_accent_black:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/diamond_base.png
       - ysbp/backpacks/accents/diamond_black.png
@@ -1109,7 +1109,7 @@ ysbp_emerald_backpack:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/emerald_accent.png
@@ -1122,7 +1122,7 @@ ysbp_emerald_backpack_accent_white:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_white.png
@@ -1135,7 +1135,7 @@ ysbp_emerald_backpack_accent_orange:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_orange.png
@@ -1148,7 +1148,7 @@ ysbp_emerald_backpack_accent_magenta:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_magenta.png
@@ -1161,7 +1161,7 @@ ysbp_emerald_backpack_accent_light_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_light_blue.png
@@ -1174,7 +1174,7 @@ ysbp_emerald_backpack_accent_yellow:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_yellow.png
@@ -1187,7 +1187,7 @@ ysbp_emerald_backpack_accent_lime:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_lime.png
@@ -1200,7 +1200,7 @@ ysbp_emerald_backpack_accent_pink:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_pink.png
@@ -1213,7 +1213,7 @@ ysbp_emerald_backpack_accent_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_gray.png
@@ -1226,7 +1226,7 @@ ysbp_emerald_backpack_accent_light_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_light_gray.png
@@ -1239,7 +1239,7 @@ ysbp_emerald_backpack_accent_cyan:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_cyan.png
@@ -1252,7 +1252,7 @@ ysbp_emerald_backpack_accent_purple:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_purple.png
@@ -1265,7 +1265,7 @@ ysbp_emerald_backpack_accent_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_blue.png
@@ -1278,7 +1278,7 @@ ysbp_emerald_backpack_accent_brown:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_brown.png
@@ -1291,7 +1291,7 @@ ysbp_emerald_backpack_accent_green:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_green.png
@@ -1304,7 +1304,7 @@ ysbp_emerald_backpack_accent_red:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_red.png
@@ -1317,7 +1317,7 @@ ysbp_emerald_backpack_accent_black:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/emerald_base.png
       - ysbp/backpacks/accents/emerald_black.png
@@ -1330,7 +1330,7 @@ ysbp_netherite_backpack:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/netherite_accent.png
@@ -1343,7 +1343,7 @@ ysbp_netherite_backpack_accent_white:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_white.png
@@ -1356,7 +1356,7 @@ ysbp_netherite_backpack_accent_orange:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_orange.png
@@ -1369,7 +1369,7 @@ ysbp_netherite_backpack_accent_magenta:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_magenta.png
@@ -1382,7 +1382,7 @@ ysbp_netherite_backpack_accent_light_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_light_blue.png
@@ -1395,7 +1395,7 @@ ysbp_netherite_backpack_accent_yellow:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_yellow.png
@@ -1408,7 +1408,7 @@ ysbp_netherite_backpack_accent_lime:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_lime.png
@@ -1421,7 +1421,7 @@ ysbp_netherite_backpack_accent_pink:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_pink.png
@@ -1434,7 +1434,7 @@ ysbp_netherite_backpack_accent_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_gray.png
@@ -1447,7 +1447,7 @@ ysbp_netherite_backpack_accent_light_gray:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_light_gray.png
@@ -1460,7 +1460,7 @@ ysbp_netherite_backpack_accent_cyan:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_cyan.png
@@ -1473,7 +1473,7 @@ ysbp_netherite_backpack_accent_purple:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_purple.png
@@ -1486,7 +1486,7 @@ ysbp_netherite_backpack_accent_blue:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_blue.png
@@ -1499,7 +1499,7 @@ ysbp_netherite_backpack_accent_brown:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_brown.png
@@ -1512,7 +1512,7 @@ ysbp_netherite_backpack_accent_green:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_green.png
@@ -1525,7 +1525,7 @@ ysbp_netherite_backpack_accent_red:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_red.png
@@ -1538,7 +1538,7 @@ ysbp_netherite_backpack_accent_black:
   color: 255, 255, 255
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "ysbp:backpack"
     textures:
       - ysbp/backpacks/netherite_base.png
       - ysbp/backpacks/accents/netherite_black.png

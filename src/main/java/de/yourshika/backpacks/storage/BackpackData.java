@@ -18,7 +18,11 @@ public final class BackpackData {
     private String mainColor;
     private String accentColor;
     private ItemStack[] contents; // Lager-Inhalt
-    private ItemStack[] upgrades; // vorbereitet, in 0.0.1 ungenutzt
+    private ItemStack[] upgrades; // installierte Upgrade-Items
+    private ItemStack[] furnace;  // portable Schmelz-Station: [0]=Eingabe, [1]=Brennstoff, [2]=Ergebnis
+    private int furnaceCook;      // aktuelle Koch-Schritte (Fortschritt)
+    private int furnaceBurn;      // verbleibende Items, die der gezündete Brennstoff noch schmilzt
+    private ItemStack[] compactFilter; // Compacting-Whitelist (leer = alles verdichten)
     private boolean placed;
     private String world;
     private double x, y, z;
@@ -51,6 +55,18 @@ public final class BackpackData {
 
     public ItemStack[] upgrades() { return upgrades; }
     public void upgrades(ItemStack[] upgrades) { this.upgrades = upgrades; }
+
+    public ItemStack[] furnace() { return furnace; }
+    public void furnace(ItemStack[] furnace) { this.furnace = furnace; }
+
+    public int furnaceCook() { return furnaceCook; }
+    public void furnaceCook(int furnaceCook) { this.furnaceCook = furnaceCook; }
+
+    public int furnaceBurn() { return furnaceBurn; }
+    public void furnaceBurn(int furnaceBurn) { this.furnaceBurn = furnaceBurn; }
+
+    public ItemStack[] compactFilter() { return compactFilter; }
+    public void compactFilter(ItemStack[] compactFilter) { this.compactFilter = compactFilter; }
 
     public boolean placed() { return placed; }
     public void placed(boolean placed) { this.placed = placed; }

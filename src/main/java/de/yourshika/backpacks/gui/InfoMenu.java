@@ -146,10 +146,16 @@ public final class InfoMenu {
         fill(inv);
         backButtonTo(holder, inv, "functions");
 
-        renderFunctionGrid(inv, up.shape(), up.ingredients(), plugin.upgradeManager().baseUpgradeItem());
+        ItemStack required = up.requires() != null ? plugin.functionUpgrades().item(up.requires()) : null;
+        renderFunctionGrid(inv, up.shape(), up.ingredients(),
+                plugin.upgradeManager().baseUpgradeItem(), required);
         inv.setItem(RESULT, result);
-        inv.setItem(4, header("<yellow><bold>Crafting Table</bold></yellow>",
-                List.of("<gray>'U' = Upgrade Leather (required).")));
+        List<String> hint = new ArrayList<>();
+        hint.add("<gray>'U' = Upgrade Leather (required).");
+        if (required != null) {
+            hint.add("<gray>'X' = the base upgrade you must craft first.");
+        }
+        inv.setItem(4, header("<yellow><bold>Crafting Table</bold></yellow>", hint));
         player.openInventory(inv);
     }
 
@@ -253,7 +259,7 @@ public final class InfoMenu {
                 }
             }
         }
-        inv.setItem(ARROW, icon(Material.ARROW, "<gray>yields →"));
+        inv.setItem(ARROW, icon(Material.ARROW, "<gray>→"));
     }
 
     private static void renderSmithing(Inventory inv, ItemStack template, ItemStack base,
@@ -261,7 +267,7 @@ public final class InfoMenu {
         inv.setItem(S_TEMPLATE, template);
         inv.setItem(S_BASE, base);
         inv.setItem(S_ADDITION, addition);
-        inv.setItem(S_ARROW, icon(Material.SPECTRAL_ARROW, "<gray>yields ↓"));
+        inv.setItem(S_ARROW, icon(Material.SPECTRAL_ARROW, "<gray>↓"));
         inv.setItem(S_RESULT, label(result, "<yellow>Result"));
     }
 
@@ -275,20 +281,23 @@ public final class InfoMenu {
     }
 
     private static void renderFunctionGrid(Inventory inv, List<String> shape,
-                                           java.util.Map<Character, Material> ingredients, ItemStack base) {
+                                           java.util.Map<Character, Material> ingredients,
+                                           ItemStack base, ItemStack required) {
         for (int r = 0; r < 3; r++) {
             String row = r < shape.size() ? shape.get(r) : "   ";
             for (int c = 0; c < 3; c++) {
                 char ch = c < row.length() ? row.charAt(c) : ' ';
                 if (ch == 'U') {
                     inv.setItem(GRID[r * 3 + c], base);
+                } else if (ch == 'X' && required != null) {
+                    inv.setItem(GRID[r * 3 + c], label(required, "<gray>Base upgrade (required)"));
                 } else {
                     Material mat = ingredients.get(ch);
                     if (mat != null) inv.setItem(GRID[r * 3 + c], new ItemStack(mat));
                 }
             }
         }
-        inv.setItem(ARROW, icon(Material.ARROW, "<gray>yields →"));
+        inv.setItem(ARROW, icon(Material.ARROW, "<gray>→"));
     }
 
     private static void fill(Inventory inv) {

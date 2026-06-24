@@ -49,10 +49,14 @@ public final class FunctionUpgradeManager {
                 continue;
             }
             try {
+                List<String> shape = configShape(up);
+                Map<Character, Material> ingredients = configIngredients(up);
                 ShapedRecipe recipe = new ShapedRecipe(key, items.get(up.id()));
-                recipe.shape(up.shape().toArray(new String[0]));
-                String shapeStr = String.join("", up.shape());
-                for (Map.Entry<Character, Material> e : up.ingredients().entrySet()) {
+                recipe.shape(shape.toArray(new String[0]));
+                String shapeStr = String.join("", shape);
+                for (Map.Entry<Character, Material> e : ingredients.entrySet()) {
+                    if (e.getKey() == 'U' || e.getKey() == 'X') continue; // reserviert
+                    if (shapeStr.indexOf(e.getKey()) < 0) continue;
                     recipe.setIngredient(e.getKey(), new RecipeChoice.MaterialChoice(e.getValue()));
                 }
                 if (shapeStr.indexOf('U') >= 0) {
@@ -73,6 +77,35 @@ public final class FunctionUpgradeManager {
             }
         }
         plugin.getLogger().info("Funktions-Upgrade-Rezepte registriert: " + count);
+    }
+
+    /**
+     * Baut die kanonischen Funktions-Upgrade-Items neu (z.B. nach dem Live-
+     * Umschalten des Oraxen-Moduls). Rezepte werden bewusst NICHT angefasst.
+     */
+    public void rebuildItems() {
+        buildItems();
+    }
+
+    /** Konfiguriertes Crafting-Muster eines Upgrades (Fallback: enum-Standard). */
+    private List<String> configShape(FunctionUpgrade up) {
+        List<String> shape = plugin.getConfig().getStringList(
+                "upgrades.functions.recipes." + up.id() + ".shape");
+        return (shape == null || shape.isEmpty()) ? up.shape() : shape;
+    }
+
+    /** Konfigurierte Zutaten eines Upgrades (Fallback: enum-Standard). */
+    private Map<Character, Material> configIngredients(FunctionUpgrade up) {
+        var sec = plugin.getConfig().getConfigurationSection(
+                "upgrades.functions.recipes." + up.id() + ".ingredients");
+        if (sec == null) return up.ingredients();
+        Map<Character, Material> map = new LinkedHashMap<>();
+        for (String k : sec.getKeys(false)) {
+            if (k.isEmpty()) continue;
+            Material mat = Material.matchMaterial(sec.getString(k, ""));
+            if (mat != null) map.put(k.charAt(0), mat);
+        }
+        return map.isEmpty() ? up.ingredients() : map;
     }
 
     private void buildItems() {

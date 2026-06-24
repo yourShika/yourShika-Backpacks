@@ -76,22 +76,26 @@ public enum FunctionUpgrade {
             0, null),
 
     SMELTING("smelting", "<#FF8C42><bold>Smelting Upgrade</bold></#FF8C42>", 2117,
-            List.of("<gray>Smelts items in the backpack <white>(furnace)</white>.",
-                    "<dark_gray>Needs fuel in the backpack."),
+            List.of("<gray>Adds a <white>portable furnace</white> to the backpack.",
+                    "<gray>Open it from a button in the backpack menu",
+                    "<gray>and smelt items with fuel.",
+                    "<dark_gray>Only one furnace-type upgrade per backpack."),
             List.of(" B ", "FUF", " B "),
             Map.of('B', Material.BLAZE_POWDER, 'F', Material.FURNACE),
             0, null),
 
     BLASTING("blasting", "<#FFB36B><bold>Blasting Upgrade</bold></#FFB36B>", 2121,
-            List.of("<gray>Smelts ores/metals faster <white>(blast furnace)</white>.",
-                    "<dark_gray>Needs fuel in the backpack."),
+            List.of("<gray>Adds a <white>portable blast furnace</white> to the backpack.",
+                    "<gray>Smelts ores and metals twice as fast.",
+                    "<dark_gray>Only one furnace-type upgrade per backpack."),
             List.of(" B ", "FUF", " B "),
             Map.of('B', Material.BLAZE_POWDER, 'F', Material.BLAST_FURNACE),
             0, null),
 
     SMOKING("smoking", "<#FFD27F><bold>Smoking Upgrade</bold></#FFD27F>", 2119,
-            List.of("<gray>Cooks food <white>(smoker)</white>.",
-                    "<dark_gray>Needs fuel in the backpack."),
+            List.of("<gray>Adds a <white>portable smoker</white> to the backpack.",
+                    "<gray>Cooks food twice as fast.",
+                    "<dark_gray>Only one furnace-type upgrade per backpack."),
             List.of(" C ", "SUS", " C "),
             Map.of('C', Material.CHARCOAL, 'S', Material.SMOKER),
             0, null),
@@ -151,9 +155,24 @@ public enum FunctionUpgrade {
     /** Stationen, die einen Button in der Backpack-GUI bekommen. */
     public boolean isStation() {
         return switch (id) {
-            case "crafting", "stonecutter", "smithing", "ender_link", "trash" -> true;
+            case "crafting", "stonecutter", "smithing", "ender_link", "trash",
+                 "smelting", "blasting", "smoking", "compacting" -> true;
             default -> false;
         };
+    }
+
+    /** Schmelz-Upgrade (portable Furnace/Smoker/Blast Furnace)? Nur eines pro Rucksack. */
+    public boolean isFurnace() {
+        return switch (id) {
+            case "smelting", "blasting", "smoking" -> true;
+            default -> false;
+        };
+    }
+
+    /** Ob {@code id} ein Schmelz-Upgrade ist (smelting/blasting/smoking). */
+    public static boolean isFurnaceId(String id) {
+        FunctionUpgrade u = byId(id);
+        return u != null && u.isFurnace();
     }
 
     public static FunctionUpgrade byId(String id) {

@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 6
+config-version: 7
 
 # Language file messages_<language>.yml (default: en). German (de) is bundled too.
 language: en
@@ -341,6 +341,23 @@ upgrades:
     diamond: DIAMOND
     emerald: EMERALD
     netherite: NETHERITE_INGOT
+  # Crafting-Rezept der Tier-Upgrades (außer Netherite): 'M' = Tier-Material
+  # (siehe materials oben), 'U' = Upgrade-Leder. Standard: 8x Material um das Leder.
+  tier-recipe:
+    shape:
+      - "MMM"
+      - "MUM"
+      - "MMM"
+  # Smithing-Rezepte (Smithing Table) – frei konfigurierbar.
+  smithing:
+    # Veredelung eines Backpacks zum nächsten Tier:
+    #   template (Vorlage) + vorheriges Backpack (Basis) + Tier-Upgrade (Zugabe).
+    template-material: LEATHER
+    # Netherite-Tier-Upgrade wird per Smithing erstellt:
+    #   Upgrade-Leder (Vorlage) + base-material (Basis) + addition-material (Zugabe).
+    netherite:
+      base-material: NETHERITE_INGOT
+      addition-material: STRING
   # CustomModelData / item_model der Upgrade-Items – vorbereitet für eigene
   # Texturen via Resourcepack. 'base' = Upgrade-Leder, dann je Ziel-Tier.
   # provider-id nutzt aktive Custom-Item-Module wie Oraxen; item-model leer
@@ -367,6 +384,57 @@ upgrades:
       stonecutter:     { custom-model-data: 2123, item-model: "", provider-id: "ysbp_upgrade_stonecutter" }
       smithing:        { custom-model-data: 2125, item-model: "", provider-id: "ysbp_upgrade_smithing" }
       everlasting:     { custom-model-data: 2144, item-model: "", provider-id: "ysbp_upgrade_everlasting" }
+    # Crafting-Rezepte der Funktions-Upgrades – frei konfigurierbar.
+    # 'U' = Upgrade-Leder (Pflicht), 'X' = das vorausgesetzte Basis-Upgrade
+    # (z.B. braucht Advanced Pickup zuerst ein Pickup Upgrade). Alle anderen
+    # Buchstaben verweisen auf Vanilla-Materialien (ingredients). Fehlt ein
+    # Eintrag, gilt das eingebaute Standard-Rezept.
+    recipes:
+      pickup:
+        shape: [" H ", "RUR", " C "]
+        ingredients: { H: HOPPER, R: REDSTONE, C: CHEST }
+      advanced_pickup:
+        shape: [" E ", "EXE", " E "]
+        ingredients: { E: ENDER_PEARL }
+      magnet:
+        shape: ["IRI", "RUR", "IRI"]
+        ingredients: { I: IRON_INGOT, R: REDSTONE }
+      advanced_magnet:
+        shape: [" D ", "DXD", " D "]
+        ingredients: { D: DIAMOND }
+      crafting:
+        shape: ["PPP", "PUP", "PPP"]
+        ingredients: { P: OAK_PLANKS }
+      stonecutter:
+        shape: [" T ", "SUS", " S "]
+        ingredients: { T: STONECUTTER, S: STONE }
+      smithing:
+        shape: [" T ", "IUI", " I "]
+        ingredients: { T: SMITHING_TABLE, I: IRON_INGOT }
+      ender_link:
+        shape: [" Y ", "OUO", " O "]
+        ingredients: { Y: ENDER_EYE, O: OBSIDIAN }
+      compacting:
+        shape: ["III", "IUI", "III"]
+        ingredients: { I: IRON_INGOT }
+      smelting:
+        shape: [" B ", "FUF", " B "]
+        ingredients: { B: BLAZE_POWDER, F: FURNACE }
+      blasting:
+        shape: [" B ", "FUF", " B "]
+        ingredients: { B: BLAZE_POWDER, F: BLAST_FURNACE }
+      smoking:
+        shape: [" C ", "SUS", " C "]
+        ingredients: { C: CHARCOAL, S: SMOKER }
+      recall:
+        shape: ["EDE", "DUD", "EDE"]
+        ingredients: { E: ENDER_PEARL, D: DIAMOND }
+      trash:
+        shape: [" C ", "CUC", " L "]
+        ingredients: { C: CACTUS, L: LAVA_BUCKET }
+      everlasting:
+        shape: [" N ", "OUO", " O "]
+        ingredients: { N: NETHERITE_INGOT, O: OBSIDIAN }
 
 # ---------------------------------------------------------------------------
 #  Externe Module / Hooks
