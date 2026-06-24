@@ -3,6 +3,8 @@ package de.yourshika.backpacks.listener;
 import de.yourshika.backpacks.BackpackManager;
 import de.yourshika.backpacks.YourShikaBackpacks;
 import de.yourshika.backpacks.gui.BackpackMenuHolder;
+import de.yourshika.backpacks.gui.FilterMenuHolder;
+import de.yourshika.backpacks.gui.FurnaceMenuHolder;
 import de.yourshika.backpacks.gui.ModulesMenuHolder;
 import de.yourshika.backpacks.gui.UpgradeMenuHolder;
 import de.yourshika.backpacks.item.BackpackItemFactory;
@@ -74,13 +76,16 @@ public final class BackpackGuiListener implements Listener {
             return;
         }
 
-        // 0c) Stations-Buttons (Crafting/Stonecutter/Smithing) – nur wenn das
-        //     passende Funktions-Upgrade verbaut ist.
+        // 0c) Stations-Buttons (Crafting/Stonecutter/Smithing/Furnace/…) – nur wenn
+        //     das passende Funktions-Upgrade verbaut ist.
         if (clickedTop && raw >= BackpackMenuHolder.CONTROL_ROW_START) {
-            String station = BackpackMenuHolder.stationAt(raw);
+            String station = holder.stationAt(raw);
             if (station != null && manager.functionUpgradesOf(holder.backpackId()).contains(station)) {
                 event.setCancelled(true);
-                plugin.getServer().getScheduler().runTask(plugin, () -> manager.openStation(player, station));
+                UUID id = holder.backpackId();
+                String tier = holder.tierKey();
+                plugin.getServer().getScheduler().runTask(plugin,
+                        () -> manager.openStation(player, station, id, tier));
                 return;
             }
         }
@@ -276,38 +281,34 @@ public final class BackpackGuiListener implements Listener {
             return;
         }
 
-        // Hotbar-/Offhand-Swap: nur Upgrade-Items in Upgrade-Slots zulassen.
+        // Hotbar-/Offhand-Swap: nur Funktions-Upgrades in Upgrade-Slots zulassen.
         if (click == ClickType.NUMBER_KEY) {
             ItemStack hotbar = event.getView().getBottomInventory().getItem(event.getHotbarButton());
-            if (clickedTop && notAllowedUpgrade(up, hotbar)) {
+            if (clickedTop && rejectUpgrade(player, up, top, holder, hotbar)) {
                 event.setCancelled(true);
-                denyUpgrade(player);
                 return;
             }
         }
         if (click == ClickType.SWAP_OFFHAND) {
             ItemStack off = player.getInventory().getItemInOffHand();
-            if (clickedTop && notAllowedUpgrade(up, off)) {
+            if (clickedTop && rejectUpgrade(player, up, top, holder, off)) {
                 event.setCancelled(true);
-                denyUpgrade(player);
                 return;
             }
         }
 
         // Cursor-Platzierung in einen Upgrade-Slot.
-        if (clickedTop && holder.isUpgradeSlot(raw) && notAllowedUpgrade(up, event.getCursor())) {
+        if (clickedTop && holder.isUpgradeSlot(raw) && rejectUpgrade(player, up, top, holder, event.getCursor())) {
             event.setCancelled(true);
-            denyUpgrade(player);
             return;
         }
 
-        // Shift-Click aus dem Spieler-Inventar: nur Upgrade-Items, kontrolliert.
+        // Shift-Click aus dem Spieler-Inventar: nur Funktions-Upgrades, kontrolliert.
         if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY && !clickedTop) {
             ItemStack moving = event.getCurrentItem();
             if (moving == null || moving.getType().isAir()) return;
-            if (!up.isAnyUpgrade(moving)) {
+            if (rejectUpgrade(player, up, top, holder, moving)) {
                 event.setCancelled(true);
-                denyUpgrade(player);
                 return;
             }
             event.setCancelled(true);
@@ -322,7 +323,8 @@ public final class BackpackGuiListener implements Listener {
         Inventory top = event.getView().getTopInventory();
         if (!(top.getHolder() instanceof UpgradeMenuHolder holder)) return;
         UpgradeItemFactory up = plugin.upgradeItems();
-        boolean badItem = notAllowedUpgrade(up, event.getOldCursor());
+        ItemStack dragged = event.getOldCursor();
+        boolean badItem = onlyFunction(up, dragged) || furnaceConflict(up, top, holder, dragged);
         for (int raw : event.getRawSlots()) {
             if (raw >= top.getSize()) continue;
             if (holder.isLocked(raw) || badItem) {
@@ -339,13 +341,205 @@ public final class BackpackGuiListener implements Listener {
         }
     }
 
-    /** true, wenn das Item nicht air und KEIN Upgrade-Item ist. */
-    private boolean notAllowedUpgrade(UpgradeItemFactory up, ItemStack item) {
-        return item != null && !item.getType().isAir() && !up.isAnyUpgrade(item);
+    // --- Portable Furnace (Smelting/Blasting/Smoking Upgrade) --------------
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onFurnaceClick(InventoryClickEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof FurnaceMenuHolder holder)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+
+        int raw = event.getRawSlot();
+        boolean clickedTop = raw < top.getSize();
+        ClickType click = event.getClick();
+        InventoryAction action = event.getAction();
+
+        // Zurück-Button: Furnace schließen (Items zurück) und Backpack öffnen.
+        if (clickedTop && raw == FurnaceMenuHolder.BACK_SLOT) {
+            event.setCancelled(true);
+            UUID id = holder.backpackId();
+            manager.closeFurnace(player, holder);
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                String err = manager.openById(player, id);
+                if (err == null) return;
+                player.closeInventory();
+            });
+            return;
+        }
+
+        // Doppelklick / Backpacks niemals.
+        if (action == InventoryAction.COLLECT_TO_CURSOR) {
+            event.setCancelled(true);
+            return;
+        }
+        if (items.isBackpack(event.getCursor()) || items.isBackpack(event.getCurrentItem())) {
+            event.setCancelled(true);
+            denyNesting(player);
+            return;
+        }
+
+        // Shift-Click aus dem Spieler-Inventar: nach Brennstoff/Eingabe routen.
+        if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY && !clickedTop) {
+            ItemStack moving = event.getCurrentItem();
+            if (moving == null || moving.getType().isAir()) return;
+            event.setCancelled(true);
+            int target = manager.isFuelItem(moving)
+                    ? FurnaceMenuHolder.FUEL_SLOT
+                    : (manager.isSmeltable(holder.type(), moving) ? FurnaceMenuHolder.INPUT_SLOT : -1);
+            if (target < 0) return; // nicht schmelzbar & kein Brennstoff -> nichts tun
+            ItemStack leftover = mergeIntoSlot(top, target, moving.clone());
+            event.setCurrentItem(leftover);
+            player.updateInventory();
+            return;
+        }
+
+        // Klicks auf Deko-/gesperrte Slots im oberen Inventar blocken.
+        if (clickedTop && !holder.isInteractable(raw)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        // Output-Slot ist nur Entnahme (kein Ablegen/Tauschen).
+        if (clickedTop && holder.isOutput(raw)) {
+            ItemStack cursor = event.getCursor();
+            boolean placing = cursor != null && !cursor.getType().isAir();
+            if (placing || click == ClickType.NUMBER_KEY || click == ClickType.SWAP_OFFHAND) {
+                event.setCancelled(true);
+            }
+        }
     }
 
-    private void denyUpgrade(Player player) {
-        plugin.messages().send(player, "upgrades.no-upgrade-item");
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onFurnaceDrag(InventoryDragEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof FurnaceMenuHolder holder)) return;
+        boolean draggingBackpack = items.isBackpack(event.getOldCursor());
+        for (int raw : event.getRawSlots()) {
+            if (raw >= top.getSize()) continue;
+            // In den oberen Bereich nur Eingabe/Brennstoff – nie Output/Deko.
+            if (draggingBackpack || raw == FurnaceMenuHolder.OUTPUT_SLOT || !holder.isInteractable(raw)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onFurnaceClose(InventoryCloseEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof FurnaceMenuHolder holder
+                && event.getPlayer() instanceof Player player) {
+            manager.closeFurnace(player, holder);
+        }
+    }
+
+    // --- Compacting-Filter (Ghost-Slots) ----------------------------------
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onFilterClick(InventoryClickEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof FilterMenuHolder holder)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        int raw = event.getRawSlot();
+        boolean clickedTop = raw < top.getSize();
+
+        // Zurück-Button: speichern und Backpack öffnen.
+        if (clickedTop && raw == FilterMenuHolder.BACK_SLOT) {
+            event.setCancelled(true);
+            UUID id = holder.backpackId();
+            manager.saveFilter(holder);
+            plugin.getServer().getScheduler().runTask(plugin, () -> manager.openById(player, id));
+            return;
+        }
+
+        if (!clickedTop) return; // Klicks im Spieler-Inventar normal lassen.
+        event.setCancelled(true); // Filter sind Ghost-Slots – niemals echte Items bewegen.
+        if (!holder.isFilterSlot(raw)) return;
+
+        ItemStack cursor = event.getCursor();
+        if (cursor != null && !cursor.getType().isAir()) {
+            if (items.isBackpack(cursor)) { denyNesting(player); return; }
+            ItemStack ghost = new ItemStack(cursor.getType());          // nur Typ als Muster
+            top.setItem(raw, ghost);
+        } else {
+            top.setItem(raw, null);                                      // leeren
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onFilterDrag(InventoryDragEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        if (top.getHolder() instanceof FilterMenuHolder) {
+            for (int raw : event.getRawSlots()) {
+                if (raw < top.getSize()) { event.setCancelled(true); return; }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onFilterClose(InventoryCloseEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof FilterMenuHolder holder) {
+            manager.saveFilter(holder);
+        }
+    }
+
+    /** Legt {@code moving} in einen einzelnen Slot (stapelnd), gibt den Rest zurück. */
+    private ItemStack mergeIntoSlot(Inventory inv, int slot, ItemStack moving) {
+        ItemStack existing = inv.getItem(slot);
+        if (existing == null || existing.getType().isAir()) {
+            inv.setItem(slot, moving);
+            return null;
+        }
+        if (existing.isSimilar(moving)) {
+            int space = existing.getMaxStackSize() - existing.getAmount();
+            int add = Math.min(space, moving.getAmount());
+            existing.setAmount(existing.getAmount() + add);
+            moving.setAmount(moving.getAmount() - add);
+        }
+        return moving.getAmount() > 0 ? moving : null;
+    }
+
+    /**
+     * Prüft ein in die Upgrade-GUI gelegtes Item und meldet dem Spieler den Grund
+     * einer Ablehnung. Gibt true zurück, wenn das Item NICHT abgelegt werden darf.
+     *
+     * <p>Erlaubt sind ausschließlich <b>Funktions-Upgrades</b> (Smoker, Magnet, …) –
+     * kein Upgrade-Leder und keine Tier-Upgrades. Von den Schmelz-Upgrades
+     * (Smelting/Blasting/Smoking) darf nur <b>eines</b> pro Rucksack verbaut sein.</p>
+     */
+    private boolean rejectUpgrade(Player player, UpgradeItemFactory up, Inventory top,
+                                  UpgradeMenuHolder holder, ItemStack item) {
+        if (item == null || item.getType().isAir()) return false;
+        if (onlyFunction(up, item)) {
+            plugin.messages().send(player, "upgrades.no-upgrade-item");
+            return true;
+        }
+        if (furnaceConflict(up, top, holder, item)) {
+            plugin.messages().send(player, "upgrades.one-furnace");
+            return true;
+        }
+        return false;
+    }
+
+    /** true, wenn das Item kein (reines) Funktions-Upgrade ist. */
+    private boolean onlyFunction(UpgradeItemFactory up, ItemStack item) {
+        return item != null && !item.getType().isAir() && !up.isFunctionUpgrade(item);
+    }
+
+    /**
+     * true, wenn {@code item} ein Schmelz-Upgrade ist und im Rucksack bereits ein
+     * (anderes) Schmelz-Upgrade verbaut ist – nur eines ist erlaubt.
+     */
+    private boolean furnaceConflict(UpgradeItemFactory up, Inventory top,
+                                    UpgradeMenuHolder holder, ItemStack item) {
+        String fn = up.getFunctionType(item);
+        if (fn == null || !de.yourshika.backpacks.upgrade.FunctionUpgrade.isFurnaceId(fn)) return false;
+        for (int i = 0; i < holder.upgradeSlots(); i++) {
+            String present = up.getFunctionType(top.getItem(i));
+            if (present != null && de.yourshika.backpacks.upgrade.FunctionUpgrade.isFurnaceId(present)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void denyNesting(Player player) {

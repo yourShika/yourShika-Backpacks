@@ -4,6 +4,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -26,27 +28,39 @@ public final class BackpackMenuHolder implements InventoryHolder {
     public static final int CONTROL_ROW_START = 45; // Slots 45..53 = Steuerleiste
 
     // Feste Plätze in der Steuerleiste.
-    public static final int PREV_SLOT = 45;
-    public static final int UPGRADE_BUTTON = 47; // öffnet die separate Upgrade-GUI
+    public static final int UPGRADE_BUTTON = 45; // linke Ecke – öffnet die separate Upgrade-GUI
+    public static final int PREV_SLOT = 48;
     public static final int INFO_SLOT = 49;
-    public static final int NEXT_SLOT = 53;
-    // Stations-Buttons (nur sichtbar, wenn das passende Funktions-Upgrade verbaut ist).
-    public static final int STATION_TRASH = 46;
-    public static final int STATION_ENDER = 48;
-    public static final int STATION_CRAFTING = 50;
-    public static final int STATION_STONECUTTER = 51;
-    public static final int STATION_SMITHING = 52;
+    public static final int NEXT_SLOT = 50;
+
+    /**
+     * Kandidaten-Slots für dynamisch platzierte Stations-Buttons (Crafting,
+     * Smithing, Furnace, …). Belegt werden nur so viele, wie Funktions-Upgrades
+     * verbaut sind. PREV/NEXT (48/50) werden nur als Stations-Slots genutzt, wenn
+     * nicht geblättert wird – sonst sind das die Blätter-Buttons.
+     */
+    private static final int[] STATION_SLOTS = {46, 47, 51, 52, 53};
+    private static final int[] STATION_SLOTS_NO_PAGING = {46, 47, 51, 52, 53, 48, 50};
+
+    /** Aktuelle Zuordnung Slot -> Stations-ID (bei jedem renderPage neu gesetzt). */
+    private final Map<Integer, String> stationSlots = new LinkedHashMap<>();
+
+    /** Verteilt die Stations-Buttons auf freie Kandidaten-Slots. */
+    public int[] stationCandidates() {
+        return hasPaging() ? STATION_SLOTS : STATION_SLOTS_NO_PAGING;
+    }
+
+    public void clearStationSlots() {
+        stationSlots.clear();
+    }
+
+    public void assignStation(int rawSlot, String stationId) {
+        stationSlots.put(rawSlot, stationId);
+    }
 
     /** Liefert die Stations-ID eines Slots oder null. */
-    public static String stationAt(int rawSlot) {
-        return switch (rawSlot) {
-            case STATION_TRASH -> "trash";
-            case STATION_ENDER -> "ender_link";
-            case STATION_CRAFTING -> "crafting";
-            case STATION_STONECUTTER -> "stonecutter";
-            case STATION_SMITHING -> "smithing";
-            default -> null;
-        };
+    public String stationAt(int rawSlot) {
+        return stationSlots.get(rawSlot);
     }
 
     private final UUID backpackId;

@@ -56,7 +56,8 @@ place:
 
 upgrades:
   title: "<gradient:#6E5BC8:#5BE8D4><bold>Ulepszenia</bold></gradient> <dark_gray>(<tier>)"
-  no-upgrade-item: "<red>Tutaj można umieszczać tylko ulepszenia."
+  no-upgrade-item: "<red>Tutaj pasują tylko ulepszenia funkcyjne (nie skóra ani ulepszenia poziomu)."
+  one-furnace: "<red>Tylko jedno ulepszenie pieca (Smelting/Blasting/Smoking) na plecak."
 
 update:
   checking: "<gray>Sprawdzanie najnowszej wersji na GitHub …"

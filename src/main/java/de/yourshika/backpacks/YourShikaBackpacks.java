@@ -45,7 +45,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BukkitTask autosaveTask;
 
     /** Aktuelle Struktur-Version der config.yml. */
-    private static final int CONFIG_VERSION = 6;
+    private static final int CONFIG_VERSION = 7;
 
     @Override
     public void onEnable() {
@@ -116,10 +116,10 @@ public final class YourShikaBackpacks extends JavaPlugin {
         this.functionUpgrades.registerAll();
         Bukkit.getPluginManager().registerEvents(
                 new de.yourshika.backpacks.listener.UpgradeEffectListener(this, manager), this);
+        Bukkit.getPluginManager().registerEvents(
+                new de.yourshika.backpacks.listener.ItemUpdateListener(this), this);
         new de.yourshika.backpacks.listener.UpgradeMagnetTask(this, manager)
                 .runTaskTimer(this, 20L, 8L);
-        new de.yourshika.backpacks.listener.UpgradeSmeltTask(this, manager)
-                .runTaskTimer(this, 40L, 40L);
 
         // Befehle.
         BackpackCommand command = new BackpackCommand(this, manager, tiers);
@@ -145,7 +145,10 @@ public final class YourShikaBackpacks extends JavaPlugin {
         if (manager != null) {
             manager.saveAllOpen();
             for (var player : Bukkit.getOnlinePlayers()) {
-                if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackMenuHolder) {
+                var holder = player.getOpenInventory().getTopInventory().getHolder();
+                // Backpack- und Furnace-GUIs schließen (Furnace gibt Items zurück).
+                if (holder instanceof BackpackMenuHolder
+                        || holder instanceof de.yourshika.backpacks.gui.FurnaceMenuHolder) {
                     player.closeInventory();
                 }
             }
@@ -200,6 +203,8 @@ public final class YourShikaBackpacks extends JavaPlugin {
         recipeManager.registerAll();
         upgradeManager.registerAll();
         functionUpgrades.registerAll();
+        refreshOnlineBackpacks();
+        refreshOnlineUpgrades();
         if (autosaveTask != null) {
             autosaveTask.cancel();
             autosaveTask = null;
@@ -253,28 +258,74 @@ public final class YourShikaBackpacks extends JavaPlugin {
         saveConfig();
         pluginConfig.load();
         moduleManager.reload();
+        // Kanonische Upgrade-Items an den neuen Hook-Status anpassen (Texturen an/aus),
+        // dann alle sichtbaren Items online befindlicher Spieler aktualisieren.
+        if (upgradeManager != null) upgradeManager.rebuildItems();
+        if (functionUpgrades != null) functionUpgrades.rebuildItems();
         refreshOnlineBackpacks();
+        refreshOnlineUpgrades();
     }
 
     /** Aktualisiert Modell/Textur aller Backpack-Items online befindlicher Spieler. */
     public void refreshOnlineBackpacks() {
-        if (itemFactory == null) return;
         for (org.bukkit.entity.Player player : Bukkit.getOnlinePlayers()) {
-            org.bukkit.inventory.ItemStack[] contents = player.getInventory().getContents();
-            boolean changed = false;
-            for (org.bukkit.inventory.ItemStack item : contents) {
-                if (!itemFactory.isBackpack(item)) continue;
+            refreshPlayerItems(player);
+        }
+    }
+
+    /** Alias – aktualisiert sowohl Backpacks als auch Upgrade-Items aller Spieler. */
+    public void refreshOnlineUpgrades() {
+        refreshOnlineBackpacks();
+    }
+
+    /**
+     * Bringt ALLE Plugin-Items im Inventar eines Spielers auf den aktuellen Stand:
+     * Backpacks (Name/Lore/Modell) und Upgrade-Items (auf die kanonische Version
+     * normalisiert). So „funktionieren" alte Items nach einem Plugin-Update
+     * automatisch wieder und tragen die neuen Texturen/Daten – nichts bleibt veraltet.
+     */
+    public void refreshPlayerItems(org.bukkit.entity.Player player) {
+        if (itemFactory == null) return;
+        org.bukkit.inventory.ItemStack[] contents = player.getInventory().getContents();
+        boolean changed = false;
+        for (int i = 0; i < contents.length; i++) {
+            org.bukkit.inventory.ItemStack item = contents[i];
+            if (item == null || item.getType().isAir()) continue;
+            if (itemFactory.isBackpack(item)) {
                 var tier = tiers.get(itemFactory.getTierKey(item));
                 if (tier != null) {
                     itemFactory.refresh(item, tier);
                     changed = true;
                 }
+                continue;
             }
-            if (changed) {
-                player.getInventory().setContents(contents);
-                player.updateInventory();
+            org.bukkit.inventory.ItemStack canonical = canonicalUpgrade(item);
+            if (canonical != null) {
+                canonical.setAmount(item.getAmount());
+                contents[i] = canonical;
+                changed = true;
             }
         }
+        if (changed) {
+            player.getInventory().setContents(contents);
+            player.updateInventory();
+        }
+    }
+
+    /** Liefert das aktuelle kanonische Upgrade-Item zu einem Upgrade-Item (oder null). */
+    private org.bukkit.inventory.ItemStack canonicalUpgrade(org.bukkit.inventory.ItemStack item) {
+        if (upgradeItems.isUpgradeBase(item)) {
+            return upgradeManager.baseUpgradeItem();
+        }
+        String tier = upgradeItems.getUpgradeTarget(item);
+        if (tier != null) {
+            return upgradeManager.upgradeItem(tier);
+        }
+        String fn = upgradeItems.getFunctionType(item);
+        if (fn != null) {
+            return functionUpgrades.item(fn);
+        }
+        return null;
     }
 
     public void debug(String message) {

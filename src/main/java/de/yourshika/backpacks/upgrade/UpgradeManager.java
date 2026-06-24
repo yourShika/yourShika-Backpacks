@@ -123,21 +123,19 @@ public final class UpgradeManager implements Listener {
             Material mat = tierMaterial(target);
             try {
                 if (mat == Material.NETHERITE_INGOT || target.equalsIgnoreCase("netherite")) {
-                    // Smithing Table: Upgrade-Leder (Vorlage) + Netherite-Ingot (Basis)
-                    // + Faden (Zugabe). Vanilla-Smithing benötigt technisch 3 Slots;
-                    // der Faden ist die günstige dritte Zutat ("1 Upgrade-Leder +
-                    // 1 Netherite-Ingot" bleibt im Kern erhalten).
+                    // Smithing Table: Upgrade-Leder (Vorlage) + Basis-Material
+                    // + Zugabe-Material (beide per Config einstellbar).
                     SmithingTransformRecipe r = new SmithingTransformRecipe(
                             key("upgrade_" + target), result,
-                            new RecipeChoice.ExactChoice(baseItem),      // Vorlage
-                            new RecipeChoice.MaterialChoice(mat),               // Basis (Netherite-Ingot)
-                            new RecipeChoice.MaterialChoice(Material.STRING));  // Zugabe
+                            new RecipeChoice.ExactChoice(baseItem),                 // Vorlage
+                            new RecipeChoice.MaterialChoice(netheriteBaseMaterial(mat)),   // Basis
+                            new RecipeChoice.MaterialChoice(netheriteAdditionMaterial())); // Zugabe
                     Bukkit.addRecipe(r);
                     registered.add(r.getKey());
                 } else {
-                    // 8× Tier-Material um das Upgrade-Leder.
+                    // Tier-Material um das Upgrade-Leder (Muster per Config einstellbar).
                     ShapedRecipe r = new ShapedRecipe(key("upgrade_" + target), result);
-                    r.shape("MMM", "MUM", "MMM");
+                    r.shape(tierRecipeShape().toArray(new String[0]));
                     r.setIngredient('M', new RecipeChoice.MaterialChoice(mat));
                     r.setIngredient('U', new RecipeChoice.ExactChoice(baseItem));
                     r.setGroup("yourshika_upgrades");
@@ -162,7 +160,7 @@ public final class UpgradeManager implements Listener {
                 SmithingTransformRecipe r = new SmithingTransformRecipe(
                         key("smith_" + target),
                         placeholder,
-                        new RecipeChoice.MaterialChoice(Material.LEATHER),               // Template
+                        new RecipeChoice.MaterialChoice(smithingTemplateMaterial()),      // Template
                         new RecipeChoice.MaterialChoice(Material.LEATHER_HORSE_ARMOR),    // Basis (Backpack)
                         new RecipeChoice.ExactChoice(upgrade));                           // Zugabe (Tier-Upgrade)
                 Bukkit.addRecipe(r);
@@ -174,6 +172,15 @@ public final class UpgradeManager implements Listener {
         }
 
         plugin.getLogger().info("Upgrade-Rezepte registriert: " + count);
+    }
+
+    /**
+     * Baut die kanonischen Upgrade-Items neu (z.B. nach dem Live-Umschalten des
+     * Oraxen-Moduls), damit ihre Modell-Komponenten den aktuellen Hook-Status
+     * widerspiegeln. Rezepte werden bewusst NICHT angefasst.
+     */
+    public void rebuildItems() {
+        buildUpgradeItems();
     }
 
     private void buildUpgradeItems() {
@@ -190,7 +197,7 @@ public final class UpgradeManager implements Listener {
             String target = order.get(i);
             BackpackTier tier = tiers.get(target);
             String hex = tier == null ? "FFFFFF" : ColorUtil.hex6(tier.defaultMainColor(), "FFFFFF");
-            String name = "<#" + hex + "><bold>" + capitalize(target) + "-Upgrade</bold></#" + hex + ">";
+            String name = "<#" + hex + "><bold>" + capitalize(target) + " Upgrade</bold></#" + hex + ">";
             int cmd = plugin.getConfig().getInt("upgrades.models." + target + ".custom-model-data",
                     UpgradeItemFactory.BASE_CMD + i);
             String model = plugin.getConfig().getString("upgrades.models." + target + ".item-model", "");
@@ -281,8 +288,8 @@ public final class UpgradeManager implements Listener {
         String target = upgrades.getUpgradeTarget(addition);
         if (target == null) return null;                          // nicht unser Rezept -> Vanilla unberührt
         if (!backpacks.isBackpack(base)) return null;              // unsere Zugabe, aber Basis ist kein Backpack
-        if (template == null || template.getType() != Material.LEATHER
-                || upgrades.isUpgradeBase(template)) return null;  // Vorlage muss normales Leder sein
+        if (template == null || template.getType() != smithingTemplateMaterial()
+                || upgrades.isUpgradeBase(template)) return null;  // Vorlage muss das Template-Material sein
 
         BackpackTier targetTier = tiers.get(target);
         if (targetTier == null) return null;
@@ -359,6 +366,33 @@ public final class UpgradeManager implements Listener {
         String configured = plugin.getConfig().getString("upgrades.materials." + target.toLowerCase(), def);
         Material m = Material.matchMaterial(configured);
         return m == null ? Material.matchMaterial(def) : m;
+    }
+
+    /** Template-Material der Backpack-Veredelung (Config, Standard: Leder). */
+    private Material smithingTemplateMaterial() {
+        Material m = Material.matchMaterial(
+                plugin.getConfig().getString("upgrades.smithing.template-material", "LEATHER"));
+        return m == null ? Material.LEATHER : m;
+    }
+
+    /** Basis-Material des Netherite-Tier-Upgrades (Config, Standard: Tier-Material). */
+    private Material netheriteBaseMaterial(Material fallback) {
+        Material m = Material.matchMaterial(
+                plugin.getConfig().getString("upgrades.smithing.netherite.base-material", fallback.name()));
+        return m == null ? fallback : m;
+    }
+
+    /** Zugabe-Material des Netherite-Tier-Upgrades (Config, Standard: Faden). */
+    private Material netheriteAdditionMaterial() {
+        Material m = Material.matchMaterial(
+                plugin.getConfig().getString("upgrades.smithing.netherite.addition-material", "STRING"));
+        return m == null ? Material.STRING : m;
+    }
+
+    /** Crafting-Muster der Tier-Upgrades (Config, Standard: 8x Material um das Leder). */
+    private List<String> tierRecipeShape() {
+        List<String> shape = plugin.getConfig().getStringList("upgrades.tier-recipe.shape");
+        return (shape == null || shape.size() != 3) ? List.of("MMM", "MUM", "MMM") : shape;
     }
 
     private NamespacedKey key(String name) {

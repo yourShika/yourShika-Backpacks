@@ -48,6 +48,10 @@ public final class SqliteBackpackStorage implements BackpackStorage {
                         "accent_color TEXT," +
                         "contents TEXT," +
                         "upgrades TEXT," +
+                        "furnace TEXT," +
+                        "furnace_cook INTEGER DEFAULT 0," +
+                        "furnace_burn INTEGER DEFAULT 0," +
+                        "compact_filter TEXT," +
                         "placed INTEGER DEFAULT 0," +
                         "world TEXT," +
                         "x REAL DEFAULT 0," +
@@ -57,7 +61,22 @@ public final class SqliteBackpackStorage implements BackpackStorage {
                         "modified INTEGER)")) {
             ps.executeUpdate();
         }
+        // Bestehende Datenbanken um neue Spalten erweitern (Fehler ignorieren, falls vorhanden).
+        addColumnIfMissing("furnace", "TEXT");
+        addColumnIfMissing("furnace_cook", "INTEGER DEFAULT 0");
+        addColumnIfMissing("furnace_burn", "INTEGER DEFAULT 0");
+        addColumnIfMissing("compact_filter", "TEXT");
         plugin.getLogger().info("SQLite-Speicher initialisiert (" + file.getName() + ").");
+    }
+
+    /** Fügt eine Spalte hinzu, falls sie noch nicht existiert (für DB-Migrationen). */
+    private void addColumnIfMissing(String column, String definition) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "ALTER TABLE backpacks ADD COLUMN " + column + " " + definition)) {
+            ps.executeUpdate();
+        } catch (SQLException ignored) {
+            // Spalte existiert bereits.
+        }
     }
 
     @Override
@@ -86,6 +105,10 @@ public final class SqliteBackpackStorage implements BackpackStorage {
         data.accentColor(rs.getString("accent_color"));
         data.contents(ItemSerialization.fromBase64(rs.getString("contents")));
         data.upgrades(ItemSerialization.fromBase64(rs.getString("upgrades")));
+        data.furnace(ItemSerialization.fromBase64(rs.getString("furnace")));
+        data.furnaceCook(rs.getInt("furnace_cook"));
+        data.furnaceBurn(rs.getInt("furnace_burn"));
+        data.compactFilter(ItemSerialization.fromBase64(rs.getString("compact_filter")));
         data.placed(rs.getInt("placed") != 0);
         data.world(rs.getString("world"));
         data.position(rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
@@ -99,11 +122,13 @@ public final class SqliteBackpackStorage implements BackpackStorage {
         data.touch();
         synchronized (lock) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO backpacks (id, owner, tier, main_color, accent_color, contents, upgrades, placed, world, x, y, z, created, modified) " +
-                            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
+                    "INSERT INTO backpacks (id, owner, tier, main_color, accent_color, contents, upgrades, furnace, furnace_cook, furnace_burn, compact_filter, placed, world, x, y, z, created, modified) " +
+                            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
                             "ON CONFLICT(id) DO UPDATE SET " +
                             "owner=excluded.owner, tier=excluded.tier, main_color=excluded.main_color, " +
                             "accent_color=excluded.accent_color, contents=excluded.contents, upgrades=excluded.upgrades, " +
+                            "furnace=excluded.furnace, furnace_cook=excluded.furnace_cook, furnace_burn=excluded.furnace_burn, " +
+                            "compact_filter=excluded.compact_filter, " +
                             "placed=excluded.placed, world=excluded.world, x=excluded.x, y=excluded.y, z=excluded.z, " +
                             "modified=excluded.modified")) {
                 ps.setString(1, data.id().toString());
@@ -113,13 +138,17 @@ public final class SqliteBackpackStorage implements BackpackStorage {
                 ps.setString(5, data.accentColor());
                 ps.setString(6, ItemSerialization.toBase64(data.contents()));
                 ps.setString(7, ItemSerialization.toBase64(data.upgrades()));
-                ps.setInt(8, data.placed() ? 1 : 0);
-                ps.setString(9, data.world());
-                ps.setDouble(10, data.x());
-                ps.setDouble(11, data.y());
-                ps.setDouble(12, data.z());
-                ps.setLong(13, data.created());
-                ps.setLong(14, data.modified());
+                ps.setString(8, ItemSerialization.toBase64(data.furnace()));
+                ps.setInt(9, data.furnaceCook());
+                ps.setInt(10, data.furnaceBurn());
+                ps.setString(11, ItemSerialization.toBase64(data.compactFilter()));
+                ps.setInt(12, data.placed() ? 1 : 0);
+                ps.setString(13, data.world());
+                ps.setDouble(14, data.x());
+                ps.setDouble(15, data.y());
+                ps.setDouble(16, data.z());
+                ps.setLong(17, data.created());
+                ps.setLong(18, data.modified());
                 ps.executeUpdate();
             } catch (SQLException ex) {
                 plugin.getLogger().severe("Backpack " + data.id() + " konnte nicht gespeichert werden: " + ex.getMessage());

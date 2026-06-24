@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.6.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.7.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,32 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## ✨ v0.7.1 (Portable Stations, Filter, configurable recipes)
+
+- 🔁 **Items auto-update on join/update:** existing backpacks and upgrade items are
+  brought to the latest state when a player joins (and on reload), so nothing
+  breaks or looks stale after a plugin update.
+- 🔥 **Portable Furnace / Blast Furnace / Smoker:** the Smelting/Blasting/Smoking
+  upgrade now adds a **GUI station** (icon in the backpack) that smelts like a real
+  furnace. **State is saved in the backpack** – logout, crash or server stop never
+  lose items, and progress persists. **Only one furnace-type upgrade per backpack.**
+- 🧱 **Compacting Filter:** the Compacting upgrade gets a **filter GUI** (icon in the
+  backpack) where you pick which items get compacted on close (empty = everything).
+- 🚫 **Upgrade slots accept only function upgrades** – Upgrade Leather and tier
+  upgrades (Iron-, Netherite-Upgrade …) can no longer be placed there.
+- 🎒 **Upgrades button moved to the bottom-left corner** of the backpack menu.
+- 🛠️ **Configurable recipes:** function-upgrade recipes (incl. the *advanced ➜ needs
+  its base upgrade* rule), the tier-upgrade crafting shape and the **Smithing**
+  recipes (template material, Netherite base/addition) are all editable in
+  `config.yml` (config version 7, auto-migrates).
+- 📖 **`/bp info`:** recipe arrows are now just `→` / `↓`; advanced upgrades show the
+  required **base upgrade** as the `X` ingredient.
+- 🧊 **Placed backpacks** keep the 3D models introduced in v0.7.0. *(A 3D model for
+  the held item is prepared on the `release/v0.7.1` branch and still needs in-game
+  verification before it lands here, to avoid overwriting the current textures.)*
 
 ---
 
@@ -484,7 +510,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.6.1.jar
+target/yourShika-Backpacks-0.7.1.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

@@ -56,7 +56,8 @@ place:
 
 upgrades:
   title: "<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>(<tier>)"
-  no-upgrade-item: "<red>Hier können nur Upgrade-Items abgelegt werden."
+  no-upgrade-item: "<red>Hier passen nur Funktions-Upgrades (kein Upgrade-Leder, keine Tier-Upgrades)."
+  one-furnace: "<red>Nur ein Schmelz-Upgrade (Smelting/Blasting/Smoking) pro Rucksack."
 
 update:
   checking: "<gray>Suche nach der neuesten Version auf GitHub …"

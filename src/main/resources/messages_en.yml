@@ -55,7 +55,8 @@ place:
 
 upgrades:
   title: "<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>(<tier>)"
-  no-upgrade-item: "<red>Only upgrade items can be placed here."
+  no-upgrade-item: "<red>Only function upgrades fit here (not upgrade leather or tier upgrades)."
+  one-furnace: "<red>Only one furnace-type upgrade (Smelting/Blasting/Smoking) per backpack."
 
 update:
   checking: "<gray>Checking GitHub for the latest version …"
