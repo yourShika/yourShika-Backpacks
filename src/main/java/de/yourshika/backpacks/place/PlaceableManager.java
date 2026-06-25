@@ -40,6 +40,8 @@ public final class PlaceableManager {
 
     private final NamespacedKey markerKey;
     private final NamespacedKey idKey;
+    private final net.kyori.adventure.text.minimessage.MiniMessage mini =
+            net.kyori.adventure.text.minimessage.MiniMessage.miniMessage();
 
     public PlaceableManager(YourShikaBackpacks plugin, BackpackManager manager) {
         this.plugin = plugin;
@@ -112,7 +114,14 @@ public final class PlaceableManager {
 
         ItemStack visual = items.create(tier, id, main, accent);
         applyPlacedVisualModel(visual, tier, accent);
-        spawnEntities(loc, id, visual);
+        float yaw = player.getLocation().getYaw();
+        spawnEntities(loc, id, visual, yaw);
+        String hologramName = items.getCustomName(inHand);
+        if (hologramName == null || hologramName.isBlank()) {
+            hologramName = capitalize(tier.key()) + " Backpack";
+        }
+        spawnHologram(loc, id, hologramName, player.getName());
+        effects(loc, true);
 
         // Ein Backpack aus der Hand entfernen.
         inHand.setAmount(inHand.getAmount() - 1);
@@ -124,15 +133,17 @@ public final class PlaceableManager {
         return null;
     }
 
-    private void spawnEntities(Location loc, UUID id, ItemStack visual) {
+    private void spawnEntities(Location loc, UUID id, ItemStack visual, float yaw) {
         loc.getWorld().spawn(loc, ItemDisplay.class, display -> {
             display.setItemStack(visual);
             display.setPersistent(true);
             display.setBillboard(org.bukkit.entity.Display.Billboard.FIXED);
             display.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.GROUND);
             try {
+                // Nach Blickrichtung des Spielers drehen (#31): Y-Rotation aus dem Yaw.
+                Quaternionf left = new Quaternionf().rotationY((float) Math.toRadians(-yaw));
                 display.setTransformation(new Transformation(
-                        new Vector3f(0f, 0.08f, 0f), new Quaternionf(),
+                        new Vector3f(0f, 0.08f, 0f), left,
                         new Vector3f(0.82f, 0.82f, 0.82f), new Quaternionf()));
             } catch (Throwable ignored) {
             }
@@ -145,6 +156,47 @@ public final class PlaceableManager {
             interaction.setPersistent(true);
             tag(interaction, id);
         });
+    }
+
+    /** Optionales Hologramm (Name + Besitzer) über dem platzierten Backpack (#32). */
+    private void spawnHologram(Location loc, UUID id, String name, String ownerName) {
+        if (!plugin.getConfig().getBoolean("placeable.hologram.enabled", true)) return;
+        Location at = loc.clone().add(0, 0.85, 0);
+        loc.getWorld().spawn(at, org.bukkit.entity.TextDisplay.class, td -> {
+            td.setBillboard(org.bukkit.entity.Display.Billboard.CENTER);
+            td.setPersistent(true);
+            td.setSeeThrough(false);
+            td.setDefaultBackground(false);
+            try {
+                td.setBackgroundColor(org.bukkit.Color.fromARGB(0, 0, 0, 0));
+            } catch (Throwable ignored) {
+            }
+            td.text(mini.deserialize("<gold><name></gold><newline><gray>by <white><owner>",
+                    net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed("name", name),
+                    net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed(
+                            "owner", ownerName == null ? "?" : ownerName)));
+            tag(td, id);
+        });
+    }
+
+    /** Partikel + Sound beim Platzieren/Aufheben (#36), konfigurierbar. */
+    private void effects(Location loc, boolean placing) {
+        if (!plugin.getConfig().getBoolean("placeable.effects", true)) return;
+        var world = loc.getWorld();
+        if (world == null) return;
+        Location at = loc.clone().add(0, 0.3, 0);
+        world.spawnParticle(placing ? org.bukkit.Particle.HAPPY_VILLAGER : org.bukkit.Particle.POOF,
+                at, 12, 0.2, 0.2, 0.2, 0.02);
+        String key = placing ? "minecraft:block.wool.place" : "minecraft:block.wool.break";
+        world.playSound(net.kyori.adventure.sound.Sound.sound(
+                        net.kyori.adventure.key.Key.key(key),
+                        net.kyori.adventure.sound.Sound.Source.BLOCK, 0.7f, 1.0f),
+                at.getX(), at.getY(), at.getZ());
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.isEmpty()) return s;
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
     private void applyPlacedVisualModel(ItemStack visual, BackpackTier tier, String accent) {
@@ -179,9 +231,10 @@ public final class PlaceableManager {
             if (world == null) continue;
             org.bukkit.Location loc = new org.bukkit.Location(world, data.x(), data.y(), data.z());
             world.getChunkAt(loc).load();
-            for (Entity e : world.getNearbyEntities(loc, 0.8, 0.9, 0.8)) {
+            for (Entity e : world.getNearbyEntities(loc, 0.8, 1.4, 0.8)) {
                 if (isPlacedEntity(e) && id.equals(backpackIdOf(e))) e.remove();
             }
+            effects(loc, false);
 
             BackpackTier tier = tiers.get(data.tier());
             if (tier == null) tier = tiers.all().iterator().next();
@@ -239,12 +292,13 @@ public final class PlaceableManager {
             return false;
         }
 
-        // Beide getaggten Entities mit gleicher ID entfernen.
-        for (Entity e : loc.getWorld().getNearbyEntities(loc, 0.6, 0.8, 0.6)) {
+        // Alle getaggten Entities mit gleicher ID entfernen (inkl. Hologramm).
+        for (Entity e : loc.getWorld().getNearbyEntities(loc, 0.8, 1.4, 0.8)) {
             if (isPlacedEntity(e) && id.equals(backpackIdOf(e))) {
                 e.remove();
             }
         }
+        effects(loc, false);
         loc.getWorld().dropItemNaturally(loc, drop);
         return true;
     }

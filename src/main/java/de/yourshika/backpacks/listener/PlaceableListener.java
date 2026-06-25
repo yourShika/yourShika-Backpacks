@@ -62,7 +62,9 @@ public final class PlaceableListener implements Listener {
                     return;
                 }
             }
+            UUID pickedId = placeable.backpackIdOf(entity);
             if (placeable.pickup(entity)) {
+                plugin.audit(player.getName(), "PICKUP", String.valueOf(pickedId));
                 plugin.messages().send(player, "place.removed");
             } else {
                 plugin.messages().send(player, "error.invalid-backpack");
