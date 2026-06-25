@@ -107,6 +107,8 @@ public final class PlaceableManager {
         // umgefärbtes Backpack beim Aufheben nicht auf die Default-Farbe zurückfällt.
         data.mainColor(main);
         data.accentColor(accent);
+        // Custom-Namen mitspeichern, damit er beim Aufheben/Recall erhalten bleibt.
+        data.name(items.getCustomName(inHand));
         data.placed(true);
         data.world(loc.getWorld().getName());
         data.position(loc.getX(), loc.getY(), loc.getZ());
@@ -255,8 +257,10 @@ public final class PlaceableManager {
         ItemStack item = items.create(tier, id, main, accent);
         if (data.owner() != null) {
             items.writeOwner(item, data.owner(), org.bukkit.Bukkit.getOfflinePlayer(data.owner()).getName());
-            items.applyDisplay(item, tier, id, main, accent);
         }
+        // Custom-Namen wiederherstellen (ging früher beim Platzieren verloren).
+        items.writeName(item, data.name());
+        items.applyDisplay(item, tier, id, main, accent);
         data.placed(false);
         manager.storage().save(data);
         player.getInventory().addItem(item).values()
@@ -302,8 +306,10 @@ public final class PlaceableManager {
             if (data.owner() != null) {
                 items.writeOwner(drop, data.owner(),
                         org.bukkit.Bukkit.getOfflinePlayer(data.owner()).getName());
-                items.applyDisplay(drop, tier, id, main, accent);
             }
+            // Custom-Namen wiederherstellen (ging früher beim Platzieren verloren).
+            items.writeName(drop, data.name());
+            items.applyDisplay(drop, tier, id, main, accent);
             data.placed(false);
             manager.storage().save(data);
         } else {

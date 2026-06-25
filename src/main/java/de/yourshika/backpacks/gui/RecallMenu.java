@@ -53,6 +53,9 @@ public final class RecallMenu {
                 icon = items.create(tier, id, main, accent);
                 ItemMeta meta = icon.getItemMeta();
                 List<Component> lore = meta.lore() != null ? new ArrayList<>(meta.lore()) : new ArrayList<>();
+                String ownerName = d.owner() == null ? null
+                        : Bukkit.getOfflinePlayer(d.owner()).getName();
+                lore.add(line("<gray>Owner: <white>" + (ownerName == null ? "—" : ownerName)));
                 lore.add(line("<dark_gray>" + (d.world() == null ? "?" : d.world()) + " "
                         + (int) Math.floor(d.x()) + ", " + (int) Math.floor(d.y()) + ", " + (int) Math.floor(d.z())));
                 lore.add(line("<yellow>Click to recall this backpack"));

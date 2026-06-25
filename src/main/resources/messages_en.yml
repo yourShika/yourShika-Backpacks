@@ -69,6 +69,7 @@ upgrades:
   title: "<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>(<tier>)"
   no-upgrade-item: "<red>Only function upgrades fit here (not upgrade leather or tier upgrades)."
   one-furnace: "<red>Only one furnace-type upgrade (Smelting/Blasting/Smoking) per backpack."
+  too-many-stations: "<red>Only <max> station upgrades fit per backpack (so all buttons stay visible)."
 
 update:
   checking: "<gray>Checking GitHub for the latest version …"
@@ -113,6 +114,7 @@ trash:
 compact:
   preview: "<#D2B48C>Would compact on close: <white><items></white>"
   preview-none: "<#D2B48C>Nothing to compact right now."
+  done: "<#D2B48C>Compacted: <white><items></white>"
 
 reload:
   success: "<green>Configuration reloaded."

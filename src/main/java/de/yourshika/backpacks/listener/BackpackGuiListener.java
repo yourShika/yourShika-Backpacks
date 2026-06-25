@@ -272,10 +272,19 @@ public final class BackpackGuiListener implements Listener {
     // Trash-GUI: Confirm-Button löscht; Schließen ohne Klick gibt die Items zurück.
     @EventHandler(priority = EventPriority.HIGH)
     public void onTrashClick(InventoryClickEvent event) {
-        if (!(event.getView().getTopInventory().getHolder() instanceof TrashMenuHolder holder)) return;
-        if (!holder.confirm()) return; // Nicht-Confirm: freie Interaktion, Items verfallen beim Schließen.
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof TrashMenuHolder holder)) return;
         int raw = event.getRawSlot();
-        boolean clickedTop = raw < event.getView().getTopInventory().getSize();
+        boolean clickedTop = raw < top.getSize();
+
+        // Rucksäcke (auch in Shulker/Bundle) dürfen NIE in den Trash – sonst Verlust.
+        if (event.getWhoClicked() instanceof Player player && trashWouldHoldBackpack(event, top, clickedTop)) {
+            event.setCancelled(true);
+            denyNesting(player);
+            return;
+        }
+
+        if (!holder.confirm()) return; // Nicht-Confirm: freie Interaktion, Items verfallen beim Schließen.
         if (clickedTop && raw == TrashMenuHolder.CONFIRM_SLOT) {
             event.setCancelled(true);
             if (!(event.getWhoClicked() instanceof Player player)) return;
@@ -286,11 +295,38 @@ public final class BackpackGuiListener implements Listener {
         }
     }
 
+    /** true, wenn dieser Klick ein Backpack in das Trash-Oberinventar bewegen würde. */
+    private boolean trashWouldHoldBackpack(InventoryClickEvent event, Inventory top, boolean clickedTop) {
+        ClickType click = event.getClick();
+        // Shift-Click aus dem Spieler-Inventar wandert in den Trash.
+        if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY && !clickedTop) {
+            return cantStore(event.getCurrentItem());
+        }
+        if (!clickedTop) return false; // sonstige Klicks im Spieler-Inventar sind ok.
+        if (click == ClickType.NUMBER_KEY) {
+            return cantStore(event.getView().getBottomInventory().getItem(event.getHotbarButton()));
+        }
+        if (click == ClickType.SWAP_OFFHAND && event.getWhoClicked() instanceof Player p) {
+            return cantStore(p.getInventory().getItemInOffHand());
+        }
+        return cantStore(event.getCursor()); // Cursor-Platzierung in den Trash.
+    }
+
+    private boolean cantStore(ItemStack item) {
+        return item != null && !item.getType().isAir() && items.isOrContainsBackpack(item);
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onTrashDrag(InventoryDragEvent event) {
-        if (!(event.getView().getTopInventory().getHolder() instanceof TrashMenuHolder holder)) return;
-        if (holder.confirm() && event.getRawSlots().contains(TrashMenuHolder.CONFIRM_SLOT)) {
-            event.setCancelled(true);
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof TrashMenuHolder holder)) return;
+        boolean draggingBackpack = items.isOrContainsBackpack(event.getOldCursor());
+        for (int raw : event.getRawSlots()) {
+            if (raw >= top.getSize()) continue;
+            if (draggingBackpack || (holder.confirm() && raw == TrashMenuHolder.CONFIRM_SLOT)) {
+                event.setCancelled(true);
+                return;
+            }
         }
     }
 
@@ -336,7 +372,8 @@ public final class BackpackGuiListener implements Listener {
     public void onClose(InventoryCloseEvent event) {
         Inventory top = event.getView().getTopInventory();
         if (top.getHolder() instanceof BackpackMenuHolder holder) {
-            manager.saveAndRelease(holder);
+            Player closer = event.getPlayer() instanceof Player p ? p : null;
+            manager.saveAndRelease(holder, closer);
             plugin.debug("Backpack " + holder.backpackId() + " gespeichert & freigegeben.");
         }
     }
@@ -421,7 +458,8 @@ public final class BackpackGuiListener implements Listener {
         if (!(top.getHolder() instanceof UpgradeMenuHolder holder)) return;
         UpgradeItemFactory up = plugin.upgradeItems();
         ItemStack dragged = event.getOldCursor();
-        boolean badItem = onlyFunction(up, dragged) || furnaceConflict(up, top, holder, dragged);
+        boolean badItem = onlyFunction(up, dragged) || furnaceConflict(up, top, holder, dragged)
+                || stationOverflow(up, top, holder, dragged);
         for (int raw : event.getRawSlots()) {
             if (raw >= top.getSize()) continue;
             if (holder.isLocked(raw) || badItem) {
@@ -629,7 +667,32 @@ public final class BackpackGuiListener implements Listener {
             plugin.messages().send(player, "upgrades.one-furnace");
             return true;
         }
+        if (stationOverflow(up, top, holder, item)) {
+            plugin.messages().send(player, "upgrades.too-many-stations",
+                    de.yourshika.backpacks.config.MessageManager.ph("max",
+                            String.valueOf(BackpackMenuHolder.MAX_STATIONS)));
+            return true;
+        }
         return false;
+    }
+
+    /**
+     * true, wenn {@code item} ein Stations-Upgrade ist und der Rucksack damit mehr
+     * Stationen hätte, als gleichzeitig angezeigt werden können
+     * ({@link BackpackMenuHolder#MAX_STATIONS}). So beißen sich die Buttons nie um Platz.
+     */
+    private boolean stationOverflow(UpgradeItemFactory up, Inventory top,
+                                    UpgradeMenuHolder holder, ItemStack item) {
+        String fn = up.getFunctionType(item);
+        var def = fn == null ? null : de.yourshika.backpacks.upgrade.FunctionUpgrade.byId(fn);
+        if (def == null || !def.isStation()) return false;
+        int stations = 0;
+        for (int i = 0; i < holder.upgradeSlots(); i++) {
+            String present = up.getFunctionType(top.getItem(i));
+            var p = present == null ? null : de.yourshika.backpacks.upgrade.FunctionUpgrade.byId(present);
+            if (p != null && p.isStation()) stations++;
+        }
+        return stations >= BackpackMenuHolder.MAX_STATIONS;
     }
 
     /** true, wenn das Item kein (reines) Funktions-Upgrade ist. */

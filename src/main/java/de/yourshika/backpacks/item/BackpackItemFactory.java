@@ -145,10 +145,8 @@ public final class BackpackItemFactory {
 
         String customName = meta.getPersistentDataContainer().get(keys.name, PersistentDataType.STRING);
         if (customName != null && !customName.isBlank()) {
-            // Spieler-Name: als unparsed eingesetzt -> keine MiniMessage-Injection.
-            meta.displayName(mini.deserialize("<gold><name></gold>",
-                            Placeholder.unparsed("name", customName))
-                    .decoration(TextDecoration.ITALIC, false));
+            // Custom-Name mit Farb-/Gradient-/Legacy-Unterstützung rendern.
+            meta.displayName(de.yourshika.backpacks.util.NameUtil.render(customName));
         } else {
             meta.displayName(mini.deserialize(tier.displayName(), resolvers)
                     .decoration(TextDecoration.ITALIC, false));

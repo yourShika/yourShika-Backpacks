@@ -15,6 +15,7 @@ public final class BackpackData {
     private final UUID id;
     private UUID owner;            // kann null sein (z.B. Admin-Spawn)
     private String tier;
+    private String name;          // vom Spieler vergebener Custom-Name (roh, mit Formatierung) oder null
     private String mainColor;
     private String accentColor;
     private ItemStack[] contents; // Lager-Inhalt
@@ -43,6 +44,9 @@ public final class BackpackData {
 
     public String tier() { return tier; }
     public void tier(String tier) { this.tier = tier; }
+
+    public String name() { return name; }
+    public void name(String name) { this.name = name; }
 
     public String mainColor() { return mainColor; }
     public void mainColor(String mainColor) { this.mainColor = mainColor; }

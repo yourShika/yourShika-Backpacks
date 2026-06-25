@@ -42,6 +42,13 @@ public final class BackpackMenuHolder implements InventoryHolder {
     private static final int[] STATION_SLOTS = {46, 47, 51, 52, 53};
     private static final int[] STATION_SLOTS_NO_PAGING = {46, 47, 51, 52, 53, 48, 50};
 
+    /**
+     * Maximale Anzahl gleichzeitig anzeigbarer Stations-Buttons. Entspricht den
+     * garantiert freien Kandidaten-Slots (auch bei Blätter-Buttons), damit immer
+     * <b>alle</b> Stationen sichtbar sind und sich nicht um Plätze streiten.
+     */
+    public static final int MAX_STATIONS = STATION_SLOTS.length;
+
     /** Aktuelle Zuordnung Slot -> Stations-ID (bei jedem renderPage neu gesetzt). */
     private final Map<Integer, String> stationSlots = new LinkedHashMap<>();
 

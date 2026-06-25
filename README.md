@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.8.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.9.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,28 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## ✨ Neu in v0.9.0
+
+- 🏷️ **Umbenennen im Amboss** – Backpacks lassen sich jetzt direkt im **Anvil**
+  umbenennen, mit voller Farb-Unterstützung: **Hex** (`&#RRGGBB` / `<#RRGGBB>`),
+  **Gradient/Rainbow** (`<gradient:#a:#b>…`) und **Minecraft-Farbcodes** (`&a`, `&l` …).
+- 🧷 **Name bleibt beim Platzieren erhalten** – ein platzierter und wieder
+  aufgehobener Rucksack verliert seinen Custom-Namen nicht mehr (Name wird
+  serverseitig mitgespeichert).
+- 🔥 **Portable Furnace läuft im Hintergrund** – Schmelz-Stationen arbeiten weiter,
+  auch wenn das Menü geschlossen ist. Das **Furnace-Icon im Rucksack** zeigt eine
+  **live aktualisierte Lore**: was gerade verschmolzen wird, Brennstoff-Art/-Menge
+  und wie viele Items insgesamt verschmolzen werden.
+- 🧱 **Compacting-Chat-Meldung** – beim Schließen meldet der Rucksack, was verdichtet
+  wurde (z.B. „3x Diamond Block").
+- 👤 **`/bp recall`-Menü** zeigt jetzt den **Besitzer** jedes platzierten Backpacks.
+- 🗑️ **Trash schützt Backpacks** – Rucksäcke (auch in Shulker/Bundle) können nicht
+  mehr in den Trash gelegt werden.
+- 🎛️ **Stations-Limit** – pro Rucksack passen maximal **5 Stations-Upgrades**, damit
+  alle Icons in der Steuerleiste sichtbar bleiben und sich nicht um Plätze streiten.
 
 ---
 
@@ -315,7 +337,7 @@ ein Paper/Spigot-Plugin.**
 ## 🛠️ Installation
 
 1. Plugin-JAR aus den [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   herunterladen (`yourShika-Backpacks-0.8.0.jar`).
+   herunterladen (`yourShika-Backpacks-0.9.0.jar`).
 2. In den `plugins/`-Ordner deines **Paper 26.1.2 (Java 25)**-Servers legen.
 3. Server starten – der Datenordner **`plugins/yourShika Backpack's/`** wird automatisch
    mit `config.yml`, `messages_de.yml` und der Datenbank erstellt.
@@ -559,7 +581,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.8.0.jar
+target/yourShika-Backpacks-0.9.0.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

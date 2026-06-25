@@ -52,6 +52,7 @@ public final class SqliteBackpackStorage implements BackpackStorage {
                         "furnace_cook INTEGER DEFAULT 0," +
                         "furnace_burn INTEGER DEFAULT 0," +
                         "compact_filter TEXT," +
+                        "name TEXT," +
                         "placed INTEGER DEFAULT 0," +
                         "world TEXT," +
                         "x REAL DEFAULT 0," +
@@ -66,6 +67,7 @@ public final class SqliteBackpackStorage implements BackpackStorage {
         addColumnIfMissing("furnace_cook", "INTEGER DEFAULT 0");
         addColumnIfMissing("furnace_burn", "INTEGER DEFAULT 0");
         addColumnIfMissing("compact_filter", "TEXT");
+        addColumnIfMissing("name", "TEXT");
         plugin.getLogger().info("SQLite-Speicher initialisiert (" + file.getName() + ").");
     }
 
@@ -109,6 +111,7 @@ public final class SqliteBackpackStorage implements BackpackStorage {
         data.furnaceCook(rs.getInt("furnace_cook"));
         data.furnaceBurn(rs.getInt("furnace_burn"));
         data.compactFilter(ItemSerialization.fromBase64(rs.getString("compact_filter")));
+        data.name(rs.getString("name"));
         data.placed(rs.getInt("placed") != 0);
         data.world(rs.getString("world"));
         data.position(rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
@@ -122,13 +125,13 @@ public final class SqliteBackpackStorage implements BackpackStorage {
         data.touch();
         synchronized (lock) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO backpacks (id, owner, tier, main_color, accent_color, contents, upgrades, furnace, furnace_cook, furnace_burn, compact_filter, placed, world, x, y, z, created, modified) " +
-                            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
+                    "INSERT INTO backpacks (id, owner, tier, main_color, accent_color, contents, upgrades, furnace, furnace_cook, furnace_burn, compact_filter, name, placed, world, x, y, z, created, modified) " +
+                            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
                             "ON CONFLICT(id) DO UPDATE SET " +
                             "owner=excluded.owner, tier=excluded.tier, main_color=excluded.main_color, " +
                             "accent_color=excluded.accent_color, contents=excluded.contents, upgrades=excluded.upgrades, " +
                             "furnace=excluded.furnace, furnace_cook=excluded.furnace_cook, furnace_burn=excluded.furnace_burn, " +
-                            "compact_filter=excluded.compact_filter, " +
+                            "compact_filter=excluded.compact_filter, name=excluded.name, " +
                             "placed=excluded.placed, world=excluded.world, x=excluded.x, y=excluded.y, z=excluded.z, " +
                             "modified=excluded.modified")) {
                 ps.setString(1, data.id().toString());
@@ -142,13 +145,14 @@ public final class SqliteBackpackStorage implements BackpackStorage {
                 ps.setInt(9, data.furnaceCook());
                 ps.setInt(10, data.furnaceBurn());
                 ps.setString(11, ItemSerialization.toBase64(data.compactFilter()));
-                ps.setInt(12, data.placed() ? 1 : 0);
-                ps.setString(13, data.world());
-                ps.setDouble(14, data.x());
-                ps.setDouble(15, data.y());
-                ps.setDouble(16, data.z());
-                ps.setLong(17, data.created());
-                ps.setLong(18, data.modified());
+                ps.setString(12, data.name());
+                ps.setInt(13, data.placed() ? 1 : 0);
+                ps.setString(14, data.world());
+                ps.setDouble(15, data.x());
+                ps.setDouble(16, data.y());
+                ps.setDouble(17, data.z());
+                ps.setLong(18, data.created());
+                ps.setLong(19, data.modified());
                 ps.executeUpdate();
             } catch (SQLException ex) {
                 plugin.getLogger().severe("Backpack " + data.id() + " konnte nicht gespeichert werden: " + ex.getMessage());

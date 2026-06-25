@@ -299,7 +299,7 @@ public final class BackpackManager {
             if (!functions.contains(station)) continue;
             if (idx >= candidates.length) break; // keine freien Slots mehr
             int slot = candidates[idx++];
-            inv.setItem(slot, stationButton(station));
+            inv.setItem(slot, stationButton(station, holder.backpackId()));
             holder.assignStation(slot, station);
         }
     }
@@ -428,7 +428,7 @@ public final class BackpackManager {
                 : Character.toUpperCase(key.charAt(0)) + key.substring(1);
     }
 
-    private ItemStack stationButton(String station) {
+    private ItemStack stationButton(String station, UUID backpackId) {
         Material material;
         String name;
         String desc;
@@ -449,12 +449,73 @@ public final class BackpackManager {
         meta.displayName(line(name));
         List<Component> lore = new ArrayList<>();
         if (!desc.isEmpty()) lore.add(line("<gray>" + desc));
+        // Live-Status für die portable Schmelz-Station (#3).
+        String furnaceType = stationFurnaceType(station);
+        if (furnaceType != null) {
+            lore.add(Component.empty());
+            lore.addAll(furnaceStationLore(backpackId, furnaceType));
+        }
         lore.add(Component.empty());
         lore.add(line("<yellow>▶ Click to open"));
         meta.lore(lore);
         meta.addItemFlags(org.bukkit.inventory.ItemFlag.values());
         item.setItemMeta(meta);
         return item;
+    }
+
+    /** Furnace-Typ einer Schmelz-Station ("furnace"/"blast"/"smoker") oder null. */
+    private String stationFurnaceType(String station) {
+        return switch (station) {
+            case "smelting" -> "furnace";
+            case "blasting" -> "blast";
+            case "smoking" -> "smoker";
+            default -> null;
+        };
+    }
+
+    /** Live-Lore-Zeilen für eine portable Schmelz-Station (aus dem gespeicherten Zustand). */
+    private List<Component> furnaceStationLore(UUID backpackId, String type) {
+        List<Component> lines = new ArrayList<>();
+        BackpackData data = backpackId == null ? null : storage.load(backpackId);
+        ItemStack[] f = data == null ? null : data.furnace();
+        ItemStack input = f != null && f.length > 0 ? f[0] : null;
+        ItemStack fuel = f != null && f.length > 1 ? f[1] : null;
+        ItemStack output = f != null && f.length > 2 ? f[2] : null;
+        Map<Material, ItemStack> recipes = smeltMap(type);
+
+        boolean smeltable = input != null && !input.getType().isAir()
+                && input.isSimilar(new ItemStack(input.getType())) && recipes.containsKey(input.getType());
+        if (smeltable) {
+            ItemStack result = recipes.get(input.getType());
+            lines.add(line("<gray>Smelting: <white>" + input.getAmount() + "x " + prettyMaterial(input.getType())
+                    + " <dark_gray>→ <white>" + prettyMaterial(result.getType())));
+        } else if (input != null && !input.getType().isAir()) {
+            lines.add(line("<gray>Input: <white>" + input.getAmount() + "x " + prettyMaterial(input.getType())
+                    + " <dark_gray>(can't smelt)"));
+        } else {
+            lines.add(line("<gray>Input: <dark_gray>empty"));
+        }
+
+        int burn = data == null ? 0 : data.furnaceBurn();
+        if (fuel != null && !fuel.getType().isAir() && isFuelItem(fuel)) {
+            int capacity = fuelValue(fuel.getType()) * fuel.getAmount() + burn;
+            lines.add(line("<gray>Fuel: <white>" + fuel.getAmount() + "x " + prettyMaterial(fuel.getType())
+                    + " <dark_gray>(~" + capacity + " items)"));
+        } else if (burn > 0) {
+            lines.add(line("<gray>Fuel: <dark_gray>burning (" + burn + " left)"));
+        } else {
+            lines.add(line("<gray>Fuel: <dark_gray>none"));
+        }
+
+        if (smeltable) {
+            int fuelItems = (fuel != null && isFuelItem(fuel) ? fuelValue(fuel.getType()) * fuel.getAmount() : 0) + burn;
+            int willSmelt = Math.min(input.getAmount(), fuelItems);
+            lines.add(line("<gray>Will smelt: <white>" + willSmelt + " <gray>item(s)"));
+        }
+        if (output != null && !output.getType().isAir()) {
+            lines.add(line("<gray>Output: <white>" + output.getAmount() + "x " + prettyMaterial(output.getType())));
+        }
+        return lines;
     }
 
     /** Öffnet die Vanilla-Station (Crafting/Stonecutter/Smithing) für ein Stations-Upgrade. */
@@ -583,11 +644,24 @@ public final class BackpackManager {
      * "geöffnet"-Status frei.
      */
     public void saveAndRelease(BackpackMenuHolder holder) {
+        saveAndRelease(holder, null);
+    }
+
+    public void saveAndRelease(BackpackMenuHolder holder, Player closer) {
         try {
             flushVisiblePage(holder);
             // Compacting-Upgrade: 9er-Stacks zu Blöcken verdichten (nach Filter).
             if (functionUpgradesOf(holder.backpackId()).contains("compacting")) {
-                compact(holder.buffer(), compactWhitelist(holder.backpackId()));
+                java.util.Map<Material, Integer> created =
+                        compact(holder.buffer(), compactWhitelist(holder.backpackId()));
+                if (closer != null && !created.isEmpty()) {
+                    java.util.List<String> parts = new java.util.ArrayList<>();
+                    for (var e : created.entrySet()) {
+                        parts.add(e.getValue() + "x " + prettyMaterial(e.getKey()));
+                    }
+                    plugin.messages().send(closer, "compact.done",
+                            de.yourshika.backpacks.config.MessageManager.ph("items", String.join(", ", parts)));
+                }
             }
             BackpackData data = storage.load(holder.backpackId());
             if (data == null) {
@@ -777,8 +851,13 @@ public final class BackpackManager {
         return set;
     }
 
-    /** Verdichtet 9er-Mengen verdichtbarer Items im Buffer zu Blöcken. */
-    private void compact(ItemStack[] buffer, java.util.Set<Material> whitelist) {
+    /**
+     * Verdichtet 9er-Mengen verdichtbarer Items im Buffer zu Blöcken. Gibt eine
+     * Zusammenfassung zurück (Block-Material → Anzahl erstellter Blöcke), damit der
+     * Spieler im Chat informiert werden kann.
+     */
+    private java.util.Map<Material, Integer> compact(ItemStack[] buffer, java.util.Set<Material> whitelist) {
+        java.util.Map<Material, Integer> created = new java.util.LinkedHashMap<>();
         java.util.Map<Material, Integer> totals = new java.util.HashMap<>();
         for (ItemStack it : buffer) {
             if (it == null) continue;
@@ -807,8 +886,10 @@ public final class BackpackManager {
             ItemStack itemLeftover = remainder > 0 ? addToBuffer(trial, new ItemStack(mat, remainder)) : null;
             if (blockLeftover == null && itemLeftover == null) {
                 copyBuffer(trial, buffer);
+                created.merge(COMPACT.get(mat), blocks, Integer::sum);
             }
         }
+        return created;
     }
 
     /** Legt einen Stack in freie/passende Buffer-Slots (für Compacting). */
@@ -1115,6 +1196,107 @@ public final class BackpackManager {
             holder.task(null);
         }
         saveFurnace(holder);
+    }
+
+    /** Furnace-Typ aus den installierten Upgrades ("furnace"/"blast"/"smoker") oder null. */
+    private String furnaceTypeOf(java.util.Set<String> fns) {
+        if (fns.contains("blasting")) return "blast";
+        if (fns.contains("smoking")) return "smoker";
+        if (fns.contains("smelting")) return "furnace";
+        return null;
+    }
+
+    /** Hat irgendein Spieler gerade die Furnace-GUI dieses Backpacks offen? */
+    public boolean isFurnaceGuiOpen(UUID backpackId) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p.getOpenInventory().getTopInventory().getHolder()
+                    instanceof de.yourshika.backpacks.gui.FurnaceMenuHolder fh
+                    && backpackId.equals(fh.backpackId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Lässt die portable Schmelz-Station eines Backpacks im Hintergrund weiterlaufen,
+     * wenn die GUI gerade NICHT offen ist (#3). Verarbeitet pro Aufruf so viele
+     * Schritte wie die GUI in der gleichen Zeit (Task läuft alle 20 Ticks).
+     */
+    public void backgroundFurnaceStep(UUID backpackId) {
+        if (isFurnaceGuiOpen(backpackId)) return; // GUI-Tick ist maßgeblich
+        BackpackData data = storage.load(backpackId);
+        if (data == null) return;
+        String type = furnaceTypeOf(computeFunctions(data.upgrades()));
+        if (type == null) return;
+        ItemStack[] f = data.furnace();
+        if (f == null || f.length < 3) return;
+
+        Map<Material, ItemStack> recipes = smeltMap(type);
+        int steps = cookSteps(type);
+        int cook = data.furnaceCook() + 10; // entspricht der GUI-Rate über 20 Ticks
+        int burn = data.furnaceBurn();
+        boolean changed = false;
+
+        int guard = 0;
+        while (cook >= steps && guard++ < 128) {
+            ItemStack input = f[0];
+            ItemStack output = f[2];
+            ItemStack result = (input != null && !input.getType().isAir()
+                    && input.isSimilar(new ItemStack(input.getType()))) ? recipes.get(input.getType()) : null;
+            if (result == null) { cook = 0; break; } // nichts (gültiges) zu schmelzen
+            boolean outputRoom = output == null || output.getType().isAir()
+                    || (output.isSimilar(result) && output.getAmount() + result.getAmount() <= output.getMaxStackSize());
+            if (!outputRoom) { cook = Math.min(cook, steps - 1); break; } // Ausgabe voll -> Fortschritt halten
+
+            if (burn <= 0) {
+                burn = consumeFuelArray(f);
+                if (burn <= 0) { cook = 0; break; } // kein Brennstoff
+                changed = true;
+            }
+            cook -= steps;
+            burn -= 1;
+            ItemStack out = result.clone();
+            if (output == null || output.getType().isAir()) f[2] = out;
+            else output.setAmount(output.getAmount() + out.getAmount());
+            input.setAmount(input.getAmount() - 1);
+            if (input.getAmount() <= 0) f[0] = null;
+            changed = true;
+        }
+
+        if (cook != data.furnaceCook() || burn != data.furnaceBurn() || changed) {
+            data.furnace(f);
+            data.furnaceCook(cook);
+            data.furnaceBurn(burn);
+            storage.save(data);
+        }
+    }
+
+    /** Verbraucht eine Brennstoff-Einheit aus dem Fuel-Slot eines Arrays (Hintergrund). */
+    private int consumeFuelArray(ItemStack[] f) {
+        ItemStack fuel = f[1];
+        if (fuel == null || fuel.getType().isAir()) return 0;
+        int value = fuelValue(fuel.getType());
+        if (value <= 0) return 0;
+        if (fuel.getType() == Material.LAVA_BUCKET) {
+            f[1] = new ItemStack(Material.BUCKET);
+        } else {
+            fuel.setAmount(fuel.getAmount() - 1);
+            if (fuel.getAmount() <= 0) f[1] = null;
+        }
+        return value;
+    }
+
+    /** Aktualisiert die Live-Lore der Furnace-Stations-Buttons einer offenen Backpack-GUI. */
+    public void refreshStationLore(BackpackMenuHolder holder) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        for (int slot = BackpackMenuHolder.CONTROL_ROW_START; slot < BackpackMenuHolder.INVENTORY_SIZE; slot++) {
+            String station = holder.stationAt(slot);
+            if (station != null && stationFurnaceType(station) != null) {
+                inv.setItem(slot, stationButton(station, holder.backpackId()));
+            }
+        }
     }
 
     /** Speichert alle aktuell offenen Backpacks (Autosave / Shutdown), ohne sie zu schließen. */

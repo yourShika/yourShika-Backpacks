@@ -119,8 +119,13 @@ public final class YourShikaBackpacks extends JavaPlugin {
                 new de.yourshika.backpacks.listener.UpgradeEffectListener(this, manager), this);
         Bukkit.getPluginManager().registerEvents(
                 new de.yourshika.backpacks.listener.ItemUpdateListener(this), this);
+        Bukkit.getPluginManager().registerEvents(
+                new de.yourshika.backpacks.listener.AnvilRenameListener(this), this);
         new de.yourshika.backpacks.listener.UpgradeMagnetTask(this, manager)
                 .runTaskTimer(this, 20L, 8L);
+        // Portable Furnace im Hintergrund weiterlaufen lassen + Icon-Lore aktualisieren.
+        new de.yourshika.backpacks.listener.FurnaceBackgroundTask(this, manager)
+                .runTaskTimer(this, 40L, 20L);
 
         // Befehle.
         BackpackCommand command = new BackpackCommand(this, manager, tiers);
