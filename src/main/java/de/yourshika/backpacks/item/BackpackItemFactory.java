@@ -288,6 +288,34 @@ public final class BackpackItemFactory {
         return meta.getPersistentDataContainer().get(keys.ownerName, PersistentDataType.STRING);
     }
 
+    /**
+     * Ist dies ein Backpack ODER enthält es (rekursiv) ein Backpack – z.B. ein
+     * Backpack in einer Shulkerbox oder einem Bundle? Verhindert Deep-Nesting
+     * (#51): Backpack → Shulker/Bundle → Backpack.
+     */
+    public boolean isOrContainsBackpack(ItemStack item) {
+        return isOrContainsBackpack(item, 0);
+    }
+
+    private boolean isOrContainsBackpack(ItemStack item, int depth) {
+        if (item == null || depth > 4) return false;
+        if (isBackpack(item)) return true;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        if (meta instanceof org.bukkit.inventory.meta.BlockStateMeta bsm && bsm.hasBlockState()
+                && bsm.getBlockState() instanceof org.bukkit.block.ShulkerBox box) {
+            for (ItemStack inner : box.getInventory().getContents()) {
+                if (isOrContainsBackpack(inner, depth + 1)) return true;
+            }
+        }
+        if (meta instanceof org.bukkit.inventory.meta.BundleMeta bundle) {
+            for (ItemStack inner : bundle.getItems()) {
+                if (isOrContainsBackpack(inner, depth + 1)) return true;
+            }
+        }
+        return false;
+    }
+
     /** Setzt (oder löscht bei null/blank) den vom Spieler gewählten Custom-Namen. */
     public void writeName(ItemStack item, String name) {
         ItemMeta meta = item.getItemMeta();

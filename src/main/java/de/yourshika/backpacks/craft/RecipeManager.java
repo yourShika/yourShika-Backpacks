@@ -48,6 +48,14 @@ public final class RecipeManager implements Listener {
             BackpackTier.RecipeDefinition def = tier.recipe();
             if (def == null || !def.enabled()) continue;
             if (def.shape() == null || def.shape().isEmpty()) continue;
+
+            // Config-Rezept validieren mit klaren Meldungen (#56).
+            List<String> problems = validateRecipe(tier, def);
+            if (!problems.isEmpty()) {
+                plugin.getLogger().warning("Crafting-Rezept für Tier '" + tier.key() + "' übersprungen (Config-Fehler):");
+                for (String p : problems) plugin.getLogger().warning("  - " + p);
+                continue;
+            }
             try {
                 NamespacedKey key = new NamespacedKey(plugin, "backpack_" + tier.key());
                 // Idempotent: bereits registrierte Rezepte NICHT erneut entfernen/anlegen.
@@ -72,6 +80,48 @@ public final class RecipeManager implements Listener {
             }
         }
         plugin.getLogger().info("Crafting-Rezepte registriert: " + count);
+    }
+
+    /** Prüft ein Config-Rezept und liefert verständliche Problembeschreibungen (#56). */
+    private List<String> validateRecipe(BackpackTier tier, BackpackTier.RecipeDefinition def) {
+        List<String> problems = new ArrayList<>();
+        List<String> shape = def.shape();
+        if (shape.size() > 3) {
+            problems.add("shape hat " + shape.size() + " Reihen (erlaubt sind max. 3)");
+        }
+        int width = -1;
+        for (String row : shape) {
+            if (row == null) {
+                problems.add("eine shape-Reihe ist leer/null");
+                continue;
+            }
+            if (row.length() > 3) {
+                problems.add("shape-Reihe \"" + row + "\" ist länger als 3 Zeichen");
+            }
+            if (width == -1) width = row.length();
+            else if (row.length() != width) {
+                problems.add("shape-Reihen haben unterschiedliche Längen (alle müssen gleich lang sein)");
+            }
+        }
+        java.util.Set<Character> used = new java.util.HashSet<>();
+        for (String row : shape) {
+            if (row == null) continue;
+            for (char c : row.toCharArray()) {
+                if (c != ' ') used.add(c);
+            }
+        }
+        for (char c : used) {
+            if (!def.ingredients().containsKey(c)) {
+                problems.add("Zutat '" + c + "' wird in der shape verwendet, ist aber nicht (gültig) definiert"
+                        + " – prüfe den Material-Namen unter tiers." + tier.key() + ".recipe.ingredients");
+            }
+        }
+        for (Character c : def.ingredients().keySet()) {
+            if (!used.contains(c)) {
+                problems.add("Zutat '" + c + "' ist definiert, kommt aber nicht in der shape vor");
+            }
+        }
+        return problems;
     }
 
     public void unregisterAll() {

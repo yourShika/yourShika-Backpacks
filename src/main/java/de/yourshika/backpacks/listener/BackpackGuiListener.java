@@ -660,7 +660,12 @@ public final class BackpackGuiListener implements Listener {
     }
 
     private boolean canStoreBackpack(BackpackMenuHolder holder, ItemStack item) {
-        return !items.isBackpack(item) || manager.canStoreBackpackInside(holder.backpackId(), item);
+        if (item == null) return true;
+        if (items.isBackpack(item)) {
+            return manager.canStoreBackpackInside(holder.backpackId(), item);
+        }
+        // Deep-Nesting (#51): Backpack versteckt in Shulker/Bundle -> immer blocken.
+        return !items.isOrContainsBackpack(item);
     }
 
     /**

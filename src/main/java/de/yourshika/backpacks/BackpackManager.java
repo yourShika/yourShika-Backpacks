@@ -310,6 +310,7 @@ public final class BackpackManager {
         int target = holder.currentPage() + delta;
         if (target < 0 || target >= holder.pageCount()) return;
         flushVisiblePage(holder);
+        persistOpen(holder); // Auto-Recovery (#55): bei jedem Seitenwechsel sichern
         holder.currentPage(target);
         renderPage(holder);
     }
@@ -320,8 +321,23 @@ public final class BackpackManager {
         int target = Math.max(0, Math.min(holder.pageCount() - 1, page));
         if (target == holder.currentPage()) return;
         flushVisiblePage(holder);
+        persistOpen(holder); // Auto-Recovery (#55)
         holder.currentPage(target);
         renderPage(holder);
+    }
+
+    /** Speichert den aktuellen Buffer eines offenen Backpacks (für Auto-Recovery). */
+    private void persistOpen(BackpackMenuHolder holder) {
+        try {
+            BackpackData data = storage.load(holder.backpackId());
+            if (data == null) {
+                data = new BackpackData(holder.backpackId());
+                data.tier(holder.tierKey());
+            }
+            data.contents(holder.buffer());
+            storage.save(data);
+        } catch (Exception ignored) {
+        }
     }
 
     /** Anzahl belegter Lager-Slots (über alle Seiten) für die Info-Anzeige. */

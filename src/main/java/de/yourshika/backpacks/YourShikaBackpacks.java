@@ -52,6 +52,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
         saveDefaultConfig();
         migrateConfig();
         saveResourceIfMissing("messages_en.yml");
+        checkCrashMarker();
 
         this.pluginConfig = new PluginConfig(this);
         this.pluginConfig.load();
@@ -168,6 +169,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
         if (storage != null) {
             storage.close();
         }
+        clearCrashMarker(); // sauberer Shutdown (#55)
         getLogger().info("yourShika Backpack's deaktiviert.");
     }
 
@@ -331,6 +333,34 @@ public final class YourShikaBackpacks extends JavaPlugin {
     public void debug(String message) {
         if (pluginConfig != null && pluginConfig.debug()) {
             getLogger().info("[DEBUG] " + message);
+        }
+    }
+
+    /**
+     * Auto-Recovery (#55): legt beim Start einen {@code .running}-Marker an und
+     * löscht ihn bei sauberem Shutdown. Existiert er beim Start noch, lief der
+     * letzte Shutdown unsauber (Crash) – offene Backpacks wurden bis zum letzten
+     * Speichern (Autosave/Seitenwechsel) gesichert; der Spieler verliert nichts
+     * Geöffnetes dauerhaft (kein "stuck open", da der Status nicht persistiert wird).
+     */
+    private void checkCrashMarker() {
+        File running = new File(getDataFolder(), ".running");
+        if (running.exists()) {
+            getLogger().warning("Auto-Recovery: Unsauberer Shutdown erkannt – "
+                    + "offene Backpacks wurden bis zum letzten Speichern wiederhergestellt.");
+        } else {
+            try {
+                if (running.getParentFile() != null) running.getParentFile().mkdirs();
+                running.createNewFile();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    private void clearCrashMarker() {
+        try {
+            new File(getDataFolder(), ".running").delete();
+        } catch (Exception ignored) {
         }
     }
 
