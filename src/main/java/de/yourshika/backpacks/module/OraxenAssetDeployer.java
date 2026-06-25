@@ -47,6 +47,47 @@ public final class OraxenAssetDeployer {
         this.plugin = plugin;
     }
 
+    /** Status-Übersicht für {@code /bp assets status}. */
+    public record AssetStatus(boolean oraxenPresent, String bundledVersion, String deployedVersion,
+                              int managed, int missing, int total) {
+    }
+
+    /** Berechnet (read-only) den aktuellen Asset-Status gegen die gebündelten Defaults. */
+    public AssetStatus status() {
+        Plugin oraxen = Bukkit.getPluginManager().getPlugin("Oraxen");
+        boolean present = oraxen != null;
+        Properties state = loadState(new File(plugin.getDataFolder(), STATE_FILE).toPath());
+        String deployedVersion = state.getProperty("asset-version", "-");
+        String bundledVersion = "-";
+        int total = 0, missing = 0, managed = 0;
+        try (ZipFile zip = new ZipFile(plugin.pluginJarFile())) {
+            Properties bundled = loadBundledManifest(zip);
+            bundledVersion = bundled.getProperty("asset-version", "-");
+            File oraxenItems = present ? new File(oraxen.getDataFolder(), "items") : null;
+            File oraxenTextures = present ? new File(oraxen.getDataFolder(), "pack/textures") : null;
+            File oraxenModels = present ? new File(oraxen.getDataFolder(), "pack/models") : null;
+            Enumeration<? extends ZipEntry> entries = zip.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                String name = entry.getName();
+                if (entry.isDirectory() || !name.startsWith(BUNDLE_PREFIX)) continue;
+                if (name.equals(MANIFEST_ENTRY)) continue;
+                total++;
+                if (state.getProperty(MANAGED_PREFIX + name) != null) managed++;
+                if (present) {
+                    File target = null;
+                    if (name.startsWith(ITEMS_PREFIX)) target = new File(oraxenItems, name.substring(ITEMS_PREFIX.length()));
+                    else if (name.startsWith(TEX_PREFIX)) target = new File(oraxenTextures, name.substring(TEX_PREFIX.length()));
+                    else if (name.startsWith(MODEL_PREFIX)) target = new File(oraxenModels, name.substring(MODEL_PREFIX.length()));
+                    if (target != null && !target.exists()) missing++;
+                }
+            }
+        } catch (Exception ex) {
+            plugin.debug("Asset-Status fehlgeschlagen: " + ex.getMessage());
+        }
+        return new AssetStatus(present, bundledVersion, deployedVersion, managed, missing, total);
+    }
+
     public void deploy() {
         Plugin oraxen = Bukkit.getPluginManager().getPlugin("Oraxen");
         if (oraxen == null) return;

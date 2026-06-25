@@ -17,6 +17,8 @@ help:
   give: "<yellow>/bp give <player> <tier> [amount] [color] [accent] <gray>– Give a backpack"
   openid: "<yellow>/bp openid <id> <gray>– Open a backpack by ID"
   modules: "<yellow>/bp modules <gray>– Toggle external modules"
+  assets: "<yellow>/bp assets <status|redeploy> <gray>– Oraxen asset status / redeploy"
+  doctor: "<yellow>/bp doctor <gray>– Diagnostics (Oraxen, config, DB, assets, versions)"
   update: "<yellow>/bp update <gray>– Download the latest version from GitHub"
   reload: "<yellow>/bp reload <gray>– Reload the configuration"
   footer: "<dark_gray>Inspired by Sophisticated Backpacks – a standalone server plugin."
@@ -86,6 +88,18 @@ locate:
   not-placed: "<gray>This backpack is not placed."
   teleported: "<green>Teleported to backpack <white><id></white>."
   world-missing: "<red>The backpack's world is not loaded."
+
+assets:
+  no-oraxen: "<red>The Oraxen module is not active."
+  redeployed: "<green>Oraxen assets re-deployed. <yellow>Run /oraxen reload to rebuild the pack."
+  status-header: "<gold><bold>Oraxen Asset Status</bold></gold>"
+  status-oraxen: "<gray>Oraxen present: <white><value></white>"
+  status-version: "<gray>Asset version: <white><deployed></white> <dark_gray>(bundled <bundled>)"
+  status-files: "<gray>Managed: <white><managed></white><gray>/<white><total></white> <dark_gray>•</dark_gray> <gray>missing: <white><missing></white>"
+
+doctor:
+  header: "<gold><bold>yourShika Backpack's – Doctor</bold></gold>"
+  line: "<gray><label>: <white><value></white>"
 
 reload:
   success: "<green>Configuration reloaded."

@@ -69,6 +69,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "info", "recipes", "rezepte" -> info(sender);
             case "recall" -> recall(sender);
             case "modules", "module" -> modules(sender);
+            case "assets" -> assets(sender, args);
+            case "doctor" -> doctor(sender);
             case "update" -> update(sender);
             case "reload" -> reload(sender);
             case "version", "ver" -> version(sender);
@@ -89,6 +91,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
         if (sender.hasPermission("yourshika.backpack.admin.openid")) msg.sendRaw(sender, "help.openid");
         if (sender.hasPermission("yourshika.backpack.admin.modules")) msg.sendRaw(sender, "help.modules");
+        if (sender.hasPermission("yourshika.backpack.admin.assets")) msg.sendRaw(sender, "help.assets");
+        if (sender.hasPermission("yourshika.backpack.admin.doctor")) msg.sendRaw(sender, "help.doctor");
         if (sender.hasPermission("yourshika.backpack.admin.update")) msg.sendRaw(sender, "help.update");
         if (sender.hasPermission("yourshika.backpack.admin.reload")) msg.sendRaw(sender, "help.reload");
         msg.sendRaw(sender, "help.footer");
@@ -558,6 +562,63 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         new de.yourshika.backpacks.update.GitHubUpdater(plugin).checkAndUpdate(sender);
     }
 
+    private void assets(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("yourshika.backpack.admin.assets")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        if (plugin.moduleManager() == null || !plugin.moduleManager().isActive("oraxen")) {
+            msg.send(sender, "assets.no-oraxen");
+            return;
+        }
+        var deployer = new de.yourshika.backpacks.module.OraxenAssetDeployer(plugin);
+        String sub = args.length >= 2 ? args[1].toLowerCase() : "status";
+        if (sub.equals("redeploy")) {
+            deployer.deploy();
+            plugin.audit(sender.getName(), "ASSETS", "redeploy");
+            msg.send(sender, "assets.redeployed");
+            return;
+        }
+        var st = deployer.status();
+        msg.send(sender, "assets.status-header");
+        msg.sendRaw(sender, "assets.status-oraxen", ph("value", st.oraxenPresent() ? "yes" : "no"));
+        msg.sendRaw(sender, "assets.status-version",
+                ph("bundled", st.bundledVersion()), ph("deployed", st.deployedVersion()));
+        msg.sendRaw(sender, "assets.status-files",
+                ph("managed", String.valueOf(st.managed())),
+                ph("total", String.valueOf(st.total())),
+                ph("missing", String.valueOf(st.missing())));
+    }
+
+    private void doctor(CommandSender sender) {
+        if (!sender.hasPermission("yourshika.backpack.admin.doctor")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        msg.send(sender, "doctor.header");
+        doctorLine(sender, "Server", Bukkit.getVersion());
+        doctorLine(sender, "Java", System.getProperty("java.version"));
+        doctorLine(sender, "Plugin", plugin.getPluginMeta().getVersion());
+        doctorLine(sender, "Storage", plugin.pluginConfig().storageType()
+                + " (" + manager.storage().count() + " backpacks)");
+        doctorLine(sender, "Config", "v" + plugin.getConfig().getInt("config-version", -1));
+        doctorLine(sender, "Tiers", String.valueOf(tiers.all().size()));
+        boolean oraxen = plugin.moduleManager() != null && plugin.moduleManager().isActive("oraxen");
+        doctorLine(sender, "Oraxen module", oraxen ? "active" : "inactive");
+        if (oraxen) {
+            var st = new de.yourshika.backpacks.module.OraxenAssetDeployer(plugin).status();
+            String assets = "v" + st.deployedVersion() + " (bundled v" + st.bundledVersion() + ")"
+                    + (st.missing() > 0 ? ", " + st.missing() + " missing" : ", complete");
+            doctorLine(sender, "Assets", assets);
+        }
+        boolean papi = plugin.moduleManager() != null && plugin.moduleManager().isActive("placeholderapi");
+        doctorLine(sender, "PlaceholderAPI", papi ? "active" : "inactive");
+    }
+
+    private void doctorLine(CommandSender sender, String label, String value) {
+        msg.sendRaw(sender, "doctor.line", ph("label", label), ph("value", value));
+    }
+
     private void reload(CommandSender sender) {
         if (!sender.hasPermission("yourshika.backpack.admin.reload")) {
             msg.send(sender, "error.no-permission");
@@ -586,6 +647,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
             if (sender.hasPermission("yourshika.backpack.admin.modules")) subs.add("modules");
+            if (sender.hasPermission("yourshika.backpack.admin.assets")) subs.add("assets");
+            if (sender.hasPermission("yourshika.backpack.admin.doctor")) subs.add("doctor");
             if (sender.hasPermission("yourshika.backpack.admin.update")) subs.add("update");
             if (sender.hasPermission("yourshika.backpack.admin.reload")) subs.add("reload");
             return filter(subs, args[0]);
@@ -609,6 +672,9 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         }
         if (sub.equals("locate") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.locateother")) {
             return filter(onlinePlayers(), args[1]);
+        }
+        if (sub.equals("assets") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.assets")) {
+            return filter(List.of("status", "redeploy"), args[1]);
         }
         return List.of();
     }
