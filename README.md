@@ -24,6 +24,38 @@ ein Paper/Spigot-Plugin.**
 
 ---
 
+## ✨ Neu in v0.8.0
+
+**Commands & Verwaltung**
+- 🏷️ **`/bp rename <Name|reset>`** – Backpacks umbenennen (Config `rename.allow-players`, Admins immer)
+- 🖱️ **Anklickbares `/bp list`** – `[Open]` `[Copy]` `[TP]`
+- 📍 **`/bp locate [Spieler|ID]`** + **`/bp goto <ID>`** – platzierte Backpacks orten & hin-teleportieren
+- 🔁 **`/bp transfer <ID> <Spieler>`** – Besitzer ändern
+- 🎯 **`/bp recall`** öffnet bei mehreren Backpacks ein **Auswahlmenü** (sonst direkt)
+- 🧰 **`/bp assets <status|redeploy>`** & **`/bp doctor`** (Diagnose)
+- 📝 **Admin-Audit-Log** (`audit.log`): Give/OpenID/Transfer/Recall/Pickup
+- 🔢 **Mehr PlaceholderAPI**: `placed`, `used_slots`, `free_slots`, `tiers`, `count_<tier>`
+
+**GUI**
+- 📊 Info-Item zeigt **belegte/freie Slots**
+- ⏮️ **Shift-Klick** auf die Blätter-Pfeile springt zur **ersten/letzten Seite**
+
+**Platzierte Backpacks**
+- 🧭 Drehen sich **nach Blickrichtung**; optionales **Hologramm (Name + Besitzer)**; **Partikel + Sound** beim Platzieren/Aufheben
+
+**Upgrades**
+- 🗑️ **Trash mit Lösch-Bestätigung** (`trash.confirm`) – Schließen ohne Klick gibt Items zurück
+- 🧱 **Compacting-Preview** (Chat) + **Presets** (Erze/Farm/Redstone/Sonstiges)
+- 🧲 **Magnet**: Drossel gegen Lag + Respekt für Item-Owner & Pickup-Delay
+
+**Robustheit & CI**
+- 🛡️ **Deep-Nesting-Schutz**: Backpacks in Shulker/Bundle werden erkannt & blockiert
+- ♻️ **Auto-Recovery**: Speichern beim Seitenwechsel + Crash-Erkennung
+- ✅ **Rezept-Validierung** mit klaren Config-Fehlermeldungen
+- 🤖 **CI-Asset-Check**: verhindert einseitige Faces in Oraxen-Modellen
+
+---
+
 ## ✨ v0.7.2 (Placed Backpack Geometry)
 
 - 🎒 **Placed Oraxen backpacks now use real cuboid geometry** for flap, pocket,
@@ -136,38 +168,6 @@ ein Paper/Spigot-Plugin.**
   (war eine Folge des Freezes).
 - **`/bp info`:** Smithing-Rezepte sauberer dargestellt, Slot-Beschriftungen auf
   Englisch (Template / Base / Addition) – passend zum Smithing Table.
-
----
-
-## ✨ Neu in v0.8.0
-
-**Commands & Verwaltung**
-- 🏷️ **`/bp rename <Name|reset>`** – Backpacks umbenennen (Config `rename.allow-players`, Admins immer)
-- 🖱️ **Anklickbares `/bp list`** – `[Open]` `[Copy]` `[TP]`
-- 📍 **`/bp locate [Spieler|ID]`** + **`/bp goto <ID>`** – platzierte Backpacks orten & hin-teleportieren
-- 🔁 **`/bp transfer <ID> <Spieler>`** – Besitzer ändern
-- 🎯 **`/bp recall`** öffnet bei mehreren Backpacks ein **Auswahlmenü** (sonst direkt)
-- 🧰 **`/bp assets <status|redeploy>`** & **`/bp doctor`** (Diagnose)
-- 📝 **Admin-Audit-Log** (`audit.log`): Give/OpenID/Transfer/Recall/Pickup
-- 🔢 **Mehr PlaceholderAPI**: `placed`, `used_slots`, `free_slots`, `tiers`, `count_<tier>`
-
-**GUI**
-- 📊 Info-Item zeigt **belegte/freie Slots**
-- ⏮️ **Shift-Klick** auf die Blätter-Pfeile springt zur **ersten/letzten Seite**
-
-**Platzierte Backpacks**
-- 🧭 Drehen sich **nach Blickrichtung**; optionales **Hologramm (Name + Besitzer)**; **Partikel + Sound** beim Platzieren/Aufheben
-
-**Upgrades**
-- 🗑️ **Trash mit Lösch-Bestätigung** (`trash.confirm`) – Schließen ohne Klick gibt Items zurück
-- 🧱 **Compacting-Preview** (Chat) + **Presets** (Erze/Farm/Redstone/Sonstiges)
-- 🧲 **Magnet**: Drossel gegen Lag + Respekt für Item-Owner & Pickup-Delay
-
-**Robustheit & CI**
-- 🛡️ **Deep-Nesting-Schutz**: Backpacks in Shulker/Bundle werden erkannt & blockiert
-- ♻️ **Auto-Recovery**: Speichern beim Seitenwechsel + Crash-Erkennung
-- ✅ **Rezept-Validierung** mit klaren Config-Fehlermeldungen
-- 🤖 **CI-Asset-Check**: verhindert einseitige Faces in Oraxen-Modellen
 
 ---
 
@@ -315,7 +315,7 @@ ein Paper/Spigot-Plugin.**
 ## 🛠️ Installation
 
 1. Plugin-JAR aus den [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   herunterladen (`yourShika-Backpacks-0.1.0.jar`).
+   herunterladen (`yourShika-Backpacks-0.8.0.jar`).
 2. In den `plugins/`-Ordner deines **Paper 26.1.2 (Java 25)**-Servers legen.
 3. Server starten – der Datenordner **`plugins/yourShika Backpack's/`** wird automatisch
    mit `config.yml`, `messages_de.yml` und der Datenbank erstellt.
@@ -332,11 +332,18 @@ Hauptbefehl: `/backpack` · Aliase: `/bp`, `/ybackpack`, `/ysbackpack`
 | `/bp help` | Hilfe anzeigen |
 | `/bp open` | Backpack in der Hand öffnen |
 | `/bp info` | Rücksäcke, Upgrades & **Rezepte** in einer GUI ansehen |
-| `/bp list [Spieler]` | Backpacks auflisten |
+| `/bp list [Spieler]` | Backpacks auflisten (anklickbar: Open/Copy/TP) |
+| `/bp rename <Name\|reset>` | Backpack in der Hand umbenennen |
+| `/bp recall` | Platzierte Backpacks zurückholen (braucht Recall-Upgrade; Auswahlmenü bei mehreren) |
+| `/bp locate [Spieler\|ID]` | Koordinaten platzierter Backpacks anzeigen |
+| `/bp goto <ID>` | Zu einem platzierten Backpack teleportieren |
+| `/bp transfer <ID> <Spieler>` | Besitzer eines Backpacks ändern (Admin) |
 | `/bp color <Farbe> [Akzent]` | Backpack einfärben (DyeColor-Name **oder** `#RRGGBB`) — **Admin** |
 | `/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent]` | Backpack geben (Admin) |
 | `/bp openid <ID>` | Backpack per ID öffnen (Admin) |
 | `/bp modules` | Externe Module **per GUI an/aus** schalten (Admin) |
+| `/bp assets <status\|redeploy>` | Oraxen-Assets prüfen / neu ausrollen (Admin) |
+| `/bp doctor` | Diagnose (Oraxen, Config, DB, Assets, Versionen) (Admin) |
 | `/bp update` | Neueste Version von GitHub laden (Admin, Neustart nötig) |
 | `/bp reload` | Konfiguration neu laden (Admin) |
 | `/bp version` | Plugin-Infos |
@@ -552,7 +559,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.7.2.jar
+target/yourShika-Backpacks-0.8.0.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der
