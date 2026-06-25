@@ -548,6 +548,21 @@ public final class BackpackGuiListener implements Listener {
             return;
         }
 
+        // Presets / Filter leeren (#20).
+        if (clickedTop) {
+            String preset = holder.presetAt(raw);
+            if (preset != null) {
+                event.setCancelled(true);
+                manager.applyPreset(holder, preset);
+                return;
+            }
+            if (holder.isClear(raw)) {
+                event.setCancelled(true);
+                manager.clearFilter(holder);
+                return;
+            }
+        }
+
         if (!clickedTop) return; // Klicks im Spieler-Inventar normal lassen.
         event.setCancelled(true); // Filter sind Ghost-Slots – niemals echte Items bewegen.
         if (!holder.isFilterSlot(raw)) return;

@@ -110,6 +110,10 @@ doctor:
 trash:
   deleted: "<gray>Deleted <white><count></white> item(s)."
 
+compact:
+  preview: "<#D2B48C>Would compact on close: <white><items></white>"
+  preview-none: "<#D2B48C>Nothing to compact right now."
+
 reload:
   success: "<green>Configuration reloaded."
 

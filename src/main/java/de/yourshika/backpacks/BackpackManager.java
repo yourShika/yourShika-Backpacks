@@ -632,7 +632,90 @@ public final class BackpackManager {
         }
         inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.INFO_SLOT, filterInfo());
         inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.BACK_SLOT, backButton());
+
+        // Presets (#20) + Leeren-Button.
+        int[] ps = de.yourshika.backpacks.gui.FilterMenuHolder.PRESET_SLOTS;
+        inv.setItem(ps[0], presetButton(Material.IRON_INGOT, "Ores preset", "Iron, gold, copper, diamond, …"));
+        inv.setItem(ps[1], presetButton(Material.WHEAT, "Farm preset", "Wheat, kelp, nether wart, …"));
+        inv.setItem(ps[2], presetButton(Material.REDSTONE, "Redstone preset", "Redstone & lapis"));
+        inv.setItem(ps[3], presetButton(Material.NETHERITE_INGOT, "Misc preset", "All compactable items"));
+        inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.CLEAR_SLOT,
+                presetButton(Material.BARRIER, "Clear filter", "Remove all filter entries"));
+
         player.openInventory(inv);
+        // Preview (#19): zeigt im Chat, was beim Schließen verdichtet würde.
+        compactPreview(player, backpackId);
+    }
+
+    private ItemStack presetButton(Material material, String name, String desc) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line("<yellow><bold>" + name + "</bold></yellow>"));
+        meta.lore(List.of(line("<gray>" + desc), line("<dark_gray>Click to apply")));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    /** Compacting-Presets: Whitelist-Vorlagen (#20). */
+    private static final Map<String, List<Material>> COMPACT_PRESETS = Map.of(
+            "ores", List.of(Material.IRON_INGOT, Material.GOLD_INGOT, Material.COPPER_INGOT, Material.DIAMOND,
+                    Material.EMERALD, Material.NETHERITE_INGOT, Material.RAW_IRON, Material.RAW_GOLD,
+                    Material.RAW_COPPER, Material.COAL),
+            "farm", List.of(Material.WHEAT, Material.DRIED_KELP, Material.NETHER_WART, Material.BONE_MEAL,
+                    Material.SLIME_BALL),
+            "redstone", List.of(Material.REDSTONE, Material.LAPIS_LAZULI),
+            "misc", new ArrayList<>(COMPACT.keySet()));
+
+    /** Füllt die Filter-Slots mit einem Preset. */
+    public void applyPreset(de.yourshika.backpacks.gui.FilterMenuHolder holder, String presetId) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        List<Material> mats = COMPACT_PRESETS.get(presetId);
+        if (mats == null) return;
+        for (int i = 0; i < de.yourshika.backpacks.gui.FilterMenuHolder.FILTER_SLOTS; i++) inv.setItem(i, null);
+        int slot = 0;
+        for (Material m : mats) {
+            if (slot >= de.yourshika.backpacks.gui.FilterMenuHolder.FILTER_SLOTS) break;
+            inv.setItem(slot++, new ItemStack(m));
+        }
+    }
+
+    public void clearFilter(de.yourshika.backpacks.gui.FilterMenuHolder holder) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        for (int i = 0; i < de.yourshika.backpacks.gui.FilterMenuHolder.FILTER_SLOTS; i++) inv.setItem(i, null);
+    }
+
+    /** Zeigt im Chat, welche Items beim Schließen verdichtet würden (#19). */
+    public void compactPreview(Player player, UUID backpackId) {
+        BackpackData data = storage.load(backpackId);
+        if (data == null || data.contents() == null) return;
+        java.util.Set<Material> whitelist = compactWhitelist(backpackId);
+        java.util.Map<Material, Integer> totals = new java.util.LinkedHashMap<>();
+        for (ItemStack it : data.contents()) {
+            if (it == null) continue;
+            Material block = COMPACT.get(it.getType());
+            if (block == null || block == it.getType()) continue;
+            if (!whitelist.isEmpty() && !whitelist.contains(it.getType())) continue;
+            if (!it.isSimilar(new ItemStack(it.getType()))) continue;
+            totals.merge(it.getType(), it.getAmount(), Integer::sum);
+        }
+        java.util.List<String> parts = new java.util.ArrayList<>();
+        for (var e : totals.entrySet()) {
+            int blocks = e.getValue() / 9;
+            if (blocks > 0) parts.add(blocks + "x " + prettyMaterial(COMPACT.get(e.getKey())));
+        }
+        if (parts.isEmpty()) {
+            plugin.messages().send(player, "compact.preview-none");
+        } else {
+            plugin.messages().send(player, "compact.preview",
+                    de.yourshika.backpacks.config.MessageManager.ph("items", String.join(", ", parts)));
+        }
+    }
+
+    private String prettyMaterial(Material m) {
+        String n = m.name().toLowerCase(java.util.Locale.ROOT).replace('_', ' ');
+        return Character.toUpperCase(n.charAt(0)) + n.substring(1);
     }
 
     private ItemStack filterInfo() {

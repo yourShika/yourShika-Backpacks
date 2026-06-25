@@ -18,6 +18,23 @@ public final class FilterMenuHolder implements InventoryHolder {
     public static final int INFO_SLOT = 22;
     public static final int BACK_SLOT = 26;
 
+    /** Preset-Buttons (Erze/Farm/Redstone/Sonstiges) und Leeren-Button. */
+    public static final int[] PRESET_SLOTS = {18, 19, 20, 21};
+    public static final String[] PRESET_IDS = {"ores", "farm", "redstone", "misc"};
+    public static final int CLEAR_SLOT = 23;
+
+    /** Preset-ID an einem Slot oder null. */
+    public String presetAt(int rawSlot) {
+        for (int i = 0; i < PRESET_SLOTS.length; i++) {
+            if (PRESET_SLOTS[i] == rawSlot) return PRESET_IDS[i];
+        }
+        return null;
+    }
+
+    public boolean isClear(int rawSlot) {
+        return rawSlot == CLEAR_SLOT;
+    }
+
     private final UUID backpackId;
     private final String tierKey;
     private Inventory inventory;
