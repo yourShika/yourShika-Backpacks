@@ -30,6 +30,9 @@ permissions:
       yourshika.backpack.open: true
       yourshika.backpack.list: true
       yourshika.backpack.place: true
+      yourshika.backpack.rename: true
+      yourshika.backpack.locate: true
+      yourshika.backpack.transfer: true
       yourshika.backpack.craft.*: true
       yourshika.backpack.admin.*: true
 
@@ -41,6 +44,15 @@ permissions:
     default: true
   yourshika.backpack.list:
     description: Eigene Backpacks auflisten.
+    default: true
+  yourshika.backpack.rename:
+    description: Eigenes Backpack umbenennen (sofern in der Config erlaubt).
+    default: true
+  yourshika.backpack.locate:
+    description: Eigene platzierte Backpacks orten.
+    default: true
+  yourshika.backpack.transfer:
+    description: Eigenes Backpack an andere Spieler übertragen.
     default: true
 
   yourshika.backpack.craft.*:
@@ -71,6 +83,12 @@ permissions:
       yourshika.backpack.admin.openid: true
       yourshika.backpack.admin.openother: true
       yourshika.backpack.admin.listother: true
+      yourshika.backpack.admin.locateother: true
+      yourshika.backpack.admin.transfer: true
+      yourshika.backpack.admin.rename: true
+      yourshika.backpack.admin.assets: true
+      yourshika.backpack.admin.doctor: true
+      yourshika.backpack.admin.audit: true
       yourshika.backpack.admin.reload: true
       yourshika.backpack.admin.modules: true
       yourshika.backpack.admin.update: true
@@ -80,6 +98,12 @@ permissions:
   yourshika.backpack.admin.openid: { default: op }
   yourshika.backpack.admin.openother: { default: op }
   yourshika.backpack.admin.listother: { default: op }
+  yourshika.backpack.admin.locateother: { default: op }
+  yourshika.backpack.admin.transfer: { default: op }
+  yourshika.backpack.admin.rename: { default: op }
+  yourshika.backpack.admin.assets: { default: op }
+  yourshika.backpack.admin.doctor: { default: op }
+  yourshika.backpack.admin.audit: { default: op }
   yourshika.backpack.admin.reload: { default: op }
   yourshika.backpack.admin.modules: { default: op }
   yourshika.backpack.admin.update: { default: op }
