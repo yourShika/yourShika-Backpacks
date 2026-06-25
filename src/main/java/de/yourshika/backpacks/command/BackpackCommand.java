@@ -531,13 +531,22 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             msg.send(sender, "error.no-permission");
             return;
         }
-        int n = plugin.placeableManager().recall(player);
-        if (n > 0) {
-            plugin.audit(player.getName(), "RECALL", n + " backpack(s)");
-            msg.send(player, "place.recalled", ph("count", String.valueOf(n)));
-        } else {
+        var ids = plugin.placeableManager().recallableIds(player);
+        if (ids.isEmpty()) {
             msg.send(player, "place.recall-none");
+            return;
         }
+        if (ids.size() == 1) {
+            if (plugin.placeableManager().recallOne(player, ids.get(0))) {
+                plugin.audit(player.getName(), "RECALL", "1 backpack");
+                msg.send(player, "place.recalled", ph("count", "1"));
+            } else {
+                msg.send(player, "place.recall-none");
+            }
+            return;
+        }
+        // Mehrere platzierte Backpacks -> Auswahlmenü (#38).
+        de.yourshika.backpacks.gui.RecallMenu.open(plugin, player, ids);
     }
 
     private void announceGive(CommandSender sender, Player target, int amount, String what) {

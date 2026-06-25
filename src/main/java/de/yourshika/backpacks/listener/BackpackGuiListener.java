@@ -220,6 +220,54 @@ public final class BackpackGuiListener implements Listener {
         }
     }
 
+    // /bp recall: Auswahl-GUI (mehrere platzierte Backpacks).
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onRecallClick(InventoryClickEvent event) {
+        if (!(event.getView().getTopInventory().getHolder()
+                instanceof de.yourshika.backpacks.gui.RecallMenuHolder holder)) return;
+        event.setCancelled(true);
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (event.getClickedInventory() == null
+                || !(event.getClickedInventory().getHolder() instanceof de.yourshika.backpacks.gui.RecallMenuHolder)) {
+            return; // Klick im Spieler-Inventar.
+        }
+        int raw = event.getRawSlot();
+        if (holder.isAll(raw)) {
+            player.closeInventory();
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                int n = plugin.placeableManager().recall(player);
+                if (n > 0) {
+                    plugin.audit(player.getName(), "RECALL", n + " backpack(s)");
+                    plugin.messages().send(player, "place.recalled",
+                            de.yourshika.backpacks.config.MessageManager.ph("count", String.valueOf(n)));
+                } else {
+                    plugin.messages().send(player, "place.recall-none");
+                }
+            });
+            return;
+        }
+        java.util.UUID id = holder.at(raw);
+        if (id == null) return;
+        player.closeInventory();
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            if (plugin.placeableManager().recallOne(player, id)) {
+                plugin.audit(player.getName(), "RECALL", String.valueOf(id));
+                plugin.messages().send(player, "place.recalled",
+                        de.yourshika.backpacks.config.MessageManager.ph("count", "1"));
+            } else {
+                plugin.messages().send(player, "place.recall-none");
+            }
+        });
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onRecallDrag(InventoryDragEvent event) {
+        if (event.getView().getTopInventory().getHolder()
+                instanceof de.yourshika.backpacks.gui.RecallMenuHolder) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDrag(InventoryDragEvent event) {
         Inventory top = event.getView().getTopInventory();

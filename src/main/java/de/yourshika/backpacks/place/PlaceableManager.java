@@ -219,37 +219,55 @@ public final class PlaceableManager {
      * Entities entfernen, Persistenz aktualisieren, Item ins Inventar geben.
      * Gibt die Anzahl zurückgeholter Backpacks zurück.
      */
-    public int recall(Player player) {
-        int recalled = 0;
+    /** Platzierte Backpacks des Spielers mit Recall-Upgrade, die gerade nicht offen sind. */
+    public java.util.List<UUID> recallableIds(Player player) {
+        java.util.List<UUID> out = new java.util.ArrayList<>();
         for (UUID id : manager.storage().listByOwner(player.getUniqueId())) {
             BackpackData data = manager.storage().load(id);
             if (data == null || !data.placed()) continue;
             if (manager.isOpen(id)) continue;
             if (!manager.functionUpgradesOf(id).contains("recall")) continue;
+            out.add(id);
+        }
+        return out;
+    }
 
-            org.bukkit.World world = data.world() == null ? null : org.bukkit.Bukkit.getWorld(data.world());
-            if (world == null) continue;
-            org.bukkit.Location loc = new org.bukkit.Location(world, data.x(), data.y(), data.z());
-            world.getChunkAt(loc).load();
-            for (Entity e : world.getNearbyEntities(loc, 0.8, 1.4, 0.8)) {
-                if (isPlacedEntity(e) && id.equals(backpackIdOf(e))) e.remove();
-            }
-            effects(loc, false);
+    /** Holt genau ein platziertes Backpack zurück. Gibt true bei Erfolg zurück. */
+    public boolean recallOne(Player player, UUID id) {
+        BackpackData data = manager.storage().load(id);
+        if (data == null || !data.placed()) return false;
+        if (manager.isOpen(id)) return false;
+        if (!manager.functionUpgradesOf(id).contains("recall")) return false;
 
-            BackpackTier tier = tiers.get(data.tier());
-            if (tier == null) tier = tiers.all().iterator().next();
-            String main = data.mainColor() != null ? data.mainColor() : tier.defaultMainColor();
-            String accent = data.accentColor() != null ? data.accentColor() : tier.defaultAccentColor();
-            ItemStack item = items.create(tier, id, main, accent);
-            if (data.owner() != null) {
-                items.writeOwner(item, data.owner(), org.bukkit.Bukkit.getOfflinePlayer(data.owner()).getName());
-                items.applyDisplay(item, tier, id, main, accent);
-            }
-            data.placed(false);
-            manager.storage().save(data);
-            player.getInventory().addItem(item).values()
-                    .forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
-            recalled++;
+        org.bukkit.World world = data.world() == null ? null : org.bukkit.Bukkit.getWorld(data.world());
+        if (world == null) return false;
+        org.bukkit.Location loc = new org.bukkit.Location(world, data.x(), data.y(), data.z());
+        world.getChunkAt(loc).load();
+        for (Entity e : world.getNearbyEntities(loc, 0.8, 1.4, 0.8)) {
+            if (isPlacedEntity(e) && id.equals(backpackIdOf(e))) e.remove();
+        }
+        effects(loc, false);
+
+        BackpackTier tier = tiers.get(data.tier());
+        if (tier == null) tier = tiers.all().iterator().next();
+        String main = data.mainColor() != null ? data.mainColor() : tier.defaultMainColor();
+        String accent = data.accentColor() != null ? data.accentColor() : tier.defaultAccentColor();
+        ItemStack item = items.create(tier, id, main, accent);
+        if (data.owner() != null) {
+            items.writeOwner(item, data.owner(), org.bukkit.Bukkit.getOfflinePlayer(data.owner()).getName());
+            items.applyDisplay(item, tier, id, main, accent);
+        }
+        data.placed(false);
+        manager.storage().save(data);
+        player.getInventory().addItem(item).values()
+                .forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
+        return true;
+    }
+
+    public int recall(Player player) {
+        int recalled = 0;
+        for (UUID id : recallableIds(player)) {
+            if (recallOne(player, id)) recalled++;
         }
         return recalled;
     }
