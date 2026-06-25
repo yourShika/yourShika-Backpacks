@@ -1,0 +1,28 @@
+name: Asset Check
+
+on:
+  push:
+    paths:
+      - 'src/main/resources/oraxen/**'
+      - 'scripts/check_oraxen_models.py'
+      - '.github/workflows/assets-check.yml'
+  pull_request:
+    paths:
+      - 'src/main/resources/oraxen/**'
+      - 'scripts/check_oraxen_models.py'
+  workflow_dispatch:
+
+jobs:
+  oraxen-models:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate Oraxen model faces (#58 – no one-sided faces)
+        run: python scripts/check_oraxen_models.py
