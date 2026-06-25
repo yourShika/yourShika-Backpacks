@@ -457,19 +457,67 @@ public final class BackpackManager {
                 case "blasting" -> openFurnace(player, "blast", backpackId, tierKey);
                 case "smoking" -> openFurnace(player, "smoker", backpackId, tierKey);
                 case "compacting" -> openFilter(player, backpackId, tierKey);
-                case "trash" -> {
-                    de.yourshika.backpacks.gui.TrashMenuHolder holder =
-                            new de.yourshika.backpacks.gui.TrashMenuHolder();
-                    Inventory trash = Bukkit.createInventory(holder, 27,
-                            mini.deserialize("<dark_gray><bold>Trash</bold> <gray>(items here are deleted)")
-                                    .decoration(TextDecoration.ITALIC, false));
-                    holder.setInventory(trash);
-                    player.openInventory(trash);
-                }
+                case "trash" -> openTrash(player);
                 default -> { }
             }
         } catch (Throwable t) {
             plugin.getLogger().warning("Station '" + station + "' konnte nicht geöffnet werden: " + t.getMessage());
+        }
+    }
+
+    /** Öffnet die Trash-GUI (mit optionalem Lösch-Bestätigen-Button). */
+    public void openTrash(Player player) {
+        boolean confirm = plugin.getConfig().getBoolean("trash.confirm", true);
+        var holder = new de.yourshika.backpacks.gui.TrashMenuHolder(confirm);
+        Inventory trash = Bukkit.createInventory(holder, de.yourshika.backpacks.gui.TrashMenuHolder.SIZE,
+                mini.deserialize("<dark_gray><bold>Trash</bold> <gray>"
+                                + (confirm ? "(confirm to delete)" : "(items here are deleted)"))
+                        .decoration(TextDecoration.ITALIC, false));
+        holder.setInventory(trash);
+        if (confirm) {
+            trash.setItem(de.yourshika.backpacks.gui.TrashMenuHolder.CONFIRM_SLOT, trashConfirmButton());
+        }
+        player.openInventory(trash);
+    }
+
+    private ItemStack trashConfirmButton() {
+        ItemStack item = new ItemStack(Material.LAVA_BUCKET);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line("<red><bold>Delete items</bold></red>"));
+        meta.lore(List.of(
+                line("<gray>Click to permanently delete the items."),
+                line("<dark_gray>Closing the menu returns them.")));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    /** Löscht die Items im Trash (Confirm-Button) und gibt deren Anzahl zurück. */
+    public int confirmTrash(de.yourshika.backpacks.gui.TrashMenuHolder holder) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return 0;
+        int n = 0;
+        for (int i = 0; i < de.yourshika.backpacks.gui.TrashMenuHolder.ITEM_SLOTS; i++) {
+            ItemStack it = inv.getItem(i);
+            if (it != null && !it.getType().isAir()) {
+                n += it.getAmount();
+                inv.setItem(i, null);
+            }
+        }
+        return n;
+    }
+
+    /** Gibt im Confirm-Modus verbliebene (nicht bestätigte) Trash-Items zurück. */
+    public void returnTrash(de.yourshika.backpacks.gui.TrashMenuHolder holder, Player player) {
+        if (!holder.confirm()) return; // Nicht-Confirm: Items werden verworfen (altes Verhalten).
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        for (int i = 0; i < de.yourshika.backpacks.gui.TrashMenuHolder.ITEM_SLOTS; i++) {
+            ItemStack it = inv.getItem(i);
+            if (it != null && !it.getType().isAir()) {
+                player.getInventory().addItem(it).values()
+                        .forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
+                inv.setItem(i, null);
+            }
         }
     }
 

@@ -107,6 +107,9 @@ doctor:
   header: "<gold><bold>yourShika Backpack's – Doctor</bold></gold>"
   line: "<gray><label>: <white><value></white>"
 
+trash:
+  deleted: "<gray>Deleted <white><count></white> item(s)."
+
 reload:
   success: "<green>Configuration reloaded."
 

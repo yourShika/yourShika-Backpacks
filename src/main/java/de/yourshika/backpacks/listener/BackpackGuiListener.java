@@ -6,6 +6,7 @@ import de.yourshika.backpacks.gui.BackpackMenuHolder;
 import de.yourshika.backpacks.gui.FilterMenuHolder;
 import de.yourshika.backpacks.gui.FurnaceMenuHolder;
 import de.yourshika.backpacks.gui.ModulesMenuHolder;
+import de.yourshika.backpacks.gui.TrashMenuHolder;
 import de.yourshika.backpacks.gui.UpgradeMenuHolder;
 import de.yourshika.backpacks.item.BackpackItemFactory;
 import de.yourshika.backpacks.upgrade.UpgradeItemFactory;
@@ -265,6 +266,39 @@ public final class BackpackGuiListener implements Listener {
         if (event.getView().getTopInventory().getHolder()
                 instanceof de.yourshika.backpacks.gui.RecallMenuHolder) {
             event.setCancelled(true);
+        }
+    }
+
+    // Trash-GUI: Confirm-Button löscht; Schließen ohne Klick gibt die Items zurück.
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onTrashClick(InventoryClickEvent event) {
+        if (!(event.getView().getTopInventory().getHolder() instanceof TrashMenuHolder holder)) return;
+        if (!holder.confirm()) return; // Nicht-Confirm: freie Interaktion, Items verfallen beim Schließen.
+        int raw = event.getRawSlot();
+        boolean clickedTop = raw < event.getView().getTopInventory().getSize();
+        if (clickedTop && raw == TrashMenuHolder.CONFIRM_SLOT) {
+            event.setCancelled(true);
+            if (!(event.getWhoClicked() instanceof Player player)) return;
+            int n = manager.confirmTrash(holder);
+            plugin.messages().send(player, "trash.deleted",
+                    de.yourshika.backpacks.config.MessageManager.ph("count", String.valueOf(n)));
+            player.closeInventory();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onTrashDrag(InventoryDragEvent event) {
+        if (!(event.getView().getTopInventory().getHolder() instanceof TrashMenuHolder holder)) return;
+        if (holder.confirm() && event.getRawSlots().contains(TrashMenuHolder.CONFIRM_SLOT)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onTrashClose(InventoryCloseEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof TrashMenuHolder holder
+                && event.getPlayer() instanceof Player player) {
+            manager.returnTrash(holder, player);
         }
     }
 
