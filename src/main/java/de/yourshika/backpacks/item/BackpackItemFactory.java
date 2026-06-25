@@ -143,8 +143,16 @@ public final class BackpackItemFactory {
                 Placeholder.unparsed("id", id == null ? "—" : shortId(id))
         );
 
-        meta.displayName(mini.deserialize(tier.displayName(), resolvers)
-                .decoration(TextDecoration.ITALIC, false));
+        String customName = meta.getPersistentDataContainer().get(keys.name, PersistentDataType.STRING);
+        if (customName != null && !customName.isBlank()) {
+            // Spieler-Name: als unparsed eingesetzt -> keine MiniMessage-Injection.
+            meta.displayName(mini.deserialize("<gold><name></gold>",
+                            Placeholder.unparsed("name", customName))
+                    .decoration(TextDecoration.ITALIC, false));
+        } else {
+            meta.displayName(mini.deserialize(tier.displayName(), resolvers)
+                    .decoration(TextDecoration.ITALIC, false));
+        }
 
         List<Component> lore = new ArrayList<>();
         for (String line : tier.lore()) {
@@ -278,6 +286,23 @@ public final class BackpackItemFactory {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return null;
         return meta.getPersistentDataContainer().get(keys.ownerName, PersistentDataType.STRING);
+    }
+
+    /** Setzt (oder löscht bei null/blank) den vom Spieler gewählten Custom-Namen. */
+    public void writeName(ItemStack item, String name) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        if (name == null || name.isBlank()) {
+            meta.getPersistentDataContainer().remove(keys.name);
+        } else {
+            meta.getPersistentDataContainer().set(keys.name, PersistentDataType.STRING, name);
+        }
+        item.setItemMeta(meta);
+    }
+
+    public String getCustomName(ItemStack item) {
+        if (!isBackpack(item)) return null;
+        return item.getItemMeta().getPersistentDataContainer().get(keys.name, PersistentDataType.STRING);
     }
 
     private static String shortId(UUID id) {

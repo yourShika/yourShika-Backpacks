@@ -77,4 +77,9 @@ public final class PluginConfig {
     public boolean ownerOnly() { return ownerOnly; }
     public boolean rightClickOpen() { return rightClickOpen; }
     public boolean offhandOpen() { return offhandOpen; }
+
+    /** Dürfen normale Spieler ihre Backpacks umbenennen? (Admins immer) */
+    public boolean renameAllowed() {
+        return plugin.getConfig().getBoolean("rename.allow-players", true);
+    }
 }

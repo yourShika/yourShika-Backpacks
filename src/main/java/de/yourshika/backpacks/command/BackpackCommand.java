@@ -60,6 +60,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "help" -> help(sender);
             case "open" -> open(sender);
             case "color", "farbe" -> color(sender, args);
+            case "rename", "name" -> rename(sender, args);
             case "list" -> list(sender, args);
             case "give" -> give(sender, args);
             case "openid" -> openId(sender, args);
@@ -83,6 +84,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "help.header");
         msg.sendRaw(sender, "help.open");
         msg.sendRaw(sender, "help.info");
+        msg.sendRaw(sender, "help.rename");
         msg.sendRaw(sender, "help.list");
         msg.sendRaw(sender, "help.locate");
         msg.sendRaw(sender, "help.transfer");
@@ -202,6 +204,57 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
 
         msg.send(sender, "color.success",
                 ph("main", ColorUtil.pretty(main)), ph("accent", ColorUtil.pretty(accent)));
+    }
+
+    private void rename(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        boolean admin = player.hasPermission("yourshika.backpack.admin.rename");
+        if (!admin) {
+            if (!plugin.pluginConfig().renameAllowed()) {
+                msg.send(sender, "rename.disabled");
+                return;
+            }
+            if (!player.hasPermission("yourshika.backpack.rename")) {
+                msg.send(sender, "error.no-permission");
+                return;
+            }
+        }
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (!items.isBackpack(item)) {
+            msg.send(sender, "error.hold-backpack");
+            return;
+        }
+        BackpackTier tier = tiers.get(items.getTierKey(item));
+        if (tier == null) {
+            msg.send(sender, "error.invalid-backpack");
+            return;
+        }
+        UUID id = items.getId(item);
+        if (id == null) {
+            id = UUID.randomUUID();
+            items.writeId(item, id);
+        }
+        String main = items.getMainColor(item, tier.defaultMainColor());
+        String accent = items.getAccentColor(item, tier.defaultAccentColor());
+
+        boolean reset = args.length < 2 || args[1].equalsIgnoreCase("reset") || args[1].equalsIgnoreCase("clear");
+        if (reset) {
+            items.writeName(item, null);
+            items.applyDisplay(item, tier, id, main, accent);
+            player.getInventory().setItemInMainHand(item);
+            msg.send(sender, "rename.cleared");
+            return;
+        }
+        String name = String.join(" ", Arrays.copyOfRange(args, 1, args.length))
+                .replace('§', ' ').trim();
+        if (name.length() > 48) name = name.substring(0, 48);
+        items.writeName(item, name);
+        items.applyDisplay(item, tier, id, main, accent);
+        player.getInventory().setItemInMainHand(item);
+        msg.send(sender, "rename.success", ph("name", name));
     }
 
     private void list(CommandSender sender, String[] args) {
@@ -642,7 +695,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "list", "locate", "transfer", "recall", "version"));
+            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "rename", "list", "locate", "transfer", "recall", "version"));
             if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");

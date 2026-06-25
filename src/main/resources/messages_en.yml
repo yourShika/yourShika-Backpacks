@@ -9,6 +9,7 @@ help:
   header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Commands"
   open: "<yellow>/bp open <gray>– Open the backpack in your hand"
   info: "<yellow>/bp info <gray>– View backpacks, upgrades & recipes"
+  rename: "<yellow>/bp rename <name|reset> <gray>– Rename the backpack in your hand"
   color: "<yellow>/bp color <color> [accent] <gray>– Dye a backpack (name or #RRGGBB)"
   list: "<yellow>/bp list [player] <gray>– List backpacks (clickable)"
   locate: "<yellow>/bp locate [player|id] <gray>– Show coordinates of placed backpacks"
@@ -52,6 +53,11 @@ error:
 
 color:
   success: "<green>Backpack dyed: <white><main></white> <gray>/</gray> <white><accent></white>"
+
+rename:
+  success: "<green>Backpack renamed to <white><name></white>."
+  cleared: "<green>Backpack name reset to default."
+  disabled: "<red>Renaming backpacks is disabled on this server."
 
 place:
   success: "<green>Backpack placed. <gray>Right-click to open, sneak-right-click to pick up."
