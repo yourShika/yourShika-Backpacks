@@ -53,15 +53,17 @@ public final class BackpackGuiListener implements Listener {
         ClickType click = event.getClick();
         InventoryAction action = event.getAction();
 
-        // 0) Blättern.
+        // 0) Blättern. Shift-Klick springt zur ersten/letzten Seite.
         if (clickedTop && holder.isPrevButton(raw)) {
             event.setCancelled(true);
-            manager.changePage(holder, -1);
+            if (event.isShiftClick()) manager.goToPage(holder, 0);
+            else manager.changePage(holder, -1);
             return;
         }
         if (clickedTop && holder.isNextButton(raw)) {
             event.setCancelled(true);
-            manager.changePage(holder, +1);
+            if (event.isShiftClick()) manager.goToPage(holder, holder.pageCount() - 1);
+            else manager.changePage(holder, +1);
             return;
         }
 

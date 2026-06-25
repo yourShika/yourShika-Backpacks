@@ -270,6 +270,28 @@ public final class BackpackManager {
         renderPage(holder);
     }
 
+    /** Springt direkt auf eine absolute Seite (z.B. erste/letzte – Shift-Klick). */
+    public void goToPage(BackpackMenuHolder holder, int page) {
+        if (!holder.hasPaging()) return;
+        int target = Math.max(0, Math.min(holder.pageCount() - 1, page));
+        if (target == holder.currentPage()) return;
+        flushVisiblePage(holder);
+        holder.currentPage(target);
+        renderPage(holder);
+    }
+
+    /** Anzahl belegter Lager-Slots (über alle Seiten) für die Info-Anzeige. */
+    private int usedSlots(BackpackMenuHolder holder) {
+        ItemStack[] buf = holder.buffer();
+        int cap = holder.capacity();
+        int used = 0;
+        for (int i = 0; i < cap && i < buf.length; i++) {
+            ItemStack it = buf[i];
+            if (it != null && !it.getType().isAir()) used++;
+        }
+        return used;
+    }
+
     /** Kopiert die aktuell sichtbare Seite zurück in den Buffer. */
     public void flushVisiblePage(BackpackMenuHolder holder) {
         Inventory inv = holder.getInventory();
@@ -315,6 +337,10 @@ public final class BackpackManager {
         lore.add(line("<gray>ID: <white>" + holder.backpackId().toString().substring(0, 8)));
         lore.add(line("<gray>Color: " + ColorUtil.pretty(holder.mainColor())
                 + " <dark_gray>/</dark_gray> " + ColorUtil.pretty(holder.accentColor())));
+        int used = usedSlots(holder);
+        int free = Math.max(0, holder.capacity() - used);
+        lore.add(line("<gray>Used: <white>" + used + "<gray>/<white>" + holder.capacity()
+                + " <dark_gray>•</dark_gray> <green>" + free + " free"));
         if (holder.hasPaging()) {
             lore.add(line("<gray>Page: <white>" + (holder.currentPage() + 1) + "/" + holder.pageCount()));
         }
@@ -412,7 +438,10 @@ public final class BackpackManager {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(line(name));
-        meta.lore(List.of(line("<gray>Page " + (holder.currentPage() + 1) + "/" + holder.pageCount())));
+        meta.lore(List.of(
+                line("<gray>Page <white>" + (holder.currentPage() + 1) + "<gray>/<white>" + holder.pageCount()),
+                line("<dark_gray>Click: ±1 page"),
+                line("<dark_gray>Shift-Click: first/last page")));
         item.setItemMeta(meta);
         return item;
     }
