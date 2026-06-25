@@ -174,6 +174,50 @@ public final class BackpackManager {
 
         openBackpacks.put(data.id(), player.getUniqueId());
         player.openInventory(inv);
+        de.yourshika.backpacks.util.Sounds.play(plugin, player, "open");
+    }
+
+    /**
+     * Sortiert den gesamten Backpack-Inhalt dupe-sicher: führt gleiche Items zu
+     * vollen Stacks zusammen und sortiert nach Material. Operiert nur auf dem
+     * Buffer (gleiche Item-Gesamtmenge), danach Neu-Rendern.
+     */
+    public void sortBackpack(BackpackMenuHolder holder, Player player) {
+        flushVisiblePage(holder);
+        ItemStack[] buf = holder.buffer();
+        int cap = holder.capacity();
+        java.util.List<ItemStack> items = new ArrayList<>();
+        for (int i = 0; i < cap && i < buf.length; i++) {
+            ItemStack it = buf[i];
+            if (it != null && !it.getType().isAir()) items.add(it.clone());
+        }
+        // Gleiche Items zu maximalen Stacks zusammenführen.
+        java.util.List<ItemStack> merged = new ArrayList<>();
+        for (ItemStack it : items) {
+            boolean placed = false;
+            for (ItemStack m : merged) {
+                if (m.isSimilar(it)) {
+                    int space = m.getMaxStackSize() - m.getAmount();
+                    if (space > 0) {
+                        int add = Math.min(space, it.getAmount());
+                        m.setAmount(m.getAmount() + add);
+                        it.setAmount(it.getAmount() - add);
+                    }
+                }
+                if (it.getAmount() <= 0) { placed = true; break; }
+            }
+            if (!placed && it.getAmount() > 0) merged.add(it);
+        }
+        // Nach Material-Name sortieren (stabil, lesbar).
+        merged.sort(java.util.Comparator
+                .comparing((ItemStack it) -> it.getType().getKey().toString())
+                .thenComparing(it -> -it.getAmount()));
+        // Zurück in den Buffer schreiben.
+        for (int i = 0; i < cap && i < buf.length; i++) {
+            buf[i] = i < merged.size() ? merged.get(i) : null;
+        }
+        renderPage(holder);
+        de.yourshika.backpacks.util.Sounds.play(plugin, player, "sort");
     }
 
     /** Baut einen Buffer mindestens in Kapazitätsgröße auf (überzählige Items bleiben erhalten). */
@@ -348,7 +392,15 @@ public final class BackpackManager {
         if (!fns.isEmpty()) {
             lore.add(Component.empty());
             lore.add(line("<gold>Upgrades installed: <white>" + fns.size()));
+            for (String fn : fns) {
+                var fu = de.yourshika.backpacks.upgrade.FunctionUpgrade.byId(fn);
+                String label = fu != null ? fu.displayName() : fn;
+                lore.add(line("<dark_gray> • </dark_gray>")
+                        .append(mini.deserialize(label).decoration(TextDecoration.ITALIC, false)));
+            }
         }
+        lore.add(Component.empty());
+        lore.add(line("<yellow>Click <gray>to sort the contents"));
         lore.add(line("<dark_gray><st>                    </st>"));
         meta.lore(lore);
         item.setItemMeta(meta);

@@ -125,6 +125,10 @@ public final class BackpackMenuHolder implements InventoryHolder {
         return rawSlot == UPGRADE_BUTTON;
     }
 
+    public boolean isInfoButton(int rawSlot) {
+        return rawSlot == INFO_SLOT;
+    }
+
     public boolean isPrevButton(int rawSlot) {
         return hasPaging() && rawSlot == PREV_SLOT && currentPage > 0;
     }

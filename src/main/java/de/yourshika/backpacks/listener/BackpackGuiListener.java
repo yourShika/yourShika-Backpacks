@@ -92,6 +92,13 @@ public final class BackpackGuiListener implements Listener {
             }
         }
 
+        // 0d) Klick auf das Info-Item sortiert den Backpack-Inhalt.
+        if (clickedTop && holder.isInfoButton(raw)) {
+            event.setCancelled(true);
+            manager.sortBackpack(holder, player);
+            return;
+        }
+
         // 1) Doppelklick (Items zusammenführen) komplett unterbinden.
         if (action == InventoryAction.COLLECT_TO_CURSOR) {
             event.setCancelled(true);
@@ -300,9 +307,15 @@ public final class BackpackGuiListener implements Listener {
         }
 
         // Cursor-Platzierung in einen Upgrade-Slot.
-        if (clickedTop && holder.isUpgradeSlot(raw) && rejectUpgrade(player, up, top, holder, event.getCursor())) {
-            event.setCancelled(true);
-            return;
+        if (clickedTop && holder.isUpgradeSlot(raw)) {
+            ItemStack cursor = event.getCursor();
+            if (rejectUpgrade(player, up, top, holder, cursor)) {
+                event.setCancelled(true);
+                return;
+            }
+            if (cursor != null && !cursor.getType().isAir()) {
+                de.yourshika.backpacks.util.Sounds.play(plugin, player, "upgrade");
+            }
         }
 
         // Shift-Click aus dem Spieler-Inventar: nur Funktions-Upgrades, kontrolliert.
@@ -546,6 +559,7 @@ public final class BackpackGuiListener implements Listener {
 
     private void denyNesting(Player player) {
         plugin.messages().send(player, "error.no-nesting");
+        de.yourshika.backpacks.util.Sounds.play(plugin, player, "error");
     }
 
     private boolean canStoreBackpack(BackpackMenuHolder holder, ItemStack item) {
