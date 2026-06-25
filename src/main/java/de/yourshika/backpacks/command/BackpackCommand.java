@@ -475,8 +475,12 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             return;
         }
         int n = plugin.placeableManager().recall(player);
-        if (n > 0) msg.send(player, "place.recalled", ph("count", String.valueOf(n)));
-        else msg.send(player, "place.recall-none");
+        if (n > 0) {
+            plugin.audit(player.getName(), "RECALL", n + " backpack(s)");
+            msg.send(player, "place.recalled", ph("count", String.valueOf(n)));
+        } else {
+            msg.send(player, "place.recall-none");
+        }
     }
 
     private void announceGive(CommandSender sender, Player target, int amount, String what) {
