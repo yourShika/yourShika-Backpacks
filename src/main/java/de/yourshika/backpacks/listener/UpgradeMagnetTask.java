@@ -25,20 +25,32 @@ public final class UpgradeMagnetTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        // Cooldown/Drossel gegen Lag bei sehr vielen Drops (#53).
+        int maxPerTick = Math.max(1, plugin.getConfig().getInt("upgrades.magnet.max-per-tick", 60));
+
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             int radius = manager.magnetRadius(player);
             if (radius <= 0) continue;
 
             Location target = player.getLocation().add(0, 0.6, 0);
+            int processed = 0;
             for (var entity : player.getNearbyEntities(radius, radius, radius)) {
+                if (processed >= maxPerTick) break;                 // Drossel
                 if (!(entity instanceof Item item)) continue;
-                if (item.getPickupDelay() > 40) continue;          // gerade erst geworfen
                 if (manager.items().isBackpack(item.getItemStack())) continue; // Backpacks nicht magnetisieren
+
+                // Item-Owner & Pickup-Delay stärker respektieren (#54).
+                int delay = item.getPickupDelay();
+                if (delay >= 32767) continue;                       // nie aufsammelbar
+                java.util.UUID owner = item.getOwner();
+                if (owner != null && !owner.equals(player.getUniqueId())) continue; // gehört jemand anderem
+                if (delay > 10) continue;                           // gerade geworfen -> Werfer bevorzugen
 
                 Vector dir = target.toVector().subtract(item.getLocation().toVector());
                 double dist = dir.length();
                 if (dist < 1.2 || dist > radius) continue;          // sehr nah -> normales Aufsammeln
                 item.setVelocity(dir.normalize().multiply(Math.min(0.6, 0.18 * dist)));
+                processed++;
             }
         }
     }
