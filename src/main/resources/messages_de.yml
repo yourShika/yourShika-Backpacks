@@ -10,12 +10,17 @@ help:
   header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Befehle"
   open: "<yellow>/bp open <gray>– Backpack in der Hand öffnen"
   info: "<yellow>/bp info <gray>– Rucksäcke, Upgrades & Rezepte ansehen"
+  rename: "<yellow>/bp rename <Name|reset> <gray>– Backpack in der Hand umbenennen"
   color: "<yellow>/bp color <Farbe> [Akzent] <gray>– Backpack einfärben (Name oder #RRGGBB)"
-  list: "<yellow>/bp list [Spieler] <gray>– Backpacks auflisten"
+  list: "<yellow>/bp list [Spieler] <gray>– Backpacks auflisten (anklickbar)"
+  locate: "<yellow>/bp locate [Spieler|ID] <gray>– Koordinaten platzierter Backpacks"
+  transfer: "<yellow>/bp transfer <ID> <Spieler> <gray>– Besitzer eines Backpacks ändern"
   recall: "<yellow>/bp recall <gray>– Platzierte Backpacks zurückholen (braucht Recall-Upgrade)"
   give: "<yellow>/bp give <Spieler> <Item> [Anzahl] <gray>– Item geben"
   openid: "<yellow>/bp openid <ID> <gray>– Backpack per ID öffnen"
   modules: "<yellow>/bp modules <gray>– Externe Module an/aus schalten"
+  assets: "<yellow>/bp assets <status|redeploy> <gray>– Oraxen-Assets prüfen / neu ausrollen"
+  doctor: "<yellow>/bp doctor <gray>– Diagnose (Oraxen, Config, DB, Assets, Versionen)"
   update: "<yellow>/bp update <gray>– Neueste Version von GitHub laden"
   reload: "<yellow>/bp reload <gray>– Konfiguration neu laden"
   footer: "<dark_gray>Inspiriert von Sophisticated Backpacks – eigenständiges Server-Plugin."
@@ -34,6 +39,8 @@ error:
   color-usage: "<red>Verwendung: /bp color <Farbe> [Akzent] <gray>(Name oder #RRGGBB)"
   give-usage: "<red>Verwendung: /bp give <Spieler> <Item> [Anzahl]"
   openid-usage: "<red>Verwendung: /bp openid <ID>"
+  transfer-usage: "<red>Verwendung: /bp transfer <ID> <Spieler>"
+  locate-usage: "<red>Verwendung: /bp locate [Spieler|ID]"
   invalid-color: "<red>Unbekannte Farbe: <white><input></white>"
   invalid-tier: "<red>Unbekanntes Item: <white><input></white>"
   invalid-number: "<red>Keine gültige Zahl: <white><input></white>"
@@ -47,6 +54,40 @@ error:
 
 color:
   success: "<green>Backpack eingefärbt: <white><main></white> <gray>/</gray> <white><accent></white>"
+
+rename:
+  success: "<green>Backpack umbenannt in <white><name></white>."
+  cleared: "<green>Backpack-Name auf Standard zurückgesetzt."
+  disabled: "<red>Das Umbenennen von Backpacks ist auf diesem Server deaktiviert."
+
+transfer:
+  success: "<green>Backpack <white><id></white> an <white><player></white> übertragen."
+  received: "<green>Du hast Backpack <white><id></white> von <white><player></white> erhalten."
+
+locate:
+  header: "<gold>Platzierte Backpacks von <white><player></white>: <yellow><count></yellow>"
+  not-placed: "<gray>Dieses Backpack ist nicht platziert."
+  teleported: "<green>Zu Backpack <white><id></white> teleportiert."
+  world-missing: "<red>Die Welt des Backpacks ist nicht geladen."
+
+assets:
+  no-oraxen: "<red>Das Oraxen-Modul ist nicht aktiv."
+  redeployed: "<green>Oraxen-Assets neu ausgerollt. <yellow>/oraxen reload ausführen, um das Pack neu zu bauen."
+  status-header: "<gold><bold>Oraxen-Asset-Status</bold></gold>"
+  status-oraxen: "<gray>Oraxen vorhanden: <white><value></white>"
+  status-version: "<gray>Asset-Version: <white><deployed></white> <dark_gray>(gebündelt <bundled>)"
+  status-files: "<gray>Verwaltet: <white><managed></white><gray>/<white><total></white> <dark_gray>•</dark_gray> <gray>fehlend: <white><missing></white>"
+
+doctor:
+  header: "<gold><bold>yourShika Backpack's – Doctor</bold></gold>"
+  line: "<gray><label>: <white><value></white>"
+
+trash:
+  deleted: "<gray><white><count></white> Item(s) gelöscht."
+
+compact:
+  preview: "<#D2B48C>Beim Schließen würde verdichtet: <white><items></white>"
+  preview-none: "<#D2B48C>Aktuell nichts zu verdichten."
 
 place:
   success: "<green>Backpack platziert. <gray>Rechtsklick öffnet, Sneak-Rechtsklick hebt auf."

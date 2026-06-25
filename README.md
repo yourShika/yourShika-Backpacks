@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.7.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.8.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -136,6 +136,38 @@ ein Paper/Spigot-Plugin.**
   (war eine Folge des Freezes).
 - **`/bp info`:** Smithing-Rezepte sauberer dargestellt, Slot-Beschriftungen auf
   Englisch (Template / Base / Addition) – passend zum Smithing Table.
+
+---
+
+## ✨ Neu in v0.8.0
+
+**Commands & Verwaltung**
+- 🏷️ **`/bp rename <Name|reset>`** – Backpacks umbenennen (Config `rename.allow-players`, Admins immer)
+- 🖱️ **Anklickbares `/bp list`** – `[Open]` `[Copy]` `[TP]`
+- 📍 **`/bp locate [Spieler|ID]`** + **`/bp goto <ID>`** – platzierte Backpacks orten & hin-teleportieren
+- 🔁 **`/bp transfer <ID> <Spieler>`** – Besitzer ändern
+- 🎯 **`/bp recall`** öffnet bei mehreren Backpacks ein **Auswahlmenü** (sonst direkt)
+- 🧰 **`/bp assets <status|redeploy>`** & **`/bp doctor`** (Diagnose)
+- 📝 **Admin-Audit-Log** (`audit.log`): Give/OpenID/Transfer/Recall/Pickup
+- 🔢 **Mehr PlaceholderAPI**: `placed`, `used_slots`, `free_slots`, `tiers`, `count_<tier>`
+
+**GUI**
+- 📊 Info-Item zeigt **belegte/freie Slots**
+- ⏮️ **Shift-Klick** auf die Blätter-Pfeile springt zur **ersten/letzten Seite**
+
+**Platzierte Backpacks**
+- 🧭 Drehen sich **nach Blickrichtung**; optionales **Hologramm (Name + Besitzer)**; **Partikel + Sound** beim Platzieren/Aufheben
+
+**Upgrades**
+- 🗑️ **Trash mit Lösch-Bestätigung** (`trash.confirm`) – Schließen ohne Klick gibt Items zurück
+- 🧱 **Compacting-Preview** (Chat) + **Presets** (Erze/Farm/Redstone/Sonstiges)
+- 🧲 **Magnet**: Drossel gegen Lag + Respekt für Item-Owner & Pickup-Delay
+
+**Robustheit & CI**
+- 🛡️ **Deep-Nesting-Schutz**: Backpacks in Shulker/Bundle werden erkannt & blockiert
+- ♻️ **Auto-Recovery**: Speichern beim Seitenwechsel + Crash-Erkennung
+- ✅ **Rezept-Validierung** mit klaren Config-Fehlermeldungen
+- 🤖 **CI-Asset-Check**: verhindert einseitige Faces in Oraxen-Modellen
 
 ---
 

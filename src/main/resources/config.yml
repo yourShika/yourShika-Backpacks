@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 7
+config-version: 8
 
 # Language file messages_<language>.yml (default: en). German (de) is bundled too.
 language: en
@@ -52,6 +52,30 @@ crafting:
   enabled: true
 
 # ---------------------------------------------------------------------------
+#  Umbenennen (/bp rename)
+# ---------------------------------------------------------------------------
+rename:
+  # Dürfen normale Spieler ihre Backpacks umbenennen? Admins (Permission
+  # yourshika.backpack.admin.rename) dürfen immer.
+  allow-players: true
+
+# ---------------------------------------------------------------------------
+#  Mülleimer-Upgrade (Trash)
+# ---------------------------------------------------------------------------
+trash:
+  # true  = Items im Trash werden erst nach Klick auf "Delete items" gelöscht;
+  #         beim Schließen ohne Klick kommen sie zurück (kein versehentlicher Verlust).
+  # false = altes Verhalten: Items im Trash sind beim Schließen sofort weg.
+  confirm: true
+
+# ---------------------------------------------------------------------------
+#  Admin-Audit-Log (audit.log im Datenordner)
+#  Erfasst Give / OpenID / Transfer / Recall / Pickup / Assets-Redeploy.
+# ---------------------------------------------------------------------------
+audit:
+  enabled: true
+
+# ---------------------------------------------------------------------------
 #  Sicherheit
 # ---------------------------------------------------------------------------
 security:
@@ -82,6 +106,11 @@ worlds:
 placeable:
   enabled: true
   protect-from-explosions: true
+  # Optionales Hologramm (Name + Besitzer) über einem platzierten Backpack.
+  hologram:
+    enabled: true
+  # Partikel + Sound beim Platzieren und Aufheben.
+  effects: true
 
 # ---------------------------------------------------------------------------
 #  Backpack-Tiers
@@ -334,6 +363,10 @@ tiers:
 # ---------------------------------------------------------------------------
 upgrades:
   enabled: true
+  # Magnet-Upgrade: maximale Anzahl herangezogener Items pro Tick und Spieler
+  # (Drossel gegen Lag bei sehr vielen Drops).
+  magnet:
+    max-per-tick: 60
   materials:
     copper: COPPER_INGOT
     iron: IRON_INGOT
