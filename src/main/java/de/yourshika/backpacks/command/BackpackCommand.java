@@ -10,13 +10,17 @@ import de.yourshika.backpacks.tier.TierRegistry;
 import de.yourshika.backpacks.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +40,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     private final TierRegistry tiers;
     private final BackpackItemFactory items;
     private final MessageManager msg;
+    private final MiniMessage mini = MiniMessage.miniMessage();
 
     public BackpackCommand(YourShikaBackpacks plugin, BackpackManager manager, TierRegistry tiers) {
         this.plugin = plugin;
@@ -58,6 +63,9 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "list" -> list(sender, args);
             case "give" -> give(sender, args);
             case "openid" -> openId(sender, args);
+            case "transfer" -> transfer(sender, args);
+            case "locate" -> locate(sender, args);
+            case "goto", "tp" -> gotoBackpack(sender, args);
             case "info", "recipes", "rezepte" -> info(sender);
             case "recall" -> recall(sender);
             case "modules", "module" -> modules(sender);
@@ -74,6 +82,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "help.open");
         msg.sendRaw(sender, "help.info");
         msg.sendRaw(sender, "help.list");
+        msg.sendRaw(sender, "help.locate");
+        msg.sendRaw(sender, "help.transfer");
         msg.sendRaw(sender, "help.recall");
         if (sender.hasPermission("yourshika.backpack.admin.color")) msg.sendRaw(sender, "help.color");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
@@ -217,8 +227,189 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         for (UUID id : ids) {
             BackpackData data = manager.storage().load(id);
             String tierKey = data == null ? "?" : data.tier();
-            msg.sendRaw(sender, "list.entry",
-                    ph("id", id.toString().substring(0, 8)), ph("tier", tierKey));
+            boolean placed = data != null && data.placed();
+            sender.sendMessage(listEntry(id, tierKey, placed));
+        }
+    }
+
+    /** Baut eine anklickbare Listen-Zeile (Öffnen / ID kopieren / TP bei platziert). */
+    private Component listEntry(UUID id, String tier, boolean placed) {
+        String full = id.toString();
+        String shortId = full.substring(0, 8);
+        StringBuilder sb = new StringBuilder();
+        sb.append("<dark_gray>• <gray>ID <white>").append(shortId)
+          .append(" <dark_gray>–</dark_gray> <gray>Tier <white>").append(tier == null ? "?" : tier);
+        sb.append(" <click:run_command:'/bp openid ").append(full)
+          .append("'><hover:show_text:'Open this backpack'><green>[Open]</green></hover></click>");
+        sb.append(" <click:copy_to_clipboard:'").append(full)
+          .append("'><hover:show_text:'Copy full ID'><yellow>[Copy]</yellow></hover></click>");
+        if (placed) {
+            sb.append(" <click:run_command:'/bp goto ").append(full)
+              .append("'><hover:show_text:'Teleport to placed backpack'><aqua>[TP]</aqua></hover></click>");
+        }
+        return mini.deserialize(sb.toString());
+    }
+
+    private void transfer(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        boolean admin = player.hasPermission("yourshika.backpack.admin.transfer");
+        if (!admin && !player.hasPermission("yourshika.backpack.transfer")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        if (args.length < 3) {
+            msg.send(sender, "error.transfer-usage");
+            return;
+        }
+        UUID id = tryUuid(args[1]);
+        if (id == null) {
+            msg.send(sender, "error.invalid-id", ph("input", args[1]));
+            return;
+        }
+        Player target = Bukkit.getPlayerExact(args[2]);
+        if (target == null) {
+            msg.send(sender, "error.player-not-found", ph("input", args[2]));
+            return;
+        }
+        BackpackData data = manager.storage().load(id);
+        if (data == null) {
+            msg.send(sender, "error.id-not-found");
+            return;
+        }
+        if (!admin && (data.owner() == null || !data.owner().equals(player.getUniqueId()))) {
+            msg.send(sender, "error.not-owner");
+            return;
+        }
+        data.owner(target.getUniqueId());
+        manager.storage().save(data);
+        updateHeldOwner(player, id, target);
+        plugin.audit(player.getName(), "TRANSFER", id + " -> " + target.getName());
+        msg.send(sender, "transfer.success",
+                ph("id", id.toString().substring(0, 8)), ph("player", target.getName()));
+        msg.send(target, "transfer.received",
+                ph("id", id.toString().substring(0, 8)), ph("player", player.getName()));
+    }
+
+    /** Schreibt den neuen Besitzer in ein Backpack-Item, falls der Spieler es trägt. */
+    private void updateHeldOwner(Player holderPlayer, UUID id, Player target) {
+        for (ItemStack it : holderPlayer.getInventory().getContents()) {
+            if (it == null) continue;
+            if (items.isBackpack(it) && id.equals(items.getId(it))) {
+                items.writeOwner(it, target.getUniqueId(), target.getName());
+            }
+        }
+    }
+
+    private void locate(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        if (args.length >= 2) {
+            UUID maybe = tryUuid(args[1]);
+            if (maybe != null) {
+                locateOne(sender, player, maybe);
+                return;
+            }
+            if (!sender.hasPermission("yourshika.backpack.admin.locateother")) {
+                msg.send(sender, "error.no-permission");
+                return;
+            }
+            OfflinePlayer t = Bukkit.getOfflinePlayer(args[1]);
+            locatePlaced(sender, t.getUniqueId(), args[1]);
+            return;
+        }
+        if (!player.hasPermission("yourshika.backpack.locate")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        locatePlaced(sender, player.getUniqueId(), player.getName());
+    }
+
+    private void locateOne(CommandSender sender, Player player, UUID id) {
+        BackpackData data = manager.storage().load(id);
+        if (data == null) {
+            msg.send(sender, "error.id-not-found");
+            return;
+        }
+        boolean admin = player.hasPermission("yourshika.backpack.admin.locateother");
+        if (!admin && (data.owner() == null || !data.owner().equals(player.getUniqueId()))) {
+            msg.send(sender, "error.not-owner");
+            return;
+        }
+        if (!data.placed()) {
+            msg.send(sender, "locate.not-placed");
+            return;
+        }
+        sender.sendMessage(locateLine(data));
+    }
+
+    private void locatePlaced(CommandSender sender, UUID owner, String name) {
+        List<UUID> ids = manager.storage().listByOwner(owner);
+        List<BackpackData> placed = new ArrayList<>();
+        for (UUID id : ids) {
+            BackpackData d = manager.storage().load(id);
+            if (d != null && d.placed()) placed.add(d);
+        }
+        msg.send(sender, "locate.header",
+                ph("player", name == null ? "?" : name), ph("count", String.valueOf(placed.size())));
+        for (BackpackData d : placed) {
+            sender.sendMessage(locateLine(d));
+        }
+    }
+
+    private Component locateLine(BackpackData d) {
+        String full = d.id().toString();
+        String shortId = full.substring(0, 8);
+        String w = d.world() == null ? "?" : d.world();
+        String coords = (int) Math.floor(d.x()) + ", " + (int) Math.floor(d.y()) + ", " + (int) Math.floor(d.z());
+        String s = "<dark_gray>• <gray>ID <white>" + shortId + " <dark_gray>–</dark_gray> <gray>"
+                + w + " <white>" + coords
+                + " <click:run_command:'/bp goto " + full + "'><hover:show_text:'Teleport'><aqua>[TP]</aqua></hover></click>";
+        return mini.deserialize(s);
+    }
+
+    private void gotoBackpack(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        if (args.length < 2) {
+            msg.send(sender, "error.locate-usage");
+            return;
+        }
+        UUID id = tryUuid(args[1]);
+        if (id == null) {
+            msg.send(sender, "error.invalid-id", ph("input", args[1]));
+            return;
+        }
+        BackpackData data = manager.storage().load(id);
+        if (data == null || !data.placed()) {
+            msg.send(sender, "locate.not-placed");
+            return;
+        }
+        boolean admin = player.hasPermission("yourshika.backpack.admin.locateother");
+        if (!admin && (data.owner() == null || !data.owner().equals(player.getUniqueId()))) {
+            msg.send(sender, "error.not-owner");
+            return;
+        }
+        World w = Bukkit.getWorld(data.world());
+        if (w == null) {
+            msg.send(sender, "locate.world-missing");
+            return;
+        }
+        player.teleport(new Location(w, data.x() + 0.5, data.y() + 1, data.z() + 0.5));
+        msg.send(sender, "locate.teleported", ph("id", id.toString().substring(0, 8)));
+    }
+
+    private UUID tryUuid(String s) {
+        try {
+            return UUID.fromString(s);
+        } catch (IllegalArgumentException ex) {
+            return null;
         }
     }
 
@@ -289,6 +480,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     }
 
     private void announceGive(CommandSender sender, Player target, int amount, String what) {
+        plugin.audit(sender.getName(), "GIVE", amount + "x " + what + " -> " + target.getName());
         msg.send(sender, "give.success",
                 ph("amount", String.valueOf(amount)), ph("tier", what), ph("player", target.getName()));
         msg.send(target, "give.received",
@@ -349,6 +541,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         String error = manager.openById(player, id);
         if (error != null) {
             msg.send(sender, error);
+        } else {
+            plugin.audit(player.getName(), "OPENID", id.toString());
         }
     }
 
@@ -383,7 +577,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "list", "recall", "version"));
+            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "list", "locate", "transfer", "recall", "version"));
             if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
@@ -404,6 +598,12 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             return filter(dyeNames(), args[args.length - 1]);
         }
         if (sub.equals("list") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.listother")) {
+            return filter(onlinePlayers(), args[1]);
+        }
+        if (sub.equals("transfer") && args.length == 3) {
+            return filter(onlinePlayers(), args[2]);
+        }
+        if (sub.equals("locate") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.locateother")) {
             return filter(onlinePlayers(), args[1]);
         }
         return List.of();

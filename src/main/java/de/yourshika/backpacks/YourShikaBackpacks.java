@@ -334,6 +334,24 @@ public final class YourShikaBackpacks extends JavaPlugin {
         }
     }
 
+    /**
+     * Admin-Audit-Log: schreibt eine Zeile nach {@code audit.log} im Datenordner
+     * (z.B. für Give/OpenID/Delete/Transfer). Konfigurierbar über {@code audit.enabled}.
+     */
+    public synchronized void audit(String actor, String action, String detail) {
+        if (!getConfig().getBoolean("audit.enabled", true)) return;
+        String line = "[" + java.time.format.DateTimeFormatter.ISO_INSTANT.format(java.time.Instant.now()) + "] "
+                + (actor == null ? "?" : actor) + " " + action + " " + (detail == null ? "" : detail);
+        try {
+            java.io.File f = new java.io.File(getDataFolder(), "audit.log");
+            try (java.io.FileWriter w = new java.io.FileWriter(f, true)) {
+                w.write(line + System.lineSeparator());
+            }
+        } catch (Exception ex) {
+            getLogger().warning("Audit-Log konnte nicht geschrieben werden: " + ex.getMessage());
+        }
+    }
+
     /** Pfad der eigenen Plugin-JAR (für den Self-Updater). */
     public File pluginJarFile() {
         return getFile();

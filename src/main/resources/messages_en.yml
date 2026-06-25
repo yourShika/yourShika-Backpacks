@@ -10,7 +10,9 @@ help:
   open: "<yellow>/bp open <gray>– Open the backpack in your hand"
   info: "<yellow>/bp info <gray>– View backpacks, upgrades & recipes"
   color: "<yellow>/bp color <color> [accent] <gray>– Dye a backpack (name or #RRGGBB)"
-  list: "<yellow>/bp list [player] <gray>– List backpacks"
+  list: "<yellow>/bp list [player] <gray>– List backpacks (clickable)"
+  locate: "<yellow>/bp locate [player|id] <gray>– Show coordinates of placed backpacks"
+  transfer: "<yellow>/bp transfer <id> <player> <gray>– Transfer ownership of a backpack"
   recall: "<yellow>/bp recall <gray>– Recall your placed backpacks (needs Recall Upgrade)"
   give: "<yellow>/bp give <player> <tier> [amount] [color] [accent] <gray>– Give a backpack"
   openid: "<yellow>/bp openid <id> <gray>– Open a backpack by ID"
@@ -33,6 +35,8 @@ error:
   color-usage: "<red>Usage: /bp color <color> [accent] <gray>(name or #RRGGBB)"
   give-usage: "<red>Usage: /bp give <player> <tier> [amount] [color] [accent]"
   openid-usage: "<red>Usage: /bp openid <id>"
+  transfer-usage: "<red>Usage: /bp transfer <id> <player>"
+  locate-usage: "<red>Usage: /bp locate [player|id]"
   invalid-color: "<red>Unknown color: <white><input></white>"
   invalid-tier: "<red>Unknown item: <white><input></white>"
   invalid-number: "<red>Not a valid number: <white><input></white>"
@@ -72,6 +76,16 @@ list:
 give:
   success: "<green>Gave <amount>x <white><tier></white> backpack to <white><player></white>."
   received: "<green>You received <white><amount>x <tier></white> backpack."
+
+transfer:
+  success: "<green>Backpack <white><id></white> transferred to <white><player></white>."
+  received: "<green>You received ownership of backpack <white><id></white> from <white><player></white>."
+
+locate:
+  header: "<gold>Placed backpacks of <white><player></white>: <yellow><count></yellow>"
+  not-placed: "<gray>This backpack is not placed."
+  teleported: "<green>Teleported to backpack <white><id></white>."
+  world-missing: "<red>The backpack's world is not loaded."
 
 reload:
   success: "<green>Configuration reloaded."
