@@ -173,8 +173,11 @@ public final class PlaceableManager {
                 td.setBackgroundColor(org.bukkit.Color.fromARGB(0, 0, 0, 0));
             } catch (Throwable ignored) {
             }
-            td.text(mini.deserialize("<gold><name></gold><newline><gray>by <white><owner>",
-                    net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed("name", name),
+            // Name als gerenderte Component einsetzen (unterstützt Hex/Gradient/Farbcodes),
+            // sonst würde z.B. "<#aabbcc>…" wörtlich im Hologramm stehen.
+            td.text(mini.deserialize("<name><newline><gray>by <white><owner>",
+                    net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component(
+                            "name", de.yourshika.backpacks.util.NameUtil.render(name)),
                     net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed(
                             "owner", ownerName == null ? "?" : ownerName)));
             tag(td, id);

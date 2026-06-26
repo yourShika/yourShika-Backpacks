@@ -63,6 +63,7 @@ public final class YamlBackpackStorage implements BackpackStorage {
             data.furnaceBurn(sec.getInt("furnace-burn"));
             data.compactFilter(ItemSerialization.fromBase64(sec.getString("compact-filter")));
             data.name(sec.getString("name"));
+            data.storedXp(sec.getInt("stored-xp"));
             data.placed(sec.getBoolean("placed"));
             data.world(sec.getString("world"));
             data.position(sec.getDouble("x"), sec.getDouble("y"), sec.getDouble("z"));
@@ -88,6 +89,7 @@ public final class YamlBackpackStorage implements BackpackStorage {
             sec.set("furnace-burn", data.furnaceBurn());
             sec.set("compact-filter", ItemSerialization.toBase64(data.compactFilter()));
             sec.set("name", data.name());
+            sec.set("stored-xp", data.storedXp());
             sec.set("placed", data.placed());
             sec.set("world", data.world());
             sec.set("x", data.x());

@@ -113,6 +113,14 @@ public enum FunctionUpgrade {
             Map.of('C', Material.CACTUS, 'L', Material.LAVA_BUCKET),
             0, null),
 
+    XP_STORAGE("xp", "<#7CFF6B><bold>XP Storage Upgrade</bold></#7CFF6B>", 2153,
+            List.of("<gray>Store your <white>experience</white> in the backpack",
+                    "<gray>and withdraw it again any time.",
+                    "<dark_gray>Open it from a button in the backpack menu."),
+            List.of(" E ", "BUB", " E "),
+            Map.of('E', Material.EMERALD, 'B', Material.EXPERIENCE_BOTTLE),
+            0, null),
+
     EVERLASTING("everlasting", "<#B388FF><bold>Everlasting Upgrade</bold></#B388FF>", 2144,
             List.of("<gray>The dropped backpack is immune to fire, lava,",
                     "<gray>explosions and <white>never despawns</white>."),
@@ -156,7 +164,7 @@ public enum FunctionUpgrade {
     public boolean isStation() {
         return switch (id) {
             case "crafting", "stonecutter", "smithing", "ender_link", "trash",
-                 "smelting", "blasting", "smoking", "compacting" -> true;
+                 "smelting", "blasting", "smoking", "compacting", "xp" -> true;
             default -> false;
         };
     }

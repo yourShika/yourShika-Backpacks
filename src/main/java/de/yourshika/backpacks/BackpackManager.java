@@ -260,7 +260,7 @@ public final class BackpackManager {
     /** Reihenfolge, in der Stations-Buttons (falls verbaut) platziert werden. */
     private static final String[] STATION_ORDER = {
             "crafting", "stonecutter", "smithing", "ender_link",
-            "smelting", "blasting", "smoking", "compacting", "trash"
+            "smelting", "blasting", "smoking", "compacting", "xp", "trash"
     };
 
     private void fillControlRow(Inventory inv, BackpackTier tier, BackpackMenuHolder holder) {
@@ -441,6 +441,7 @@ public final class BackpackManager {
             case "blasting" -> { material = Material.BLAST_FURNACE; name = "<#FFB36B><bold>Portable Blast Furnace</bold>"; desc = "Smelt ores & metals fast."; }
             case "smoking" -> { material = Material.SMOKER; name = "<#FFD27F><bold>Portable Smoker</bold>"; desc = "Cook food fast."; }
             case "compacting" -> { material = Material.PISTON; name = "<#D2B48C><bold>Compacting Filter</bold>"; desc = "Choose what compacts on close."; }
+            case "xp" -> { material = Material.EXPERIENCE_BOTTLE; name = "<#7CFF6B><bold>XP Storage</bold>"; desc = "Store & withdraw experience."; }
             case "trash" -> { material = Material.LAVA_BUCKET; name = "<#8B8B8B><bold>Trash</bold>"; desc = "Delete unwanted items."; }
             default -> { material = Material.BARRIER; name = "<gray>Station"; desc = ""; }
         }
@@ -454,6 +455,12 @@ public final class BackpackManager {
         if (furnaceType != null) {
             lore.add(Component.empty());
             lore.addAll(furnaceStationLore(backpackId, furnaceType));
+        }
+        if (station.equals("xp")) {
+            BackpackData d = backpackId == null ? null : storage.load(backpackId);
+            int xp = d == null ? 0 : d.storedXp();
+            lore.add(Component.empty());
+            lore.add(line("<gray>Stored: <white>" + xp + " XP <dark_gray>(~" + xpLevels(xp) + " levels)"));
         }
         lore.add(Component.empty());
         lore.add(line("<yellow>▶ Click to open"));
@@ -534,6 +541,7 @@ public final class BackpackManager {
                 case "blasting" -> openFurnace(player, "blast", backpackId, tierKey);
                 case "smoking" -> openFurnace(player, "smoker", backpackId, tierKey);
                 case "compacting" -> openFilter(player, backpackId, tierKey);
+                case "xp" -> openXp(player, backpackId, tierKey);
                 case "trash" -> openTrash(player);
                 default -> { }
             }
@@ -1293,10 +1301,135 @@ public final class BackpackManager {
         if (inv == null) return;
         for (int slot = BackpackMenuHolder.CONTROL_ROW_START; slot < BackpackMenuHolder.INVENTORY_SIZE; slot++) {
             String station = holder.stationAt(slot);
-            if (station != null && stationFurnaceType(station) != null) {
+            if (station != null && (stationFurnaceType(station) != null || station.equals("xp"))) {
                 inv.setItem(slot, stationButton(station, holder.backpackId()));
             }
         }
+    }
+
+    // ---- XP-Storage-Upgrade ----------------------------------------------
+
+    /** Ungefähres Level, das einer Punkte-Menge entspricht (für die Anzeige). */
+    private int xpLevels(int points) {
+        int level = 0;
+        while (de.yourshika.backpacks.util.ExpUtil.totalForLevel(level + 1) <= points) level++;
+        return level;
+    }
+
+    /** Öffnet die XP-Storage-GUI eines Backpacks. */
+    public void openXp(Player player, UUID backpackId, String tierKey) {
+        de.yourshika.backpacks.gui.XpMenuHolder holder =
+                new de.yourshika.backpacks.gui.XpMenuHolder(backpackId, tierKey);
+        Inventory inv = Bukkit.createInventory(holder, de.yourshika.backpacks.gui.XpMenuHolder.SIZE,
+                mini.deserialize("<#7CFF6B><bold>XP Storage</bold>").decoration(TextDecoration.ITALIC, false));
+        holder.setInventory(inv);
+        renderXp(holder, player);
+        player.openInventory(inv);
+    }
+
+    /** Zeichnet die XP-GUI (Buttons + Info) neu. */
+    public void renderXp(de.yourshika.backpacks.gui.XpMenuHolder holder, Player player) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        ItemStack filler = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
+        for (int i = 0; i < de.yourshika.backpacks.gui.XpMenuHolder.SIZE; i++) inv.setItem(i, filler);
+
+        BackpackData data = storage.load(holder.backpackId());
+        int stored = data == null ? 0 : data.storedXp();
+        int playerXp = de.yourshika.backpacks.util.ExpUtil.totalExp(player);
+
+        ItemStack info = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemMeta im = info.getItemMeta();
+        im.displayName(line("<#7CFF6B><bold>XP Storage</bold>"));
+        im.lore(List.of(
+                line("<dark_gray><st>                    </st>"),
+                line("<gray>Stored: <white>" + stored + " XP <dark_gray>(~" + xpLevels(stored) + " levels)"),
+                line("<gray>You have: <white>" + playerXp + " XP <dark_gray>(level " + player.getLevel() + ")"),
+                line("<dark_gray><st>                    </st>")
+        ));
+        info.setItemMeta(im);
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.INFO_SLOT, info);
+
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.DEPOSIT_LEVEL,
+                xpButton(Material.LIME_DYE, "<green>Deposit 1 level", "Store one level of XP."));
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.DEPOSIT_ALL,
+                xpButton(Material.LIME_CONCRETE, "<green><bold>Deposit all</bold>", "Store all your XP."));
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.WITHDRAW_LEVEL,
+                xpButton(Material.YELLOW_DYE, "<yellow>Withdraw 1 level", "Take one level back."));
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.WITHDRAW_ALL,
+                xpButton(Material.YELLOW_CONCRETE, "<yellow><bold>Withdraw all</bold>", "Take all stored XP back."));
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.BACK_SLOT, backButton());
+    }
+
+    private ItemStack xpButton(Material material, String name, String desc) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line(name));
+        meta.lore(List.of(line("<gray>" + desc), Component.empty(), line("<yellow>▶ Click")));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    /**
+     * Führt eine XP-Aktion aus ({@code deposit_all}, {@code deposit_level},
+     * {@code withdraw_all}, {@code withdraw_level}) und speichert den neuen Stand.
+     * Gibt true zurück, wenn sich etwas geändert hat.
+     */
+    public boolean xpAction(Player player, UUID backpackId, String action) {
+        BackpackData data = storage.load(backpackId);
+        if (data == null) return false;
+        int stored = data.storedXp();
+        boolean changed = false;
+
+        switch (action) {
+            case "deposit_all" -> {
+                int pts = de.yourshika.backpacks.util.ExpUtil.totalExp(player);
+                if (pts > 0) {
+                    de.yourshika.backpacks.util.ExpUtil.clear(player);
+                    stored += pts;
+                    changed = true;
+                }
+            }
+            case "deposit_level" -> {
+                int lvl = player.getLevel();
+                if (lvl >= 1) {
+                    int removed = de.yourshika.backpacks.util.ExpUtil.totalExp(player)
+                            - de.yourshika.backpacks.util.ExpUtil.totalForLevel(lvl - 1);
+                    de.yourshika.backpacks.util.ExpUtil.clear(player);
+                    player.giveExp(de.yourshika.backpacks.util.ExpUtil.totalForLevel(lvl - 1));
+                    stored += removed;
+                    changed = true;
+                }
+            }
+            case "withdraw_all" -> {
+                if (stored > 0) {
+                    player.giveExp(stored);
+                    stored = 0;
+                    changed = true;
+                }
+            }
+            case "withdraw_level" -> {
+                if (stored > 0) {
+                    int lvl = player.getLevel();
+                    int need = de.yourshika.backpacks.util.ExpUtil.totalForLevel(lvl + 1)
+                            - de.yourshika.backpacks.util.ExpUtil.totalExp(player);
+                    if (need <= 0) need = de.yourshika.backpacks.util.ExpUtil.pointsToNext(lvl);
+                    int give = Math.min(stored, need);
+                    if (give > 0) {
+                        player.giveExp(give);
+                        stored -= give;
+                        changed = true;
+                    }
+                }
+            }
+            default -> { }
+        }
+
+        if (changed) {
+            data.storedXp(stored);
+            storage.save(data);
+        }
+        return changed;
     }
 
     /** Speichert alle aktuell offenen Backpacks (Autosave / Shutdown), ohne sie zu schließen. */

@@ -7,6 +7,7 @@ import de.yourshika.backpacks.gui.FilterMenuHolder;
 import de.yourshika.backpacks.gui.FurnaceMenuHolder;
 import de.yourshika.backpacks.gui.ModulesMenuHolder;
 import de.yourshika.backpacks.gui.TrashMenuHolder;
+import de.yourshika.backpacks.gui.XpMenuHolder;
 import de.yourshika.backpacks.gui.UpgradeMenuHolder;
 import de.yourshika.backpacks.item.BackpackItemFactory;
 import de.yourshika.backpacks.upgrade.UpgradeItemFactory;
@@ -335,6 +336,45 @@ public final class BackpackGuiListener implements Listener {
         if (event.getView().getTopInventory().getHolder() instanceof TrashMenuHolder holder
                 && event.getPlayer() instanceof Player player) {
             manager.returnTrash(holder, player);
+        }
+    }
+
+    // XP-Storage-GUI: reine Button-GUI (ein-/auszahlen).
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onXpClick(InventoryClickEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof XpMenuHolder holder)) return;
+        event.setCancelled(true);
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (event.getClickedInventory() == null
+                || !(event.getClickedInventory().getHolder() instanceof XpMenuHolder)) {
+            return; // Klick im Spieler-Inventar – ignorieren.
+        }
+        int raw = event.getRawSlot();
+        if (raw == XpMenuHolder.BACK_SLOT) {
+            UUID id = holder.backpackId();
+            plugin.getServer().getScheduler().runTask(plugin, () -> manager.openById(player, id));
+            return;
+        }
+        String action = switch (raw) {
+            case XpMenuHolder.DEPOSIT_LEVEL -> "deposit_level";
+            case XpMenuHolder.DEPOSIT_ALL -> "deposit_all";
+            case XpMenuHolder.WITHDRAW_LEVEL -> "withdraw_level";
+            case XpMenuHolder.WITHDRAW_ALL -> "withdraw_all";
+            default -> null;
+        };
+        if (action == null) return;
+        boolean changed = manager.xpAction(player, holder.backpackId(), action);
+        manager.renderXp(holder, player);
+        if (changed) {
+            de.yourshika.backpacks.util.Sounds.play(plugin, player, "upgrade");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onXpDrag(InventoryDragEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof XpMenuHolder) {
+            event.setCancelled(true);
         }
     }
 

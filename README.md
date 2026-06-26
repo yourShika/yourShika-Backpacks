@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.9.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-0.9.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,16 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## ✨ Neu in v0.9.1
+
+- 🪪 **Hologramm-Name korrekt gerendert** – platzierte Rucksäcke mit Gradient-/Hex-/
+  Farbcode-Namen zeigen den Namen jetzt richtig an (statt z.B. „<#aabbcc>…").
+- 🧪 **Neues XP-Storage-Upgrade** – speichere deine **Erfahrung** im Rucksack und
+  hole sie jederzeit wieder ab. Eigener Button in der Steuerleiste mit GUI
+  (Einzahlen/Auszahlen, 1 Level oder alles) und Live-Anzeige des gespeicherten XP.
 
 ---
 
@@ -337,7 +347,7 @@ ein Paper/Spigot-Plugin.**
 ## 🛠️ Installation
 
 1. Plugin-JAR aus den [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   herunterladen (`yourShika-Backpacks-0.9.0.jar`).
+   herunterladen (`yourShika-Backpacks-0.9.1.jar`).
 2. In den `plugins/`-Ordner deines **Paper 26.1.2 (Java 25)**-Servers legen.
 3. Server starten – der Datenordner **`plugins/yourShika Backpack's/`** wird automatisch
    mit `config.yml`, `messages_de.yml` und der Datenbank erstellt.
@@ -581,7 +591,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.9.0.jar
+target/yourShika-Backpacks-0.9.1.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der
