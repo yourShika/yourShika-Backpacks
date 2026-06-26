@@ -423,7 +423,7 @@ upgrades:
       ender_link:      { custom-model-data: 2150, item-model: "", provider-id: "ysbp_upgrade_ender_link" }
       recall:          { custom-model-data: 2151, item-model: "", provider-id: "ysbp_upgrade_recall" }
       trash:           { custom-model-data: 2152, item-model: "", provider-id: "ysbp_upgrade_trash" }
-      xp:              { custom-model-data: 2153, item-model: "", provider-id: "ysbp_upgrade_xp" }
+      xp:              { custom-model-data: 2155, item-model: "", provider-id: "ysbp_upgrade_xp" }
       everlasting:     { custom-model-data: 2144, item-model: "", provider-id: "ysbp_upgrade_everlasting" }
     # Crafting-Rezepte der Funktions-Upgrades – frei konfigurierbar.
     # 'U' = Upgrade-Leder (Pflicht), 'X' = das vorausgesetzte Basis-Upgrade

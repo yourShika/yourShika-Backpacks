@@ -312,6 +312,7 @@ FUNCTIONS = [
     ("trash", "Trash Upgrade", "#8b8b8b", "trash", False, 2152),
     ("xp_pump", "XP Pump Upgrade", "#5bd75b", "xp_pump", False, 2153),
     ("battery", "Battery Upgrade", "#f2d14e", "battery", False, 2154),
+    ("xp", "XP Storage Upgrade", "#7cff6b", "xp_store", False, 2155),
 ]
 
 
@@ -627,6 +628,17 @@ def glyph_xp16(d, color):
     d.point((12, 4), fill=PAPER_LIGHT)
 
 
+def glyph_xp_store16(d, color):
+    # Erfahrungsfläschchen (Stil wie das Alchemy-Glyph) -> "XP gespeichert".
+    rect(d, (7, 3, 8, 4), OUTLINE)                              # Hals/Korken
+    poly(d, [(6, 5), (9, 5), (11, 12), (4, 12)], OUTLINE)       # Glas-Outline
+    poly(d, [(6, 6), (9, 6), (10, 11), (5, 11)], c("#3f6b14"))  # dunkles Glas
+    poly(d, [(6, 8), (9, 8), (10, 11), (5, 11)], c("#80ff5a"))  # XP-Flüssigkeit
+    line(d, [(6, 7), (7, 7)], c("#d6ffb0"))                     # Glanz
+    d.point((11, 4), fill=c("#b9ffd0"))                         # XP-Funke
+    d.point((12, 6), fill=PAPER_LIGHT)
+
+
 def glyph_battery16(d, color):
     rect(d, (4, 6, 11, 10), OUTLINE)
     rect(d, (12, 7, 13, 9), OUTLINE)
@@ -737,6 +749,8 @@ def draw_function(slug, color, kind, advanced):
         glyph_tank16(d, col, True)
     elif kind == "xp_pump":
         glyph_xp16(d, col)
+    elif kind == "xp_store":
+        glyph_xp_store16(d, col)
     elif kind == "battery":
         glyph_battery16(d, col)
     elif kind == "ender_link":

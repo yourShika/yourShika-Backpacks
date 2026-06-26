@@ -550,3 +550,13 @@ ysbp_upgrade_battery:
     textures:
       - ysbp/upgrades/functions/battery.png
     custom_model_data: 2154
+
+ysbp_upgrade_xp:
+  displayname: "<#7cff6b><bold>XP Storage Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/xp.png
+    custom_model_data: 2155

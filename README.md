@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-0.9.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,24 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## 🎉 v1.0.0 – Erstes stabiles Release
+
+Der erste offizielle Meilenstein. Enthält alle Features der 0.x-Reihe –
+Tiers & Upgrade-Kette, einfärbbare Backpacks, platzierbare Backpacks mit
+Hologramm, funktionale Upgrades (Pickup, Magnet, Crafting/Smithing/Stonecutter,
+portable Furnace/Smoker/Blast Furnace mit Hintergrund-Betrieb, Compacting mit
+Filter, Ender-Link, Trash, Recall, Everlasting, **XP-Storage**), dupe-sichere
+Speicherung, Oraxen-Assets inkl. 3D-Modelle für platzierte Backpacks, sowie
+Mehrsprachigkeit (EN/DE/PL).
+
+- 🧪 **XP-Storage-Upgrade** hat jetzt ein eigenes, zum Stil passendes Item-Asset
+  (Erfahrungsfläschchen) für Oraxen.
+- 🏷️ **Tier-Upgrade behält den Namen** – beim Veredeln im Smithing Table bleibt
+  ein selbst vergebener Backpack-Name (inkl. Farben) erhalten.
+- ✅ Abschluss-Review: Assets, Code und Rezepte geprüft; CI-Modell-Check grün.
 
 ---
 
@@ -347,7 +365,7 @@ ein Paper/Spigot-Plugin.**
 ## 🛠️ Installation
 
 1. Plugin-JAR aus den [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   herunterladen (`yourShika-Backpacks-0.9.1.jar`).
+   herunterladen (`yourShika-Backpacks-1.0.0.jar`).
 2. In den `plugins/`-Ordner deines **Paper 26.1.2 (Java 25)**-Servers legen.
 3. Server starten – der Datenordner **`plugins/yourShika Backpack's/`** wird automatisch
    mit `config.yml`, `messages_de.yml` und der Datenbank erstellt.
@@ -591,7 +609,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-0.9.1.jar
+target/yourShika-Backpacks-1.0.0.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

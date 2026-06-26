@@ -113,7 +113,7 @@ public enum FunctionUpgrade {
             Map.of('C', Material.CACTUS, 'L', Material.LAVA_BUCKET),
             0, null),
 
-    XP_STORAGE("xp", "<#7CFF6B><bold>XP Storage Upgrade</bold></#7CFF6B>", 2153,
+    XP_STORAGE("xp", "<#7CFF6B><bold>XP Storage Upgrade</bold></#7CFF6B>", 2155,
             List.of("<gray>Store your <white>experience</white> in the backpack",
                     "<gray>and withdraw it again any time.",
                     "<dark_gray>Open it from a button in the backpack menu."),

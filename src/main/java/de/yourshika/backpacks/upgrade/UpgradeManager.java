@@ -320,11 +320,14 @@ public final class UpgradeManager implements Listener {
         String accent = isSameColor(baseAccent, prevAccent) ? targetTier.defaultAccentColor() : baseAccent;
 
         ItemStack result = backpacks.create(targetTier, id, main, accent);
+        // Custom-Namen und Besitzer des bisherigen Backpacks übernehmen, damit sie
+        // bei der Tier-Veredelung nicht verloren gehen.
+        backpacks.writeName(result, backpacks.getCustomName(base));
         UUID ownerUuid = backpacks.getOwner(base);
         if (ownerUuid != null) {
             backpacks.writeOwner(result, ownerUuid, backpacks.getOwnerName(base));
-            backpacks.applyDisplay(result, targetTier, id, main, accent);
         }
+        backpacks.applyDisplay(result, targetTier, id, main, accent);
         return new SmithingUpgrade(id, target, main, accent, result);
     }
 
