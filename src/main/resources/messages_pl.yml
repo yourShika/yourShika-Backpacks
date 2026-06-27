@@ -10,6 +10,7 @@ help:
   header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Komendy"
   open: "<yellow>/bp open <gray>– Otwórz plecak trzymany w ręce"
   info: "<yellow>/bp info <gray>– Zobacz plecaki, ulepszenia i przepisy"
+  achievements: "<yellow>/bp achievements <gray>– Zobacz swoje osiągnięcia plecaków"
   color: "<yellow>/bp color <kolor> [akcent] <gray>– Farbuj plecak (nazwa lub #RRGGBB)"
   list: "<yellow>/bp list [gracz] <gray>– Lista plecaków"
   recall: "<yellow>/bp recall <gray>– Przywołaj postawione plecaki (wymaga ulepszenia Recall)"
@@ -79,6 +80,10 @@ list:
 give:
   success: "<green>Dano <amount>x <white><tier></white> graczowi <white><player></white>."
   received: "<green>Otrzymałeś <white><amount>x <tier></white>."
+
+achievement:
+  unlocked: "<gradient:#6E5BC8:#5BE8D4><bold>Osiągnięcie odblokowane!</bold></gradient> <white><title></white> <dark_gray>– <gray><desc>"
+  broadcast: "<gray><player> odblokował osiągnięcie <white><title></white>."
 
 reload:
   success: "<green>Konfiguracja przeładowana."

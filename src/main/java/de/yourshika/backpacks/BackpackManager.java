@@ -175,6 +175,14 @@ public final class BackpackManager {
         openBackpacks.put(data.id(), player.getUniqueId());
         player.openInventory(inv);
         de.yourshika.backpacks.util.Sounds.play(plugin, player, "open");
+
+        // Achievements: erstes Backpack, Tier-Stufe, Sammler.
+        var ach = plugin.achievements();
+        if (ach != null) {
+            ach.trigger(player, "first");
+            ach.trigger(player, "tier_" + tier.key().toLowerCase());
+            if (storage.listByOwner(player.getUniqueId()).size() >= 5) ach.trigger(player, "collector");
+        }
     }
 
     /**
@@ -545,6 +553,16 @@ public final class BackpackManager {
                 case "trash" -> openTrash(player);
                 default -> { }
             }
+            var ach = plugin.achievements();
+            if (ach != null) {
+                switch (station) {
+                    case "crafting" -> ach.trigger(player, "crafting");
+                    case "ender_link" -> ach.trigger(player, "ender");
+                    case "trash" -> ach.trigger(player, "trash");
+                    case "smelting", "blasting", "smoking" -> ach.trigger(player, "furnace");
+                    default -> { }
+                }
+            }
         } catch (Throwable t) {
             plugin.getLogger().warning("Station '" + station + "' konnte nicht geöffnet werden: " + t.getMessage());
         }
@@ -669,6 +687,7 @@ public final class BackpackManager {
                     }
                     plugin.messages().send(closer, "compact.done",
                             de.yourshika.backpacks.config.MessageManager.ph("items", String.join(", ", parts)));
+                    if (plugin.achievements() != null) plugin.achievements().trigger(closer, "compact");
                 }
             }
             BackpackData data = storage.load(holder.backpackId());
@@ -678,12 +697,28 @@ public final class BackpackManager {
             }
             data.contents(holder.buffer());
             storage.save(data);
+
+            // Achievement „Hoarder": Lager komplett voll.
+            if (closer != null && plugin.achievements() != null && isStorageFull(holder)) {
+                plugin.achievements().trigger(closer, "fill");
+            }
         } catch (Exception ex) {
             plugin.getLogger().severe("Backpack " + holder.backpackId()
                     + " konnte beim Schließen nicht gespeichert werden: " + ex.getMessage());
         } finally {
             openBackpacks.remove(holder.backpackId());
         }
+    }
+
+    /** true, wenn alle Lager-Slots des Backpacks belegt sind. */
+    private boolean isStorageFull(BackpackMenuHolder holder) {
+        ItemStack[] buffer = holder.buffer();
+        int capacity = holder.capacity();
+        for (int i = 0; i < capacity; i++) {
+            ItemStack it = i < buffer.length ? buffer[i] : null;
+            if (it == null || it.getType().isAir()) return false;
+        }
+        return capacity > 0;
     }
 
     /** Items, die sich aus 9 Stück zu einem Block verdichten lassen. */
@@ -1428,6 +1463,9 @@ public final class BackpackManager {
         if (changed) {
             data.storedXp(stored);
             storage.save(data);
+            if (action.startsWith("deposit") && plugin.achievements() != null) {
+                plugin.achievements().trigger(player, "xp");
+            }
         }
         return changed;
     }

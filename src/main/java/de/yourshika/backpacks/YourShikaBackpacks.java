@@ -41,6 +41,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private de.yourshika.backpacks.upgrade.UpgradeManager upgradeManager;
     private de.yourshika.backpacks.upgrade.FunctionUpgradeManager functionUpgrades;
     private de.yourshika.backpacks.place.PlaceableManager placeableManager;
+    private de.yourshika.backpacks.achievement.AchievementManager achievements;
 
     private BukkitTask autosaveTask;
 
@@ -77,6 +78,10 @@ public final class YourShikaBackpacks extends JavaPlugin {
         }
 
         this.manager = new BackpackManager(this, storage, itemFactory, tiers);
+
+        // Achievements (eigener Reiter über /bp achievements).
+        this.achievements = new de.yourshika.backpacks.achievement.AchievementManager(this);
+        this.achievements.load();
 
         // Modul-System (externe, experimentelle Hooks) – vor der Rezept-/Item-Erstellung.
         this.moduleManager = new ModuleManager(this);
@@ -403,4 +408,5 @@ public final class YourShikaBackpacks extends JavaPlugin {
     public de.yourshika.backpacks.upgrade.FunctionUpgradeManager functionUpgrades() { return functionUpgrades; }
     public de.yourshika.backpacks.upgrade.UpgradeItemFactory upgradeItems() { return upgradeItems; }
     public de.yourshika.backpacks.place.PlaceableManager placeableManager() { return placeableManager; }
+    public de.yourshika.backpacks.achievement.AchievementManager achievements() { return achievements; }
 }

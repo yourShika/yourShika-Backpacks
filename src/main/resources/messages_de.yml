@@ -10,6 +10,7 @@ help:
   header: "<gradient:#6E5BC8:#5BE8D4><bold>yourShika Backpack's</bold></gradient> <gray>– Befehle"
   open: "<yellow>/bp open <gray>– Backpack in der Hand öffnen"
   info: "<yellow>/bp info <gray>– Rucksäcke, Upgrades & Rezepte ansehen"
+  achievements: "<yellow>/bp achievements <gray>– Deine Backpack-Erfolge ansehen"
   rename: "<yellow>/bp rename <Name|reset> <gray>– Backpack in der Hand umbenennen"
   color: "<yellow>/bp color <Farbe> [Akzent] <gray>– Backpack einfärben (Name oder #RRGGBB)"
   list: "<yellow>/bp list [Spieler] <gray>– Backpacks auflisten (anklickbar)"
@@ -116,6 +117,10 @@ list:
 give:
   success: "<green><amount>x <white><tier></white> an <white><player></white> gegeben."
   received: "<green>Du hast <white><amount>x <tier></white> erhalten."
+
+achievement:
+  unlocked: "<gradient:#6E5BC8:#5BE8D4><bold>Erfolg freigeschaltet!</bold></gradient> <white><title></white> <dark_gray>– <gray><desc>"
+  broadcast: "<gray><player> hat den Erfolg <white><title></white> freigeschaltet."
 
 reload:
   success: "<green>Konfiguration neu geladen."

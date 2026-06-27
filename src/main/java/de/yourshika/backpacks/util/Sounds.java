@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
  * Spielt konfigurierbare UI-Sounds (Adventure). Alle Sounds sind optional und
  * über {@code sounds.*} in der config.yml ein-/ausschaltbar und austauschbar.
  *
- * <p>Events: {@code open}, {@code upgrade}, {@code sort}, {@code error}.
+ * <p>Events: {@code open}, {@code upgrade}, {@code sort}, {@code error}, {@code pickup}.
  * Ein Sound wird übersprungen, wenn {@code sounds.enabled} aus ist oder der
  * Key leer bzw. {@code "none"} ist.</p>
  */
@@ -40,6 +40,8 @@ public final class Sounds {
             case "upgrade" -> "minecraft:block.anvil.use";
             case "sort" -> "minecraft:block.barrel.close";
             case "error" -> "minecraft:block.note_block.bass";
+            case "pickup" -> "minecraft:entity.item.pickup";
+            case "achievement" -> "minecraft:ui.toast.challenge_complete";
             default -> "none";
         };
     }
@@ -50,6 +52,8 @@ public final class Sounds {
             case "upgrade" -> 1.0F;
             case "sort" -> 1.3F;
             case "error" -> 0.7F;
+            case "pickup" -> 1.6F;
+            case "achievement" -> 1.0F;
             default -> 1.0F;
         };
     }

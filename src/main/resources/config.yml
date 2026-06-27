@@ -60,6 +60,16 @@ rename:
   allow-players: true
 
 # ---------------------------------------------------------------------------
+#  Achievements (eigener Reiter über /bp achievements)
+# ---------------------------------------------------------------------------
+achievements:
+  enabled: true          # Achievement-System global an/aus
+  broadcast: false       # true = Freischaltung an alle Spieler ansagen
+  # IDs hier listen, um einzelne Achievements abzuschalten (siehe /bp achievements).
+  # Beispiel: disabled: ["collector", "fill"]
+  disabled: []
+
+# ---------------------------------------------------------------------------
 #  Mülleimer-Upgrade (Trash)
 # ---------------------------------------------------------------------------
 trash:
@@ -456,8 +466,8 @@ upgrades:
         shape: [" Y ", "OUO", " O "]
         ingredients: { Y: ENDER_EYE, O: OBSIDIAN }
       compacting:
-        shape: ["III", "IUI", "III"]
-        ingredients: { I: IRON_INGOT }
+        shape: ["PIP", "IUI", "PIP"]
+        ingredients: { P: PISTON, I: IRON_BLOCK }
       smelting:
         shape: [" B ", "FUF", " B "]
         ingredients: { B: BLAZE_POWDER, F: FURNACE }
@@ -477,8 +487,8 @@ upgrades:
         shape: [" E ", "BUB", " E "]
         ingredients: { E: EMERALD, B: EXPERIENCE_BOTTLE }
       everlasting:
-        shape: [" N ", "OUO", " O "]
-        ingredients: { N: NETHERITE_INGOT, O: OBSIDIAN }
+        shape: ["OSO", "NUN", "OOO"]
+        ingredients: { O: OBSIDIAN, S: NETHER_STAR, N: NETHERITE_INGOT }
 
 # ---------------------------------------------------------------------------
 #  Externe Module / Hooks

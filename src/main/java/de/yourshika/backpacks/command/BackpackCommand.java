@@ -68,6 +68,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "locate" -> locate(sender, args);
             case "goto", "tp" -> gotoBackpack(sender, args);
             case "info", "recipes", "rezepte" -> info(sender);
+            case "achievements", "achievement", "ach" -> achievements(sender);
             case "recall" -> recall(sender);
             case "modules", "module" -> modules(sender);
             case "assets" -> assets(sender, args);
@@ -84,6 +85,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "help.header");
         msg.sendRaw(sender, "help.open");
         msg.sendRaw(sender, "help.info");
+        msg.sendRaw(sender, "help.achievements");
         msg.sendRaw(sender, "help.rename");
         msg.sendRaw(sender, "help.list");
         msg.sendRaw(sender, "help.locate");
@@ -106,6 +108,15 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             return;
         }
         de.yourshika.backpacks.gui.InfoMenu.openOverview(plugin, player);
+    }
+
+    private void achievements(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        if (plugin.achievements() == null) return;
+        plugin.achievements().openMenu(player);
     }
 
     private void modules(CommandSender sender) {
@@ -255,6 +266,12 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         items.applyDisplay(item, tier, id, main, accent);
         player.getInventory().setItemInMainHand(item);
         msg.send(sender, "rename.success", ph("name", name));
+        if (plugin.achievements() != null) {
+            plugin.achievements().trigger(player, "rename");
+            if (name.indexOf('&') >= 0 || name.indexOf('<') >= 0) {
+                plugin.achievements().trigger(player, "color_name");
+            }
+        }
     }
 
     private void list(CommandSender sender, String[] args) {
@@ -348,6 +365,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
                 ph("id", id.toString().substring(0, 8)), ph("player", target.getName()));
         msg.send(target, "transfer.received",
                 ph("id", id.toString().substring(0, 8)), ph("player", player.getName()));
+        if (plugin.achievements() != null) plugin.achievements().trigger(player, "transfer");
     }
 
     /** Schreibt den neuen Besitzer in ein Backpack-Item, falls der Spieler es trägt. */
@@ -704,7 +722,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "rename", "list", "locate", "transfer", "recall", "version"));
+            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "achievements", "rename", "list", "locate", "transfer", "recall", "version"));
             if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");

@@ -118,6 +118,8 @@ public final class DyeCraftListener implements Listener {
 
         // 4) Client im nächsten Tick synchronisieren (verhindert Slot-Desync).
         org.bukkit.Bukkit.getScheduler().runTask(plugin, player::updateInventory);
+
+        if (plugin.achievements() != null) plugin.achievements().trigger(player, "dye");
     }
 
     /**

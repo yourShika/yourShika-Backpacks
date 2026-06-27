@@ -32,6 +32,12 @@ public final class AnvilRenameListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         ItemStack base = event.getInventory().getItem(0);
+        // Upgrade-Items (Upgrade-Leder, Tier- & Funktions-Upgrades) dürfen NICHT
+        // im Amboss umbenannt werden – sonst ließe sich die Identität verschleiern.
+        if (base != null && plugin.upgradeItems() != null && plugin.upgradeItems().isAnyUpgrade(base)) {
+            event.setResult(null);
+            return;
+        }
         if (!items.isBackpack(base)) return;
 
         // Zweiten Slot (Kombinieren) ignorieren – wir benennen nur um.

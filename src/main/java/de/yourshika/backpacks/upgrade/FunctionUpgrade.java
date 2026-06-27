@@ -71,8 +71,8 @@ public enum FunctionUpgrade {
     COMPACTING("compacting", "<#D2B48C><bold>Compacting Upgrade</bold></#D2B48C>", 2115,
             List.of("<gray>Compacts 9x stacks into blocks",
                     "<gray>(e.g. Iron Ingot → Iron Block)."),
-            List.of("III", "IUI", "III"),
-            Map.of('I', Material.IRON_INGOT),
+            List.of("PIP", "IUI", "PIP"),
+            Map.of('P', Material.PISTON, 'I', Material.IRON_BLOCK),
             0, null),
 
     SMELTING("smelting", "<#FF8C42><bold>Smelting Upgrade</bold></#FF8C42>", 2117,
@@ -123,9 +123,10 @@ public enum FunctionUpgrade {
 
     EVERLASTING("everlasting", "<#B388FF><bold>Everlasting Upgrade</bold></#B388FF>", 2144,
             List.of("<gray>The dropped backpack is immune to fire, lava,",
-                    "<gray>explosions and <white>never despawns</white>."),
-            List.of(" N ", "OUO", " O "),
-            Map.of('N', Material.NETHERITE_INGOT, 'O', Material.OBSIDIAN),
+                    "<gray>explosions and <white>never despawns</white>.",
+                    "<dark_gray>Needs a Nether Star (Wither)."),
+            List.of("OSO", "NUN", "OOO"),
+            Map.of('O', Material.OBSIDIAN, 'S', Material.NETHER_STAR, 'N', Material.NETHERITE_INGOT),
             0, null);
 
     private final String id;

@@ -132,6 +132,7 @@ public final class PlaceableManager {
         } else {
             player.getInventory().setItemInMainHand(inHand);
         }
+        if (plugin.achievements() != null) plugin.achievements().trigger(player, "place");
         return null;
     }
 
@@ -268,6 +269,7 @@ public final class PlaceableManager {
         manager.storage().save(data);
         player.getInventory().addItem(item).values()
                 .forEach(rest -> player.getWorld().dropItemNaturally(player.getLocation(), rest));
+        if (plugin.achievements() != null) plugin.achievements().trigger(player, "recall");
         return true;
     }
 

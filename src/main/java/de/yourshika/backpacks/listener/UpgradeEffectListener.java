@@ -51,11 +51,14 @@ public final class UpgradeEffectListener implements Listener {
                 java.util.Set.of("pickup", "advanced_pickup"))) return; // nichts ging rein -> normal aufsammeln
 
         event.setCancelled(true);
+        // Feedback-Sound, da der Vanilla-Aufsammel-Sound durch das Canceln entfällt.
+        de.yourshika.backpacks.util.Sounds.play(plugin, player, "pickup");
         if (work.getAmount() <= 0) {
             entity.remove();
         } else {
             entity.setItemStack(work); // Rest liegen lassen
         }
+        plugin.achievements().trigger(player, "pickup");
     }
 
     // --- Everlasting -------------------------------------------------------

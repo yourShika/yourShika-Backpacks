@@ -272,6 +272,9 @@ public final class UpgradeManager implements Listener {
         }
         event.setCurrentItem(upgrade.result());
         saveSmithingUpgrade(upgrade);
+        if (event.getWhoClicked() instanceof org.bukkit.entity.Player p && plugin.achievements() != null) {
+            plugin.achievements().trigger(p, "smithing_up");
+        }
     }
 
     private boolean hasTierUpgradeAddition(SmithingInventory inv) {

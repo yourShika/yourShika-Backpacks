@@ -2,6 +2,7 @@ package de.yourshika.backpacks.listener;
 
 import de.yourshika.backpacks.BackpackManager;
 import de.yourshika.backpacks.YourShikaBackpacks;
+import de.yourshika.backpacks.gui.AchievementMenuHolder;
 import de.yourshika.backpacks.gui.BackpackMenuHolder;
 import de.yourshika.backpacks.gui.FilterMenuHolder;
 import de.yourshika.backpacks.gui.FurnaceMenuHolder;
@@ -378,6 +379,21 @@ public final class BackpackGuiListener implements Listener {
         }
     }
 
+    // Achievements-GUI: reine Anzeige – jede Interaktion blocken.
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onAchievementClick(InventoryClickEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof AchievementMenuHolder) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onAchievementDrag(InventoryDragEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof AchievementMenuHolder) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDrag(InventoryDragEvent event) {
         Inventory top = event.getView().getTopInventory();
@@ -513,6 +529,30 @@ public final class BackpackGuiListener implements Listener {
     public void onUpgradeClose(InventoryCloseEvent event) {
         if (event.getView().getTopInventory().getHolder() instanceof UpgradeMenuHolder holder) {
             manager.saveUpgrades(holder);
+            if (event.getPlayer() instanceof Player player && plugin.achievements() != null) {
+                grantUpgradeAchievements(player, holder);
+            }
+        }
+    }
+
+    /** Vergibt Achievements rund um eingebaute Upgrades beim Schließen der Upgrade-GUI. */
+    private void grantUpgradeAchievements(Player player, UpgradeMenuHolder holder) {
+        var ach = plugin.achievements();
+        java.util.Set<String> fns = manager.functionUpgradesOf(holder.backpackId());
+        if (fns.isEmpty()) return;
+        ach.trigger(player, "upgrade");
+        if (fns.contains("everlasting")) ach.trigger(player, "everlasting");
+        int stations = 0;
+        boolean advanced = false;
+        for (String fn : fns) {
+            var def = de.yourshika.backpacks.upgrade.FunctionUpgrade.byId(fn);
+            if (def != null && def.isStation()) stations++;
+            if (fn.startsWith("advanced_")) advanced = true;
+        }
+        if (advanced) ach.trigger(player, "advanced");
+        if (stations >= 5) ach.trigger(player, "stations");
+        if (fns.size() >= holder.upgradeSlots() && holder.upgradeSlots() > 0) {
+            ach.trigger(player, "full_upgrades");
         }
     }
 

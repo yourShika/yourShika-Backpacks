@@ -49,8 +49,15 @@ public final class UpgradeMagnetTask extends BukkitRunnable {
                 Vector dir = target.toVector().subtract(item.getLocation().toVector());
                 double dist = dir.length();
                 if (dist < 1.2 || dist > radius) continue;          // sehr nah -> normales Aufsammeln
-                item.setVelocity(dir.normalize().multiply(Math.min(0.6, 0.18 * dist)));
+                Vector pull = dir.normalize().multiply(Math.min(0.6, 0.18 * dist));
+                // Items über Blöcke gleiten lassen statt in den Boden zu ziehen (#…):
+                // ein leichter Auftrieb verhindert, dass sie in Blöcken verschwinden.
+                if (pull.getY() < 0.18) pull.setY(0.18);
+                item.setVelocity(pull);
                 processed++;
+            }
+            if (processed > 0 && plugin.achievements() != null) {
+                plugin.achievements().trigger(player, "magnet");
             }
         }
     }
