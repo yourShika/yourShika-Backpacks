@@ -65,12 +65,15 @@ rename:
 achievements:
   enabled: true          # Achievement-System global an/aus (echte MC-Advancements)
   broadcast: true        # true = Freischaltung im Chat ansagen (respektiert announceAdvancements-Gamerule)
-  # Hintergrund-Textur des Achievement-Reiters. Je nach MC-Version unterscheidet
-  # sich das Format. Standard ist die neue Textur-ID (1.21.4+). Falls der
-  # Hintergrund lila/schwarz erscheint, die jeweils andere Variante probieren:
-  #   neu  (1.21.4+):  "minecraft:gui/advancements/backgrounds/gravel"
-  #   alt  (≤1.21.3):  "minecraft:textures/gui/advancements/backgrounds/gravel.png"
-  background: "minecraft:gui/advancements/backgrounds/gravel"
+  # Hintergrund-Textur des Achievement-Reiters. Neue MC-Versionen (26.x) nutzen
+  # die Textur-ID-Konvention (der Client ergänzt automatisch "textures/" + ".png").
+  # Standard ist die garantiert vorhandene Dirt-Block-Textur. Weitere Optionen:
+  #   "minecraft:block/dirt"        -> Erd-Hintergrund (Standard)
+  #   "minecraft:block/stone"       -> Stein
+  #   "minecraft:block/netherrack"  -> Netherrack
+  #   "none"                        -> kein Hintergrund (sauberes, dunkles Fenster)
+  # Ältere Versionen (≤1.21.3) bräuchten den vollen Pfad mit .png – nur dann nötig.
+  background: "minecraft:block/dirt"
   # IDs hier listen, um einzelne Achievements abzuschalten.
   # Beispiel: disabled: ["collector", "fill"]
   disabled: []
