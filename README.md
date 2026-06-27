@@ -1,180 +1,172 @@
 # yourShika Backpack's
 
-> Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
-> Spieler brauchen **keinen Client-Mod**.
+> A standalone, **fully server-side** backpack system for **Paper/Spigot**.
+> Players need **no client mod**.
 
 [![Version](https://img.shields.io/badge/version-1.0.6-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
-[![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
+[![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
-[![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 ---
 
-## 📦 Beschreibung
+## 📦 Description
 
-**yourShika Backpack's** bringt hochwertige, **einfärbbare** Rucksäcke mit eigenen
-Inventaren auf deinen Survival-Server – sicher gegen Dupe-Bugs, persistent
-gespeichert und vorbereitet für eigene Custom-Texturen.
+**yourShika Backpack's** brings high-quality, **dyeable** backpacks with their own
+inventories to your survival server – safe against dupe bugs, persistently stored
+and prepared for custom textures.
 
-Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisticated-backpacks)
-([GitHub](https://github.com/P3pp3rF1y/SophisticatedBackpacks)) inspiriert**, aber eine
-**komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
-Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
-ein Paper/Spigot-Plugin.**
+The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/sophisticated-backpacks)
+([GitHub](https://github.com/P3pp3rF1y/SophisticatedBackpacks))**, but is a
+**completely standalone re-implementation**. **No code, no asset and no texture**
+was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
+Paper/Spigot plugin.**
 
 ---
 
 ## 🐞 v1.0.6
 
-- 🖼️ **Tab-Hintergrund für MC 26.x gefixt** – die neuen Versionen nutzen die
-  Textur-ID-Konvention (Client ergänzt `textures/`+`.png`). Schon der klassische
-  volle Pfad rendert dort als Missing-Texture. Standard ist jetzt die garantiert
-  vorhandene `minecraft:block/dirt`. Per `achievements.background` änderbar
-  (`block/stone`, `block/netherrack`, … oder `none` für kein Hintergrund).
+- 🖼️ **Tab background fixed for MC 26.x** – newer versions resolve the background
+  via the texture-id convention (the client adds `textures/` + `.png`). Even the
+  classic full path renders as a missing texture there. The default is now the
+  guaranteed `minecraft:block/dirt`. Changeable via `achievements.background`
+  (`block/stone`, `block/netherrack`, … or `none` for no background).
 
 ---
 
 ## 🐞 v1.0.5
 
-- 🖼️ **Tab-Hintergrund konfigurierbar + neues Textur-Format** – Standard ist jetzt
-  die 1.21.4-Textur-ID (`achievements.background: minecraft:gui/advancements/backgrounds/gravel`).
-  Falls er lila/schwarz erscheint, lässt sich in der config auf die alte Variante
-  (`minecraft:textures/...png`) umstellen – ohne neuen Release.
-- 📣 **Chat-Broadcast standardmäßig an** – freigeschaltete Achievements werden jetzt
-  per Default im Chat angekündigt (`achievements.broadcast: true`, respektiert die
-  `announceAdvancements`-Gamerule).
-- 🌳 **Schöneres Menü** – die Achievements sind jetzt in thematische Zweige
-  (Tiers, Anpassung, Platzieren, Upgrades, Stationen) verkettet statt in einer
-  langen Spalte; Tier-Erfolge als „goal", schwere als „challenge"-Rahmen.
+- 🖼️ **Tab background configurable + new texture format** – it can be changed in
+  the config without a new release if it shows up as missing texture.
+- 📣 **Chat broadcast on by default** – unlocked achievements are now announced in
+  chat by default (`achievements.broadcast: true`, respects the
+  `announceAdvancements` gamerule).
+- 🌳 **Nicer menu** – achievements are now chained into themed branches (tiers,
+  customization, placing, upgrades, stations) instead of one long column; tier
+  achievements use the "goal" frame, hard ones the "challenge" frame.
 
 ---
 
 ## 🐞 v1.0.4
 
-- 🖼️ **Tab-Hintergrund gefixt** – nutzt jetzt die dedizierte Advancement-Background-
-  Textur (`gui/advancements/backgrounds/stone.png`) statt `block/dirt.png`, das in
-  dieser Version als Missing-Texture (lila/schwarz) erschien.
-- 👀 **Reiter & alle Achievements sichtbar** – der (unsichtbare) Root wird jedem
-  Spieler beim Beitritt vergeben, damit der Achievement-Reiter erscheint und **alle**
-  Achievements (ausgegraut bis erreicht) angezeigt werden.
+- 🖼️ Switched the tab background to a dedicated advancement background texture.
+- 👀 **Tab & all achievements visible** – the (invisible) root is granted to every
+  player on join so the achievement tab appears and **all** achievements (greyed
+  out until earned) are shown.
 
 ---
 
 ## 🐞 v1.0.3
 
-- 🛠️ **Advancement-Datapack-Fix** – das `background`-Feld des Achievement-Tabs muss
-  ein String sein; dadurch ließen sich die Advancements in v1.0.2 nicht laden
-  (`Not a string: {...}`). Jetzt korrekt, der Tab und alle Erfolge laden sauber.
+- 🛠️ **Advancement datapack fix** – the `background` field of the achievement tab
+  must be a string; otherwise the advancements failed to load (`Not a string:
+  {...}`). The tab and all achievements load cleanly now.
 
 ---
 
-## ✨ Neu in v1.0.2
+## ✨ v1.0.2
 
-- 🏆 **Achievements sind jetzt echte Minecraft-Advancements** – statt eines eigenen
-  Befehls/Menüs erscheinen sie als **eigener Reiter** („yourShika Backpack's") im
-  normalen Advancement-Screen (Toast + Fortschritt von Vanilla). Dafür legt das
-  Plugin automatisch einen kleinen Datapack an und lädt ihn beim ersten Start.
-  Weiterhin über `achievements.enabled` / `broadcast` / `disabled` konfigurierbar.
-- 🧹 `/bp achievements` entfällt (durch die native Integration ersetzt).
-
----
-
-## ✨ Neu in v1.0.1
-
-- 🏅 **Achievements** – ein eigener Reiter über **`/bp achievements`** mit **28
-  Erfolgen** (Titel, Beschreibung, Icon; freigeschaltete glänzen). Beim Erreichen
-  gibt's Nachricht + Sound, optional serverweite Ansage. Vollständig **konfigurierbar**
-  (`achievements.enabled` / `broadcast` / einzelne via `achievements.disabled`).
-- 🔊 **Pickup-Sound** – das Pickup-Upgrade gibt beim Einsaugen einen Aufsammel-Sound.
-- 🧲 **Magnet** zieht Items jetzt **über Blöcke** statt sie in den Boden zu ziehen
-  (leichter Auftrieb, nichts verschwindet mehr).
-- 🛠️ **Compacting-Rezept überarbeitet** – kollidierte vorher mit dem Iron-Upgrade;
-  jetzt aus **Pistons + Eisenblöcken** (eigenständig & etwas anspruchsvoller).
-- 💀 **Everlasting teurer** – braucht jetzt einen **Nether-Stern** (Wither) + Netherite + Obsidian.
-- 🔒 **Amboss-Schutz** – Upgrade-Items (Upgrade-Leder, Tier- & Funktions-Upgrades)
-  lassen sich **nicht** mehr im Amboss umbenennen.
+- 🏆 **Achievements are now real Minecraft advancements** – instead of a custom
+  command/menu they appear as their **own tab** ("yourShika Backpack's") in the
+  normal advancements screen (toast + progress handled by vanilla). The plugin
+  generates a small datapack automatically and loads it on first start. Still
+  configurable via `achievements.enabled` / `broadcast` / `disabled`.
+- 🧹 `/bp achievements` was removed (replaced by the native integration).
 
 ---
 
-## 🎉 v1.0.0 – Erstes stabiles Release
+## ✨ v1.0.1
 
-Der erste offizielle Meilenstein. Enthält alle Features der 0.x-Reihe –
-Tiers & Upgrade-Kette, einfärbbare Backpacks, platzierbare Backpacks mit
-Hologramm, funktionale Upgrades (Pickup, Magnet, Crafting/Smithing/Stonecutter,
-portable Furnace/Smoker/Blast Furnace mit Hintergrund-Betrieb, Compacting mit
-Filter, Ender-Link, Trash, Recall, Everlasting, **XP-Storage**), dupe-sichere
-Speicherung, Oraxen-Assets inkl. 3D-Modelle für platzierte Backpacks, sowie
-Mehrsprachigkeit (EN/DE/PL).
-
-- 🧪 **XP-Storage-Upgrade** hat jetzt ein eigenes, zum Stil passendes Item-Asset
-  (Erfahrungsfläschchen) für Oraxen.
-- 🏷️ **Tier-Upgrade behält den Namen** – beim Veredeln im Smithing Table bleibt
-  ein selbst vergebener Backpack-Name (inkl. Farben) erhalten.
-- ✅ Abschluss-Review: Assets, Code und Rezepte geprüft; CI-Modell-Check grün.
+- 🏅 **Achievements** – 28 achievements (title, description, icon). Unlocking gives
+  a message + sound, optional server-wide announcement. Fully **configurable**.
+- 🔊 **Pickup sound** – the Pickup upgrade plays a pickup sound when vacuuming items.
+- 🧲 **Magnet** now pulls items **over blocks** instead of dragging them into the
+  ground (a slight lift, nothing disappears anymore).
+- 🛠️ **Compacting recipe reworked** – it collided with the Iron upgrade before; now
+  made from **pistons + iron blocks** (distinct and a bit harder).
+- 💀 **Everlasting more expensive** – now needs a **Nether Star** (Wither) + netherite + obsidian.
+- 🔒 **Anvil protection** – upgrade items (Upgrade Leather, tier & function upgrades)
+  can **no longer** be renamed in an anvil.
 
 ---
 
-## ✨ Neu in v0.9.1
+## 🎉 v1.0.0 – First stable release
 
-- 🪪 **Hologramm-Name korrekt gerendert** – platzierte Rucksäcke mit Gradient-/Hex-/
-  Farbcode-Namen zeigen den Namen jetzt richtig an (statt z.B. „<#aabbcc>…").
-- 🧪 **Neues XP-Storage-Upgrade** – speichere deine **Erfahrung** im Rucksack und
-  hole sie jederzeit wieder ab. Eigener Button in der Steuerleiste mit GUI
-  (Einzahlen/Auszahlen, 1 Level oder alles) und Live-Anzeige des gespeicherten XP.
+The first official milestone. Contains all features of the 0.x line – tiers &
+upgrade chain, dyeable backpacks, placeable backpacks with holograms, functional
+upgrades (Pickup, Magnet, Crafting/Smithing/Stonecutter, portable
+Furnace/Smoker/Blast Furnace with background operation, Compacting with filter,
+Ender-Link, Trash, Recall, Everlasting, **XP Storage**), dupe-safe storage, Oraxen
+assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/PL).
 
----
-
-## ✨ Neu in v0.9.0
-
-- 🏷️ **Umbenennen im Amboss** – Backpacks lassen sich jetzt direkt im **Anvil**
-  umbenennen, mit voller Farb-Unterstützung: **Hex** (`&#RRGGBB` / `<#RRGGBB>`),
-  **Gradient/Rainbow** (`<gradient:#a:#b>…`) und **Minecraft-Farbcodes** (`&a`, `&l` …).
-- 🧷 **Name bleibt beim Platzieren erhalten** – ein platzierter und wieder
-  aufgehobener Rucksack verliert seinen Custom-Namen nicht mehr (Name wird
-  serverseitig mitgespeichert).
-- 🔥 **Portable Furnace läuft im Hintergrund** – Schmelz-Stationen arbeiten weiter,
-  auch wenn das Menü geschlossen ist. Das **Furnace-Icon im Rucksack** zeigt eine
-  **live aktualisierte Lore**: was gerade verschmolzen wird, Brennstoff-Art/-Menge
-  und wie viele Items insgesamt verschmolzen werden.
-- 🧱 **Compacting-Chat-Meldung** – beim Schließen meldet der Rucksack, was verdichtet
-  wurde (z.B. „3x Diamond Block").
-- 👤 **`/bp recall`-Menü** zeigt jetzt den **Besitzer** jedes platzierten Backpacks.
-- 🗑️ **Trash schützt Backpacks** – Rucksäcke (auch in Shulker/Bundle) können nicht
-  mehr in den Trash gelegt werden.
-- 🎛️ **Stations-Limit** – pro Rucksack passen maximal **5 Stations-Upgrades**, damit
-  alle Icons in der Steuerleiste sichtbar bleiben und sich nicht um Plätze streiten.
+- 🧪 The **XP Storage upgrade** now has its own, style-matching item asset
+  (experience bottle) for Oraxen.
+- 🏷️ **Tier upgrade keeps the name** – a custom backpack name (incl. colors) is kept
+  when upgrading at the smithing table.
+- ✅ Final review: assets, code and recipes checked; CI model check green.
 
 ---
 
-## ✨ Neu in v0.8.0
+## ✨ v0.9.1
 
-**Commands & Verwaltung**
-- 🏷️ **`/bp rename <Name|reset>`** – Backpacks umbenennen (Config `rename.allow-players`, Admins immer)
-- 🖱️ **Anklickbares `/bp list`** – `[Open]` `[Copy]` `[TP]`
-- 📍 **`/bp locate [Spieler|ID]`** + **`/bp goto <ID>`** – platzierte Backpacks orten & hin-teleportieren
-- 🔁 **`/bp transfer <ID> <Spieler>`** – Besitzer ändern
-- 🎯 **`/bp recall`** öffnet bei mehreren Backpacks ein **Auswahlmenü** (sonst direkt)
-- 🧰 **`/bp assets <status|redeploy>`** & **`/bp doctor`** (Diagnose)
-- 📝 **Admin-Audit-Log** (`audit.log`): Give/OpenID/Transfer/Recall/Pickup
-- 🔢 **Mehr PlaceholderAPI**: `placed`, `used_slots`, `free_slots`, `tiers`, `count_<tier>`
+- 🪪 **Hologram name rendered correctly** – placed backpacks with gradient/hex/
+  color-code names now show the name properly (instead of e.g. "<#aabbcc>…").
+- 🧪 **New XP Storage upgrade** – store your **experience** in the backpack and
+  withdraw it any time. Own button in the control bar with a GUI
+  (deposit/withdraw, 1 level or all) and a live display of the stored XP.
+
+---
+
+## ✨ v0.9.0
+
+- 🏷️ **Rename in the anvil** – backpacks can be renamed directly in an **anvil**,
+  with full color support: **hex** (`&#RRGGBB` / `<#RRGGBB>`),
+  **gradient/rainbow** (`<gradient:#a:#b>…`) and **Minecraft color codes** (`&a`, `&l` …).
+- 🧷 **Name persists when placed** – a placed and then picked-up backpack no longer
+  loses its custom name (the name is stored server-side).
+- 🔥 **Portable furnace runs in the background** – smelting stations keep working
+  even when the menu is closed. The **furnace icon in the backpack** shows a
+  **live-updating lore**: what is being smelted, fuel type/amount and how many
+  items will be smelted in total.
+- 🧱 **Compacting chat message** – on close the backpack reports what was compacted
+  (e.g. "3x Diamond Block").
+- 👤 **`/bp recall` menu** now shows the **owner** of each placed backpack.
+- 🗑️ **Trash protects backpacks** – backpacks (also inside shulkers/bundles) can no
+  longer be put into the trash.
+- 🎛️ **Station limit** – at most **5 station upgrades** fit per backpack so all icons
+  in the control bar stay visible and don't fight for space.
+
+---
+
+## ✨ v0.8.0
+
+**Commands & management**
+- 🏷️ **`/bp rename <name|reset>`** – rename backpacks (config `rename.allow-players`, admins always)
+- 🖱️ **Clickable `/bp list`** – `[Open]` `[Copy]` `[TP]`
+- 📍 **`/bp locate [player|ID]`** + **`/bp goto <ID>`** – locate placed backpacks & teleport to them
+- 🔁 **`/bp transfer <ID> <player>`** – change owner
+- 🎯 **`/bp recall`** opens a **selection menu** when you have several backpacks (otherwise direct)
+- 🧰 **`/bp assets <status|redeploy>`** & **`/bp doctor`** (diagnostics)
+- 📝 **Admin audit log** (`audit.log`): give/openid/transfer/recall/pickup
+- 🔢 **More PlaceholderAPI**: `placed`, `used_slots`, `free_slots`, `tiers`, `count_<tier>`
 
 **GUI**
-- 📊 Info-Item zeigt **belegte/freie Slots**
-- ⏮️ **Shift-Klick** auf die Blätter-Pfeile springt zur **ersten/letzten Seite**
+- 📊 Info item shows **used/free slots**
+- ⏮️ **Shift-click** the paging arrows jumps to the **first/last page**
 
-**Platzierte Backpacks**
-- 🧭 Drehen sich **nach Blickrichtung**; optionales **Hologramm (Name + Besitzer)**; **Partikel + Sound** beim Platzieren/Aufheben
+**Placed backpacks**
+- 🧭 Rotate to **face the player**; optional **hologram (name + owner)**; **particles + sound** when placing/picking up
 
 **Upgrades**
-- 🗑️ **Trash mit Lösch-Bestätigung** (`trash.confirm`) – Schließen ohne Klick gibt Items zurück
-- 🧱 **Compacting-Preview** (Chat) + **Presets** (Erze/Farm/Redstone/Sonstiges)
-- 🧲 **Magnet**: Drossel gegen Lag + Respekt für Item-Owner & Pickup-Delay
+- 🗑️ **Trash with delete confirmation** (`trash.confirm`) – closing without a click returns the items
+- 🧱 **Compacting preview** (chat) + **presets** (ores/farm/redstone/misc)
+- 🧲 **Magnet**: throttle against lag + respect for item owner & pickup delay
 
-**Robustheit & CI**
-- 🛡️ **Deep-Nesting-Schutz**: Backpacks in Shulker/Bundle werden erkannt & blockiert
-- ♻️ **Auto-Recovery**: Speichern beim Seitenwechsel + Crash-Erkennung
-- ✅ **Rezept-Validierung** mit klaren Config-Fehlermeldungen
-- 🤖 **CI-Asset-Check**: verhindert einseitige Faces in Oraxen-Modellen
+**Robustness & CI**
+- 🛡️ **Deep-nesting protection**: backpacks in shulkers/bundles are detected & blocked
+- ♻️ **Auto-recovery**: save on page change + crash detection
+- ✅ **Recipe validation** with clear config error messages
+- 🤖 **CI asset check**: prevents one-sided faces in Oraxen models
 
 ---
 
@@ -208,9 +200,6 @@ Mehrsprachigkeit (EN/DE/PL).
   `config.yml` (config version 7, auto-migrates).
 - 📖 **`/bp info`:** recipe arrows are now just `→` / `↓`; advanced upgrades show the
   required **base upgrade** as the `X` ingredient.
-- 🧊 **Placed backpacks** keep the 3D models introduced in v0.7.0. *(A 3D model for
-  the held item is prepared on the `release/v0.7.1` branch and still needs in-game
-  verification before it lands here, to avoid overwriting the current textures.)*
 
 ---
 
@@ -220,8 +209,7 @@ Mehrsprachigkeit (EN/DE/PL).
   mount – horses, **zombie/skeleton horses**, donkeys, mules, llamas, camels –
   via interaction, inventory, or **dispenser**.
 - **Smelting status** is shown in the backpack's Info item: how much is left to
-  smelt, how many items the fuel can smelt, and an estimated time
-  (smelting pauses while the backpack is open).
+  smelt, how many items the fuel can smelt, and an estimated time.
 - Backpack Info item is now English.
 
 ---
@@ -233,13 +221,8 @@ Mehrsprachigkeit (EN/DE/PL).
   your edits are kept).
 - 🎒 **`/bp give` now gives everything** – backpacks, Upgrade Leather, tier
   upgrades (`upgrade_copper` …) and every function upgrade (`pickup`, `magnet` …).
-- 🧩 **New functional upgrades:**
-  - **Ender-Link** – opens your **ender chest** from the backpack.
-  - **Compacting** – compacts 9× stacks into blocks on close (iron → iron block, …).
-  - **Smelting / Blasting / Smoking** – auto-cooks items in the backpack using
-    **fuel** placed inside it.
-  - **Recall** – `/bp recall` returns your placed backpacks (needs the upgrade).
-  - **Trash** – a button opens a trash menu; items left inside are deleted.
+- 🧩 **New functional upgrades:** Ender-Link, Compacting, Smelting/Blasting/Smoking,
+  Recall, Trash.
 - 🔗 **Advanced upgrades require their base** to craft (e.g. Advanced Pickup needs
   a Pickup Upgrade).
 - 🧹 **PacketEvents removed** – placement uses vanilla display entities and never
@@ -251,389 +234,321 @@ Mehrsprachigkeit (EN/DE/PL).
 ## ✨ v0.5.0 (English + Functional Upgrades)
 
 - 🌐 **Plugin is now English by default** (`language: en`, `messages_en.yml`).
-  German is still bundled (`messages_de.yml`) and comes back as a full option later.
-- 🧩 **Functional upgrades** you craft and install into a backpack (via its
-  **Upgrades** menu):
-  - **Pickup / Advanced Pickup** – picked-up items go straight into the backpack
-    (advanced also vacuums a small radius).
-  - **Magnet / Advanced Magnet** – pulls nearby dropped items towards you.
-  - **Crafting / Stonecutter / Smithing** – open that station from a button in
-    the backpack GUI.
-  - **Everlasting** – the dropped backpack is immune to fire, lava, explosions
-    and never despawns.
-  - Each has a **fair recipe** (`'U'` = Upgrade Leather) and appears in
-    **`/bp info` → Function Upgrades**.
-- 📖 **`/bp info`** fully English; smithing view reworked (inputs in a row, a
-  **centered arrow**, the **result above the Back button**).
-- 📦 **PacketEvents:** placement uses vanilla display entities and does **not**
-  require it. Optional `placeable.require-packetevents: true` only allows placing
-  while PacketEvents is installed & enabled.
+- 🧩 **Functional upgrades** you craft and install into a backpack: Pickup/Advanced
+  Pickup, Magnet/Advanced Magnet, Crafting/Stonecutter/Smithing, Everlasting. Each
+  has a fair recipe (`'U'` = Upgrade Leather) and appears in `/bp info`.
+- 📖 **`/bp info`** fully English; smithing view reworked.
 - 🗂️ **Config version 5** (auto-migrates; old file backed up).
 
 ---
 
-## 🐞 v0.4.0 (Stabilität & Module)
+## 🐞 v0.4.0 (Stability & Modules)
 
-- **Vanilla-like Oraxen-Defaults:** Backpack-Texturen nutzen jetzt die
-  mitgelieferte Bundle-Referenz als Stilbasis. Alle Pack-PNGs sind 64x64, aber
-  aus echter 16x16-Pixelart hochskaliert, damit sie in Minecraft natürlicher
-  wirken.
-- **Kein Freeze/Crash mehr beim Modul-Umschalten.** Ursache war das wiederholte
-  Neu-Registrieren von Rezepten (`Bukkit.removeRecipe` löst je Aufruf einen
-  vollen Rezept-/Advancement-Reload aus). Rezepte werden jetzt **idempotent**
-  registriert und beim Umschalten **gar nicht** mehr angefasst.
-- **Oraxen aus = zurück zu normaler Pferderüstung.** Beim Abschalten des
-  Oraxen-Moduls wird das Custom-Modell sauber **entfernt**; beim Einschalten
-  werden die Backpacks online befindlicher Spieler **automatisch aktualisiert**
-  (danach ggf. `/oraxen reload`).
-- **Module-/Info-GUIs:** Items lassen sich nicht mehr entnehmen/verschieben
-  (war eine Folge des Freezes).
-- **`/bp info`:** Smithing-Rezepte sauberer dargestellt, Slot-Beschriftungen auf
-  Englisch (Template / Base / Addition) – passend zum Smithing Table.
+- **Vanilla-like Oraxen defaults:** backpack textures use the bundled reference as
+  their style base. All pack PNGs are 64x64, upscaled from real 16x16 pixel art.
+- **No more freeze/crash when toggling modules.** Recipes are now registered
+  **idempotently** and not touched when toggling.
+- **Oraxen off = back to normal horse armor.** Disabling the Oraxen module removes
+  the custom model cleanly; enabling auto-updates online players' backpacks.
+- **Module/info GUIs:** items can no longer be taken/moved.
+- **`/bp info`:** smithing recipes shown more clearly with English slot labels.
 
 ---
 
-## ✨ Neu in v0.3.5
+## ✨ v0.3.5
 
-- 🎨 **Echte zweite Akzentfarbe** über Oraxen-Varianten (z. B.
-  `ysbp_leather_backpack_accent_red`). Die **Hauptfarbe** bleibt echtes
-  `LEATHER_HORSE_ARMOR`-Tinting.
-- 🧩 **Oraxen-YAMLs** mit **178 eindeutigen** Provider-/CustomModelData-Werten.
-- 📦 **Versionierter Asset-Deployer:** aktualisiert alte Defaults und legt
-  Backups unter `AssetBackups/` an.
-- 🛟 **Oraxen-Item-YAMLs** werden **vor dem Überschreiben gesichert**.
-- ⚒️ **Smithing-Fix:** Tier & Farbe werden erst beim `SmithItemEvent` geschrieben,
-  nicht mehr in der Vorschau.
-- 🧹 Alter `hooks.experimental`-Kommentar aus der `plugin.yml` entfernt.
+- 🎨 **Real second accent color** via Oraxen variants (e.g.
+  `ysbp_leather_backpack_accent_red`). The **main color** stays real
+  `LEATHER_HORSE_ARMOR` tinting.
+- 🧩 **Oraxen YAMLs** with **178 unique** provider/CustomModelData values.
+- 📦 **Versioned asset deployer:** updates old defaults and creates backups under
+  `AssetBackups/`.
+- 🛟 **Oraxen item YAMLs** are **backed up before overwriting**.
+- ⚒️ **Smithing fix:** tier & color are written on `SmithItemEvent`, not in the preview.
 
 ---
 
-## ✨ Neu in v0.3.0
+## ✨ v0.3.0
 
-- 🖼️ **Oraxen-Texturen integriert:** Ist das **Oraxen**-Modul aktiv, liefert das
-  Plugin mitgelieferte Texturen & Item-Definitionen automatisch aus
-  (`plugins/yourShika Backpack's/Textures/` zum Austauschen, Kopie nach Oraxen).
-  Backpacks & Upgrade-Items erhalten so eigene Modelle – einfach `/oraxen reload`.
-- 📖 **`/bp info` – Rezept-Browser:** Eine schöne GUI mit allen Rücksäcken und
-  Upgrade-Items. Klick auf ein Item zeigt sein **Crafting-/Smithing-Rezept**
-  (visuell, inkl. Zutaten & Ergebnis).
-- 🔄 **Auto-Aktualisierung bestehender Rucksäcke:** Bei jedem Öffnen werden
-  Name, Lore und Modell auf den aktuellen Stand gebracht – **ohne** ID, Farbe,
-  Besitzer oder Inhalt zu verändern. Änderungen an Tier-Texten greifen so auch
-  rückwirkend.
-- 🔒 **Upgrade-Items missbrauchssicher:** Upgrade-Leder und Tier-Upgrades lassen
-  sich **nur** in den Backpack-Rezepten verwenden – nicht mehr als Leder/Papier
-  für Bücher, Karten o.ä.
-- 🎨 **Doppelte Farb-Anzeige entfernt** (Vanilla-Dye-Tooltip ausgeblendet),
-  Namen & Lore aufpoliert.
-- 🐞 **Dye-Färben** wieder zuverlässig entnehmbar (robuste Ergebnis-Ausgabe).
+- 🖼️ **Oraxen textures integrated:** when the Oraxen module is active, the plugin
+  ships bundled textures & item definitions automatically. Just `/oraxen reload`.
+- 📖 **`/bp info` – recipe browser:** a GUI with all backpacks and upgrade items;
+  clicking an item shows its crafting/smithing recipe.
+- 🔄 **Auto-update of existing backpacks:** name, lore and model are brought up to
+  date on each open – **without** changing ID, color, owner or contents.
+- 🔒 **Upgrade items abuse-proof:** Upgrade Leather and tier upgrades can **only**
+  be used in the backpack recipes.
+- 🎨 Removed the duplicate color display; polished names & lore.
+- 🐞 Dyeing is reliably retrievable again.
 
 ---
 
 ## 🔧 v0.2.2
 
-- **Farb-Bug behoben:** Eingefärbte Backpacks behalten ihre Farbe jetzt auch
-  nach dem **Platzieren & Aufheben** (vorher Rücksprung auf Default).
-- **Upgrade-Farben:** Beim Veredeln werden **Standard-Farben** auf das neue Tier
-  angehoben, **individuell gefärbte** Backpacks behalten ihre Farbe.
-- **Hooks automatisch an:** Externe Hooks aktivieren sich selbst, sobald das
-  jeweilige Plugin installiert ist (kein „experimental"-Schalter mehr).
-- **Besitzer:** Jedes Backpack merkt sich, **wer es gecraftet** hat (in der Lore).
-  Optional `security.owner-only: true` → nur Besitzer (oder Admins) dürfen öffnen
-  und ein platziertes Backpack aufheben. **Standard: aus** (jeder darf).
-- **Lore aufgeräumt:** „(Roadmap)" entfernt, Besitzer-Zeile ergänzt.
-- **Upgrade-Items vorbereitet für eigene Texturen:** CustomModelData (2000–2006)
-  und optionales `item_model` je Upgrade in der Config einstellbar.
-- **Netherite-Upgrade** wird (wie gewünscht) im **Smithing Table** erstellt.
-- Hinweis bleibt: In **JEI/REI/EMI** zeigen die **Zutaten** der Smithing-
-  Veredelung das generische Item (z. B. *Horse Leather Armor* / *Paper*) – das ist
-  technisch bedingt (siehe unten), das **Ergebnis** ist korrekt benannt.
+- **Color bug fixed:** dyed backpacks keep their color even after **placing &
+  picking up** (previously reverted to default).
+- **Upgrade colors:** default colors are raised to the new tier on upgrade,
+  individually dyed backpacks keep their color.
+- **Hooks auto-on:** external hooks activate themselves once the respective plugin
+  is installed.
+- **Owner:** every backpack remembers **who crafted it**. Optional
+  `security.owner-only: true` → only owner (or admins) may open/pick up. Default: off.
+- **Upgrade items prepared for custom textures:** CustomModelData (2000–2006) and
+  optional `item_model` per upgrade, configurable.
+- **Netherite upgrade** is created in the **smithing table**.
 
 ---
 
 ## 🔧 v0.2.1 (Bugfixes)
 
-- **Config-Auto-Update:** Bei Struktur-Änderungen aktualisiert sich die
-  `config.yml` automatisch (alte Datei wird als `config-backup-*.yml` gesichert) –
-  so greifen neue Tiers/Rezepte/Upgrade-Regeln auch auf bestehenden Servern.
-- **Nur Leder ist direkt craftbar** – alle höheren Tiers entstehen ausschließlich
-  über die **Upgrade-Kette** (Smithing). Alte Direkt-Rezepte sind deaktiviert.
-- **ID erscheint sofort** in der Lore beim Craften (vorher erst nach dem Öffnen).
-- **Netherite-Upgrade** wird jetzt im **Smithing Table** erstellt
-  (Upgrade-Leder + Netherite-Ingot + Faden — Minecraft-Smithing braucht 3 Slots).
-- **Upgrade-Leder** wird im **Vorlage-Slot** (Leder) der Veredelung **abgelehnt**.
-- **Dye-Färben:** Ergebnis lässt sich jetzt zuverlässig entnehmen (landet im Inventar).
-- **PacketEvents statt ProtocolLib** als (Roadmap-)Hook.
-- Hinweis: In **JEI/REI/EMI** zeigt der Basis-Slot der Smithing-Veredelung das
-  generische *Horse Leather Armor* – technisch bedingt, weil das Rezept **jedes**
-  Backpack dieses Tiers akzeptieren muss (das **Ergebnis** zeigt korrekt den Ziel-Rucksack).
+- **Config auto-update:** on structure changes `config.yml` updates itself (old
+  file backed up as `config-backup-*.yml`).
+- **Only leather is directly craftable** – all higher tiers come from the upgrade
+  chain (smithing).
+- **ID appears immediately** in the lore on crafting.
+- **Netherite upgrade** is now created in the **smithing table**.
+- **Upgrade Leather** is **rejected** in the template slot of the upgrade.
+- **Dyeing:** the result can now reliably be taken out (lands in the inventory).
 
 ---
 
-## 🆕 Neu in v0.2.0
+## 🆕 v0.2.0
 
-- 🔒 **Update-sichere Speicherung (MUSS):** Inhalte werden im versionierten
-  Paper-Byte-Format gespeichert (mit Minecraft-Datenversion + DataFixer). Items
-  – **inklusive beliebiger Custom-NBT/Components** – überstehen Server- und
-  Plugin-Updates unbeschädigt. Alte Daten werden automatisch migriert.
-- 🧵 **Upgrade-Kette:** **Leder → Copper → Eisen → Gold → Diamant → Smaragd →
-  Netherite**. Aus **Upgrade-Leder** (Leder + Faden) werden mit Tier-Material
-  **Tier-Upgrades**; die **Veredelung** läuft im **Smithing Table** und
-  **erhält ID, Inhalt und Farbe** des Backpacks.
-- 🧰 **Upgrade-GUI:** Eigenes Inventar je Backpack (Button in der Backpack-GUI),
-  in das nur Upgrade-Items passen – server-seitig gespeichert.
-- 🎨 **Dye-Färben im Crafting Table:** Backpack in die Mitte, Färbemittel in die
-  **linke Spalte = Hauptfarbe**, **rechte Spalte = Akzentfarbe** (positions-
-  unabhängig, mehrere Dyes werden zu **Hex** gemischt). Der Inhalt bleibt erhalten.
-- 📦 **Platzierbare Backpacks:** **Shift-Rechtsklick** auf den Boden platziert
-  (ItemDisplay + Interaction), **Rechtsklick öffnet**, **Sneak-Rechtsklick hebt
-  auf** – persistent über Neustarts, geschützt vor Explosionen, nicht per Hopper
-  auslesbar.
-- 🐴 **Schutz:** Backpacks lassen sich **nicht** als Pferderüstung anlegen und
-  **nicht** in Hopper/Automationen bewegen.
-- 🔁 **`/bp update`:** Lädt die neueste Release-JAR von GitHub in den
-  `plugins/update/`-Ordner (Übernahme beim Neustart; Daten bleiben erhalten).
-- 🧪 **Module-GUI:** `/bp modules` schaltet Hooks **per Klick** live an/aus.
-- 📖 **Recipe Book + JEI/REI/EMI:** Alle echten Rezepte (Backpacks, Upgrades,
-  Smithing) sind freigeschaltet und sichtbar.
-- ➖ **Custom-Item-Hooks:** nur noch **Oraxen** (Nexo & ItemsAdder entfernt).
+- 🔒 **Update-safe storage (MUST):** contents are stored in the versioned Paper byte
+  format (with Minecraft data version + DataFixer). Items – **including arbitrary
+  custom NBT/components** – survive server and plugin updates intact.
+- 🧵 **Upgrade chain:** **Leather → Copper → Iron → Gold → Diamond → Emerald →
+  Netherite**. The smithing-table upgrade **keeps ID, contents and color**.
+- 🧰 **Upgrade GUI:** a dedicated inventory per backpack (button in the backpack GUI).
+- 🎨 **Dyeing in the crafting table:** backpack in the center, dyes in the **left
+  column = main color**, **right column = accent color** (mixed to **hex**).
+- 📦 **Placeable backpacks:** **shift-right-click** the ground to place
+  (ItemDisplay + Interaction), **right-click opens**, **sneak-right-click picks up**.
+- 🐴 **Protection:** backpacks cannot be used as horse armor and cannot be moved by
+  hoppers/automation.
+- 🔁 **`/bp update`:** downloads the latest release JAR from GitHub.
+- 🧪 **Module GUI:** `/bp modules` toggles hooks live by clicking.
+- 📖 **Recipe Book + JEI/REI/EMI:** all real recipes are unlocked and visible.
+- ➖ **Custom-item hooks:** Oraxen only (Nexo & ItemsAdder removed).
 
 ---
 
-## 🧱 Minecraft-/Paper-Version
+## 🧱 Minecraft/Paper version
 
-- **Zielplattform:** Paper (läuft auch auf Spigot, dort ggf. eingeschränkte MiniMessage-Optik)
-- **Gebaut gegen:** `io.papermc.paper:paper-api:26.1.2.build.72-stable`
-- **Java:** **25** erforderlich (Minecraft 26.1.x setzt Java 25 voraus, Microsoft OpenJDK 25)
-- **Versionsschema:** Seit dem neuen `YY.D.H`-Schema verwendet die Paper-API
-  `<version>.build.<n>-<stage>` statt `-R0.1-SNAPSHOT`. Die Ziel-Version ist
-  über die Eigenschaft `paper.version` in der [`pom.xml`](pom.xml) leicht änderbar.
+- **Target platform:** Paper (also runs on Spigot, with possibly limited MiniMessage visuals)
+- **Built against:** `io.papermc.paper:paper-api:26.1.2.build.72-stable`
+- **Java:** **25** required (Minecraft 26.1.x requires Java 25, Microsoft OpenJDK 25)
+- **Version scheme:** since the new `YY.D.H` scheme, the Paper API uses
+  `<version>.build.<n>-<stage>` instead of `-R0.1-SNAPSHOT`. The target version is
+  easily changed via the `paper.version` property in [`pom.xml`](pom.xml).
 
 ---
 
 ## ✨ Features
 
-- ✅ Backpacks als **normale Items** mit **eindeutiger, fälschungssicherer ID** (PDC)
-- ✅ **Eigenes Inventar pro Backpack** – gleiche Items, unterschiedliche Inhalte
-- ✅ **Persistente Speicherung** (SQLite oder YAML)
-- ✅ **Sichere GUI** mit umfassendem Dupe-/Verlust-Schutz
-- ✅ **Doppeltruhen-Layout (54 Slots)** – nur freigegebene Felder sind nutzbar
-- ✅ **Größere Tiers = mehr Platz**, bei Überschreiten einer Seite automatisches **Paging**
-- ✅ **6 Backpack-Tiers** (Leder, Kupfer, Eisen, Gold, Diamant, Netherite)
-- ✅ **Echt einfärbbar** über färbbare Leder-Items (DyeColor **oder Hex `#RRGGBB`**) –
-  Farbe sichtbar **auch ohne Resourcepack**
-- ✅ **Crafting-Rezepte** (konfigurierbar, aktivier-/deaktivierbar)
-- ✅ **Öffnen per Rechtsklick** (Haupt- & Nebenhand) **und Command**
-- ✅ **Admin-Give-Command** und **Öffnen per ID**
-- ✅ **CustomModelData + `item_model`-Component pro Tier** – vorbereitet für Resourcepacks
-- ✅ **Modulares Hook-System** – alle externen Hooks **standardmäßig gesperrt & experimentell**,
-  Live-Status über **`/bp modules`**
-- ✅ **Deutsche, konfigurierbare Nachrichten** (MiniMessage + `&`-Codes)
-- ✅ **Schutz gegen Backpacks-in-Backpacks**
-- ❌ **Kein Vault** mehr (bewusst entfernt)
+- ✅ Backpacks as **normal items** with a **unique, forgery-proof ID** (PDC)
+- ✅ **Own inventory per backpack** – same items, different contents
+- ✅ **Persistent storage** (SQLite or YAML)
+- ✅ **Safe GUI** with comprehensive dupe/loss protection
+- ✅ **Double-chest layout (54 slots)** – only enabled fields are usable
+- ✅ **Bigger tiers = more space**, with automatic **paging** beyond one page
+- ✅ **6 backpack tiers** (Leather, Copper, Iron, Gold, Diamond, Netherite) + Emerald
+- ✅ **Truly dyeable** via dyeable leather items (DyeColor **or hex `#RRGGBB`**) –
+  color visible **even without a resource pack**
+- ✅ **Crafting recipes** (configurable, can be enabled/disabled)
+- ✅ **Open by right-click** (main & off hand) **and command**
+- ✅ **Admin give command** and **open by ID**
+- ✅ **CustomModelData + `item_model` component per tier** – prepared for resource packs
+- ✅ **Modular hook system** – live status via **`/bp modules`**
+- ✅ **Configurable messages** (MiniMessage + `&` codes), bundled EN/DE/PL
+- ✅ **Protection against backpacks-in-backpacks**
+- ❌ **No Vault** (deliberately removed)
 
 ---
 
 ## 🛠️ Installation
 
-1. Plugin-JAR aus den [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   herunterladen (`yourShika-Backpacks-1.0.6.jar`).
-2. In den `plugins/`-Ordner deines **Paper 26.1.2 (Java 25)**-Servers legen.
-3. Server starten – der Datenordner **`plugins/yourShika Backpack's/`** wird automatisch
-   mit `config.yml`, `messages_de.yml` und der Datenbank erstellt.
-4. Optional `config.yml` anpassen und `/bp reload` ausführen.
+1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
+   (`yourShika-Backpacks-1.0.6.jar`).
+2. Put it into the `plugins/` folder of your **Paper 26.1.2 (Java 25)** server.
+3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
+   automatically with `config.yml`, the message files and the database.
+4. Optionally adjust `config.yml` and run `/bp reload`.
 
 ---
 
 ## ⌨️ Commands
 
-Hauptbefehl: `/backpack` · Aliase: `/bp`, `/ybackpack`, `/ysbackpack`
+Main command: `/backpack` · aliases: `/bp`, `/ybackpack`, `/ysbackpack`
 
-| Befehl | Beschreibung |
+| Command | Description |
 |---|---|
-| `/bp help` | Hilfe anzeigen |
-| `/bp open` | Backpack in der Hand öffnen |
-| `/bp info` | Rücksäcke, Upgrades & **Rezepte** in einer GUI ansehen |
-| `/bp list [Spieler]` | Backpacks auflisten (anklickbar: Open/Copy/TP) |
-| `/bp rename <Name\|reset>` | Backpack in der Hand umbenennen |
-| `/bp recall` | Platzierte Backpacks zurückholen (braucht Recall-Upgrade; Auswahlmenü bei mehreren) |
-| `/bp locate [Spieler\|ID]` | Koordinaten platzierter Backpacks anzeigen |
-| `/bp goto <ID>` | Zu einem platzierten Backpack teleportieren |
-| `/bp transfer <ID> <Spieler>` | Besitzer eines Backpacks ändern (Admin) |
-| `/bp color <Farbe> [Akzent]` | Backpack einfärben (DyeColor-Name **oder** `#RRGGBB`) — **Admin** |
-| `/bp give <Spieler> <Tier> [Anzahl] [Farbe] [Akzent]` | Backpack geben (Admin) |
-| `/bp openid <ID>` | Backpack per ID öffnen (Admin) |
-| `/bp modules` | Externe Module **per GUI an/aus** schalten (Admin) |
-| `/bp assets <status\|redeploy>` | Oraxen-Assets prüfen / neu ausrollen (Admin) |
-| `/bp doctor` | Diagnose (Oraxen, Config, DB, Assets, Versionen) (Admin) |
-| `/bp update` | Neueste Version von GitHub laden (Admin, Neustart nötig) |
-| `/bp reload` | Konfiguration neu laden (Admin) |
-| `/bp version` | Plugin-Infos |
+| `/bp help` | Show help |
+| `/bp open` | Open the backpack in your hand |
+| `/bp info` | View backpacks, upgrades & **recipes** in a GUI |
+| `/bp list [player]` | List backpacks (clickable: Open/Copy/TP) |
+| `/bp rename <name\|reset>` | Rename the backpack in your hand |
+| `/bp recall` | Recall placed backpacks (needs Recall upgrade; selection menu for several) |
+| `/bp locate [player\|ID]` | Show coordinates of placed backpacks |
+| `/bp goto <ID>` | Teleport to a placed backpack |
+| `/bp transfer <ID> <player>` | Change a backpack's owner (admin) |
+| `/bp color <color> [accent]` | Dye a backpack (DyeColor name **or** `#RRGGBB`) — **admin** |
+| `/bp give <player> <tier> [amount] [color] [accent]` | Give a backpack (admin) |
+| `/bp openid <ID>` | Open a backpack by ID (admin) |
+| `/bp modules` | Toggle external modules **via GUI** (admin) |
+| `/bp assets <status\|redeploy>` | Check / redeploy Oraxen assets (admin) |
+| `/bp doctor` | Diagnostics (Oraxen, config, DB, assets, versions) (admin) |
+| `/bp update` | Download the latest version from GitHub (admin, restart needed) |
+| `/bp reload` | Reload the configuration (admin) |
+| `/bp version` | Plugin info |
 
-> **Färben für Spieler** läuft über den **Crafting Table** (siehe unten); der
-> Befehl `/bp color` ist bewusst eine **Admin**-Funktion.
+> **Dyeing for players** works via the **crafting table** (see below); the
+> `/bp color` command is deliberately an **admin** function.
+
+> **Achievements** are real Minecraft advancements and appear as their own tab in
+> the advancements screen — there is no command for them.
 
 ---
 
 ## 🔐 Permissions
 
-| Permission | Beschreibung | Standard |
+| Permission | Description | Default |
 |---|---|---|
-| `yourshika.backpack.use` | Backpacks benutzen | alle |
-| `yourshika.backpack.open` | Eigenes Backpack öffnen | alle |
-| `yourshika.backpack.list` | Eigene Backpacks auflisten | alle |
-| `yourshika.backpack.place` | Backpacks platzieren/aufheben | alle |
-| `yourshika.backpack.craft.<tier>` | Bestimmten Tier craften | alle |
-| `yourshika.backpack.admin.color` | Backpack per Befehl einfärben | OP |
-| `yourshika.backpack.admin.give` | Backpacks geben | OP |
-| `yourshika.backpack.admin.openid` | Per ID öffnen | OP |
-| `yourshika.backpack.admin.openother` | Fremde Backpacks öffnen | OP |
-| `yourshika.backpack.admin.listother` | Fremde Backpacks listen | OP |
-| `yourshika.backpack.admin.modules` | Modul-GUI öffnen/umschalten | OP |
-| `yourshika.backpack.admin.update` | Self-Updater | OP |
+| `yourshika.backpack.use` | Use backpacks | all |
+| `yourshika.backpack.open` | Open your own backpack | all |
+| `yourshika.backpack.list` | List your own backpacks | all |
+| `yourshika.backpack.place` | Place/pick up backpacks | all |
+| `yourshika.backpack.rename` | Rename backpacks | all |
+| `yourshika.backpack.craft.<tier>` | Craft a specific tier | all |
+| `yourshika.backpack.admin.color` | Dye a backpack via command | OP |
+| `yourshika.backpack.admin.give` | Give backpacks | OP |
+| `yourshika.backpack.admin.openid` | Open by ID | OP |
+| `yourshika.backpack.admin.openother` | Open others' backpacks | OP |
+| `yourshika.backpack.admin.listother` | List others' backpacks | OP |
+| `yourshika.backpack.admin.modules` | Open/toggle module GUI | OP |
+| `yourshika.backpack.admin.update` | Self-updater | OP |
 | `yourshika.backpack.admin.reload` | Reload | OP |
 | `yourshika.backpack.admin.debug` | Debug | OP |
 
 ---
 
-## 🎒 Backpacks, Tiers, Größe & Paging
+## 🎒 Backpacks, tiers, size & paging
 
-Jedes Backpack öffnet als **Doppeltruhe (54 Slots)**. Die unterste Reihe (9 Slots)
-ist die **Steuerleiste** (Blättern, Info, Upgrade-Vorschau). Von den verbleibenden
-**45 Slots** sind nur so viele **freigegeben**, wie der Tier erlaubt – der Rest ist
-gesperrt. Tiers mit mehr als 45 Lager-Slots werden automatisch über mehrere
-**Seiten** geblättert (◀ / ▶).
+Each backpack opens as a **double chest (54 slots)**. The bottom row (9 slots) is
+the **control bar** (paging, info, upgrades). Of the remaining **45 slots** only as
+many are **enabled** as the tier allows – the rest is locked. Tiers with more than
+45 storage slots are paged automatically (◀ / ▶).
 
-| Tier | Lager-Slots | Seiten* | Upgrade-Slots | CustomModelData |
+| Tier | Storage slots | Pages* | Upgrade slots | CustomModelData |
 |---|---|---|---|---|
-| Leder | 9 | 1 | 1 | 1001 |
-| Kupfer | 18 | 1 | 2 | 1002 |
-| Eisen | 27 | 1 | 3 | 1003 |
+| Leather | 9 | 1 | 1 | 1001 |
+| Copper | 18 | 1 | 2 | 1002 |
+| Iron | 27 | 1 | 3 | 1003 |
 | Gold | 45 | 1 | 4 | 1004 |
-| Diamant | 54 | 2 | 5 | 1005 |
-| **Smaragd** | 81 | 2 | 6 | 1006 |
+| Diamond | 54 | 2 | 5 | 1005 |
+| **Emerald** | 81 | 2 | 6 | 1006 |
 | Netherite | 108 | 3 | 6 | 1007 |
 
-\* Bei 45 nutzbaren Slots pro Seite (`gui.storage-slots-per-page`).
-Die Upgrade-Slots sind über den **Upgrades-Button** in der Backpack-GUI als
-eigenes Inventar nutzbar.
+\* At 45 usable slots per page (`gui.storage-slots-per-page`).
+The upgrade slots are usable as their own inventory via the **Upgrades button** in
+the backpack GUI.
 
-### Identität & Sicherheit
+### Identity & security
 
-Jedes Backpack trägt seine **ID, Tier und Farben im PersistentDataContainer** – nicht in
-Name oder Lore. Dadurch sind Backpacks **nicht durch Umbenennen fälschbar**.
-**Der Inhalt wird niemals im Item gespeichert**, sondern serverseitig an die ID gebunden.
-Das ist der Kern des Dupe-Schutzes: Ein kopiertes Item teilt sich dasselbe Inventar.
-Beim Blättern wird stets nur die sichtbare Seite zwischen Inventar und Puffer
-synchronisiert – die Operation bleibt atomar und dupe-sicher.
+Every backpack carries its **ID, tier and colors in the PersistentDataContainer** –
+not in name or lore. This makes backpacks **not forgeable by renaming**.
+**Contents are never stored in the item**, but server-side bound to the ID. That is
+the core of the dupe protection: a copied item shares the same inventory. When
+paging, only the visible page is synced between inventory and buffer – the
+operation stays atomic and dupe-safe.
 
-### Farben (echt einfärbbar)
+### Colors (truly dyeable)
 
-Backpacks basieren standardmäßig auf einem **färbbaren Leder-Item**
-(`LEATHER_HORSE_ARMOR`). Die **Hauptfarbe färbt das Item real ein** – sichtbar
-**auch ohne Resourcepack** – und ist über `/bp color` änderbar. Als Farbe sind
-sowohl **DyeColor-Namen** (`BROWN`, `CYAN`, …) als auch **Hex-Werte** (`#A0703C`)
-erlaubt. Leder-Pferderüstung ist nicht vom Spieler anlegbar und eignet sich daher
-ideal als Backpack-Basis.
+Backpacks are based on a **dyeable leather item** (`LEATHER_HORSE_ARMOR`) by
+default. The **main color tints the item for real** – visible **even without a
+resource pack** – and is changeable via `/bp color`. Both **DyeColor names**
+(`BROWN`, `CYAN`, …) and **hex values** (`#A0703C`) are allowed.
 
 ---
 
-## 🎨 CustomModelData, item_model & Resourcepacks
+## 🎨 CustomModelData, item_model & resource packs
 
-- Jeder Tier besitzt eine eigene **CustomModelData** (1001–1007) und kann optional
-  eine moderne **`item_model`-Component** setzen (`item-model: "namespace:pfad"`).
-- **Ohne Resourcepack** funktionieren Backpacks als normale (gefärbte) Leder-Items.
-- **Mit Resourcepack** sehen sie wie eigene Items aus.
-- **Externe Item-Systeme** (Nexo, ItemsAdder, Oraxen) sind **optional** und
-  experimentell – siehe Hooks. Default ist immer der eingebaute Vanilla-Anbieter.
+- Each tier has its own **CustomModelData** (1001–1007) and can optionally set a
+  modern **`item_model` component** (`item-model: "namespace:path"`).
+- **Without a resource pack** backpacks work as normal (dyed) leather items.
+- **With a resource pack** they look like custom items.
+- **External item systems** (Oraxen) are **optional**. The default is always the
+  built-in vanilla provider.
 
-### Oraxen-Assets
+### Oraxen assets
 
-Unter `src/main/resources/oraxen/` liegt eine fertige Oraxen-Beilage mit
-64x64-PNGs im Vanilla-Style für alle Backpack-Tiers, Tier-Upgrade-Items und
-52 vorbereitete Funktions-Upgrades (Pickup, Magnet, Filter, Void, Transfer,
-Crafting/Processing, Stack, Utility, Tank/Energy/XP). Die Texturen sind bewusst
-aus 16x16-Pixelart hochskaliert, damit sie zu Minecraft-Items passen. Die Backpack-Texturen
-nutzen drei Layer: dyebare Basis (`*_base.png`), feste Akzentvarianten
-(`accents/<tier>_<dye>.png`) und Overlay für Outline, Tier-Metall und
-Glanzdetails. Die Plugin-Config verweist per `provider-id` auf die Basis-IDs;
-für abweichende Akzentfarben nutzt das Plugin automatisch Provider-IDs wie
-`ysbp_leather_backpack_accent_red`. Erzeugt werden echte Backpacks weiterhin
-über Plugin-Crafting, Smithing oder `/bp give`, damit ID, Inhalt, Besitzer und
-Farbe erhalten bleiben.
-
-Die Funktions-Upgrades sind als Modell-/Textur-Provider vorbereitet
-(`ysbp_upgrade_<upgrade_key>`, CustomModelData `2100-2151`); ihre Gameplay-Logik
-kann später daran angebunden werden.
+Under `src/main/resources/oraxen/` there is a ready-made Oraxen bundle with 64x64
+PNGs in vanilla style for all backpack tiers, tier-upgrade items and many prepared
+function upgrades. Real backpacks are still created via plugin crafting, smithing or
+`/bp give` so that ID, contents, owner and color are preserved.
 
 ---
 
-## 🧰 Crafting, Upgrade-Kette & Färben
+## 🧰 Crafting, upgrade chain & dyeing
 
-**Nur der Leder-Rucksack** wird direkt gecraftet (8× Leder um eine **Truhe**).
-Alle höheren Tiers entstehen über die **Upgrade-Kette** im Smithing Table.
-Frisch gecraftete Backpacks zeigen ihre **ID sofort** in der Lore.
+**Only the leather backpack** is crafted directly (8× leather around a **chest**).
+All higher tiers come from the **upgrade chain** in the smithing table. Freshly
+crafted backpacks show their **ID immediately** in the lore.
 
-**Upgrade-Kette** — Leder → Copper → Eisen → Gold → Diamant → Smaragd → Netherite:
+**Upgrade chain** — Leather → Copper → Iron → Gold → Diamond → Emerald → Netherite:
 
-1. **Upgrade-Leder** craften: 1× Leder (Mitte) + 4× Faden (Crafting Table).
-2. **Tier-Upgrade** craften: Upgrade-Leder + 8× Tier-Material (z. B. Kupfer) →
-   *Copper-Upgrade* (Crafting Table). **Netherite-Upgrade**: **Smithing Table** –
-   Upgrade-Leder (Vorlage) + Netherite-Ingot (Basis) + Faden (Zugabe).
-3. **Veredeln im Smithing Table:** **normales Leder** (Vorlage) + **vorheriges
-   Backpack** (Basis) + **Tier-Upgrade** (Zugabe) → nächstes Backpack.
-   **ID, Inhalt und Farbe bleiben erhalten.** (Upgrade-Leder wird im Vorlage-Slot
-   nicht akzeptiert – dort gehört echtes Leder hin.)
+1. Craft **Upgrade Leather**: 1× leather (center) + 4× string (crafting table).
+2. Craft a **tier upgrade**: Upgrade Leather + 8× tier material (e.g. copper) →
+   *Copper Upgrade* (crafting table). **Netherite upgrade**: smithing table –
+   Upgrade Leather (template) + Netherite Ingot (base) + string (addition).
+3. **Upgrade in the smithing table:** **plain leather** (template) + **previous
+   backpack** (base) + **tier upgrade** (addition) → next backpack.
+   **ID, contents and color are kept.**
 
-**Färben (Crafting Table):** Backpack in die **mittlere Spalte**, Färbemittel in
-die **linke Spalte** = Hauptfarbe, **rechte Spalte** = Akzentfarbe. Innerhalb
-einer Spalte ist die Position egal; mehrere Dyes werden zu einem **Hex-Wert**
-gemischt. Der Backpack-Inhalt bleibt dabei vollständig erhalten.
+**Dyeing (crafting table):** backpack in the **center column**, dyes in the **left
+column** = main color, **right column** = accent color. Position within a column
+does not matter; several dyes are mixed into a **hex value**. The backpack contents
+are fully preserved.
 
-> Die echten Rezepte erscheinen im **Recipe Book** und in **JEI/REI/EMI**. Das
-> positionsunabhängige Färben ist kein festes Rezept und daher dort nicht gelistet.
+> The real recipes appear in the **Recipe Book** and in **JEI/REI/EMI**. The
+> position-independent dyeing is not a fixed recipe and is therefore not listed there.
 
 ---
 
 ## 💾 Storage
 
-- **SQLite** (Standard, empfohlen) → `backpacks.db`
-- **YAML** (Alternative) → `backpacks.yml`
+- **SQLite** (default, recommended) → `backpacks.db`
+- **YAML** (alternative) → `backpacks.yml`
 
-Gespeichert wird beim **Schließen**, beim **Seitenwechsel**, bei **Logout**,
-**Plugin-Deaktivierung**, **Server-Stop** und per **Autosave**.
+Saved on **close**, **page change**, **logout**, **plugin disable**, **server stop**
+and via **autosave**.
 
-**Update-sicher (MUSS):** Inhalte werden im **versionierten Paper-Byte-Format**
-(`serializeAsBytes`) abgelegt – inkl. Minecraft-Datenversion. Beim Laden migriert
-der DataFixer automatisch auf die aktuelle Version, sodass Items mit beliebiger
-Custom-NBT/Components nach Updates **nicht verloren gehen und nicht beschädigt
-werden**. Ältere Daten im alten Format werden weiterhin gelesen und beim nächsten
-Speichern automatisch migriert.
+**Update-safe (MUST):** contents are stored in the **versioned Paper byte format**
+(`serializeAsBytes`) – incl. Minecraft data version. On load the DataFixer migrates
+automatically to the current version, so items with arbitrary custom NBT/components
+are **not lost or corrupted** after updates.
 
 ---
 
-## 🔌 Externe Module / Hooks (automatisch)
+## 🔌 External modules / hooks (automatic)
 
-Das Plugin läuft **vollständig eigenständig**. Externe Hooks sind als **Module**
-gekapselt und aktivieren sich **automatisch**, sobald das jeweilige Plugin
-installiert und das Modul in der Config aktiviert ist (**Standard: aktiviert**).
-Fehlt das Plugin, bleibt das Modul still inaktiv.
+The plugin runs **fully standalone**. External hooks are encapsulated as **modules**
+and activate **automatically** as soon as the respective plugin is installed and the
+module is enabled in the config (**default: enabled**). If the plugin is missing,
+the module stays silently inactive.
 
-Live-Status & Umschalten **per GUI**: **`/bp modules`** (Klick auf ein Modul
-schaltet es um und lädt es neu).
+Live status & toggling **via GUI**: **`/bp modules`**.
 
-| Modul | Zweck | Standard |
+| Module | Purpose | Default |
 |---|---|---|
-| **PlaceholderAPI** | `%ysbp_count%`, `%ysbp_highest_tier%`, `%ysbp_open%` | auto |
-| **PacketEvents** | Packet-Darstellung platzierter Backpacks (Roadmap) | auto |
-| **Oraxen** | Custom-Modelle/Texturen | auto |
+| **PlaceholderAPI** | `%ysbp_count%`, `%ysbp_highest_tier%`, `%ysbp_open%` … | auto |
+| **Oraxen** | Custom models/textures | auto |
 
-> **Custom-Items:** Als Custom-Item-Hook wird ausschließlich **Oraxen** unterstützt
-> (frei nutzbar, reife API). **Nexo** (kostenpflichtig) und **ItemsAdder** (Premium)
-> wurden bewusst entfernt. Pro Tier kann eine `provider-id` gesetzt werden, die nur
-> greift, wenn das Oraxen-Modul aktiv ist. **Vault wird bewusst nicht unterstützt.**
+> **Custom items:** only **Oraxen** is supported as a custom-item hook (free to use,
+> mature API). **Nexo** and **ItemsAdder** were deliberately removed.
+> **Vault is deliberately not supported.**
 
-Einzelnes Modul deaktivieren (Beispiel):
+Disable a single module (example):
 
 ```yaml
 hooks:
@@ -643,55 +558,38 @@ hooks:
 
 ---
 
-## ⚠️ Bekannte Einschränkungen
-
-- **Funktionale Upgrade-Effekte** (Pickup, Magnet, Void, Filter …) folgen noch –
-  v0.2.0 bringt die **Upgrade-Slots als Inventar** sowie die **Tier-Veredelung**.
-- Ein vollständiges Server-Resourcepack wird nicht automatisch installiert; eine
-  Oraxen-Beilage mit Texturen/YAML liegt unter `src/main/resources/oraxen/`.
-- Externe Module sind **experimentell**; ihre Modell-Übernahme erfolgt best-effort.
-- Das **positionsunabhängige Dye-Färben** ist kein festes Rezept und erscheint
-  daher nicht in JEI/REI/EMI (alle echten Rezepte hingegen schon).
-- **JEI/REI/EMI-Zutaten:** Bei der Smithing-Veredelung zeigen die Eingabe-Slots
-  das generische Item (*Horse Leather Armor* für das Backpack, *Paper* für das
-  Tier-Upgrade). Grund: Recipe-Zutaten werden nur als **Item-Typ** an den Client
-  übertragen – der individuelle Name/NBT von Custom-Items geht dabei verloren.
-  Das **Ergebnis** wird korrekt mit vollem Namen angezeigt. Server-seitig ist das
-  nicht behebbar (es bräuchte ein client-seitiges JEI-Addon).
-
----
-
 ## 🗺️ Roadmap
 
-- **Funktionale Upgrade-Effekte** (Pickup, Magnet, Void, Filter, Compacting,
-  Smelting, Stack, Inception u.v.m.) – die Upgrade-Slots & -Items existieren bereits.
-- **Eigenes Resourcepack** + tiefere Oraxen-Integration.
-- **Backpacks-in-Backpacks** nur über das geplante **Inception Upgrade** (mit Limits & Dupe-Schutz).
+- More functional upgrade effects (Void, Filter, Stack, Inception, …) – the
+  upgrade slots & items already exist.
+- **Own resource pack** + deeper Oraxen integration.
+- **Backpacks-in-backpacks** only via the planned **Inception upgrade** (with limits
+  & dupe protection).
 
 ---
 
-## 🧪 Build-Hinweise
+## 🧪 Build notes
 
-Voraussetzungen: **JDK 25** und **Maven**.
+Requirements: **JDK 25** and **Maven**.
 
 ```bash
 mvn clean package
 ```
 
-Das fertige Plugin liegt anschließend unter:
+The finished plugin is then located at:
 
 ```
 target/yourShika-Backpacks-1.0.6.jar
 ```
 
-Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der
-[`pom.xml`](pom.xml) anpassen.
+The target Paper version can be adjusted via the `paper.version` property in
+[`pom.xml`](pom.xml).
 
 ---
 
-## 📄 Lizenz
+## 📄 License
 
-Veröffentlicht unter der [MIT-Lizenz](LICENSE).
+Released under the [MIT License](LICENSE).
 
-> Inspiriert von Sophisticated Backpacks – jedoch eine eigenständige Implementierung
-> ohne übernommenen Code, ohne Assets und ohne Texturen.
+> Inspired by Sophisticated Backpacks – but a standalone implementation without any
+> taken code, assets or textures.
