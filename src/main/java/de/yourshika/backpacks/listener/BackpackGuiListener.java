@@ -2,7 +2,6 @@ package de.yourshika.backpacks.listener;
 
 import de.yourshika.backpacks.BackpackManager;
 import de.yourshika.backpacks.YourShikaBackpacks;
-import de.yourshika.backpacks.gui.AchievementMenuHolder;
 import de.yourshika.backpacks.gui.BackpackMenuHolder;
 import de.yourshika.backpacks.gui.FilterMenuHolder;
 import de.yourshika.backpacks.gui.FurnaceMenuHolder;
@@ -375,21 +374,6 @@ public final class BackpackGuiListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onXpDrag(InventoryDragEvent event) {
         if (event.getView().getTopInventory().getHolder() instanceof XpMenuHolder) {
-            event.setCancelled(true);
-        }
-    }
-
-    // Achievements-GUI: reine Anzeige – jede Interaktion blocken.
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onAchievementClick(InventoryClickEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof AchievementMenuHolder) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onAchievementDrag(InventoryDragEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof AchievementMenuHolder) {
             event.setCancelled(true);
         }
     }

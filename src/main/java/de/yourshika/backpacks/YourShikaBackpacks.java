@@ -79,9 +79,11 @@ public final class YourShikaBackpacks extends JavaPlugin {
 
         this.manager = new BackpackManager(this, storage, itemFactory, tiers);
 
-        // Achievements (eigener Reiter über /bp achievements).
+        // Achievements als echte Minecraft-Advancements (eigener Reiter im
+        // Advancement-Screen). Datapack VOR der Rezept-Registrierung bereitstellen,
+        // da deploy() bei Änderungen reloadData() aufruft.
         this.achievements = new de.yourshika.backpacks.achievement.AchievementManager(this);
-        this.achievements.load();
+        this.achievements.deploy();
 
         // Modul-System (externe, experimentelle Hooks) – vor der Rezept-/Item-Erstellung.
         this.moduleManager = new ModuleManager(this);

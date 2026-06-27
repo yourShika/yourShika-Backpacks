@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-1.0.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.0.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,17 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## ✨ Neu in v1.0.2
+
+- 🏆 **Achievements sind jetzt echte Minecraft-Advancements** – statt eines eigenen
+  Befehls/Menüs erscheinen sie als **eigener Reiter** („yourShika Backpack's") im
+  normalen Advancement-Screen (Toast + Fortschritt von Vanilla). Dafür legt das
+  Plugin automatisch einen kleinen Datapack an und lädt ihn beim ersten Start.
+  Weiterhin über `achievements.enabled` / `broadcast` / `disabled` konfigurierbar.
+- 🧹 `/bp achievements` entfällt (durch die native Integration ersetzt).
 
 ---
 
@@ -382,7 +393,7 @@ Mehrsprachigkeit (EN/DE/PL).
 ## 🛠️ Installation
 
 1. Plugin-JAR aus den [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   herunterladen (`yourShika-Backpacks-1.0.1.jar`).
+   herunterladen (`yourShika-Backpacks-1.0.2.jar`).
 2. In den `plugins/`-Ordner deines **Paper 26.1.2 (Java 25)**-Servers legen.
 3. Server starten – der Datenordner **`plugins/yourShika Backpack's/`** wird automatisch
    mit `config.yml`, `messages_de.yml` und der Datenbank erstellt.
@@ -626,7 +637,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-1.0.1.jar
+target/yourShika-Backpacks-1.0.2.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der
