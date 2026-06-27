@@ -159,9 +159,10 @@ public final class DyeCraftListener implements Listener {
         }
 
         ItemStack result = backpack.clone();
-        UUID id = items.getId(result);
         items.writeColors(result, main, accent);
-        items.applyDisplay(result, tier, id, main, accent);
+        // Vollständig auffrischen, damit auch das externe (Oraxen) Akzent-Modell
+        // auf die neue Akzentfarbe wechselt – nicht nur Lore/Leder-Tint.
+        items.refresh(result, tier);
         return result;
     }
 

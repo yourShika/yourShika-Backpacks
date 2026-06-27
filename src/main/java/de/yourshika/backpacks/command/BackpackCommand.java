@@ -188,7 +188,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             items.writeId(item, id);
         }
         items.writeColors(item, main, accent);
-        items.applyDisplay(item, tier, id, main, accent);
+        // refresh() statt nur applyDisplay, damit auch das externe Akzent-Modell wechselt.
+        items.refresh(item, tier);
         player.getInventory().setItemInMainHand(item);
 
         BackpackData data = manager.storage().load(id);
