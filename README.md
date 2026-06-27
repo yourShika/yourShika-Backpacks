@@ -3,7 +3,7 @@
 > Ein eigenständiges, **vollständig serverseitiges** Backpack-System für **Paper/Spigot**.
 > Spieler brauchen **keinen Client-Mod**.
 
-[![Version](https://img.shields.io/badge/version-1.0.4-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.0.5-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Plattform](https://img.shields.io/badge/Plattform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)](LICENSE)
@@ -21,6 +21,21 @@ Das Plugin ist **von [Sophisticated Backpacks](https://modrinth.com/mod/sophisti
 **komplett eigenständige Neuentwicklung**. Es wurde **kein Code, kein Asset und keine
 Textur** aus der Mod übernommen. **Dies ist kein Forge-/Fabric-/NeoForge-Mod, sondern
 ein Paper/Spigot-Plugin.**
+
+---
+
+## 🐞 v1.0.5
+
+- 🖼️ **Tab-Hintergrund konfigurierbar + neues Textur-Format** – Standard ist jetzt
+  die 1.21.4-Textur-ID (`achievements.background: minecraft:gui/advancements/backgrounds/gravel`).
+  Falls er lila/schwarz erscheint, lässt sich in der config auf die alte Variante
+  (`minecraft:textures/...png`) umstellen – ohne neuen Release.
+- 📣 **Chat-Broadcast standardmäßig an** – freigeschaltete Achievements werden jetzt
+  per Default im Chat angekündigt (`achievements.broadcast: true`, respektiert die
+  `announceAdvancements`-Gamerule).
+- 🌳 **Schöneres Menü** – die Achievements sind jetzt in thematische Zweige
+  (Tiers, Anpassung, Platzieren, Upgrades, Stationen) verkettet statt in einer
+  langen Spalte; Tier-Erfolge als „goal", schwere als „challenge"-Rahmen.
 
 ---
 
@@ -412,7 +427,7 @@ Mehrsprachigkeit (EN/DE/PL).
 ## 🛠️ Installation
 
 1. Plugin-JAR aus den [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   herunterladen (`yourShika-Backpacks-1.0.4.jar`).
+   herunterladen (`yourShika-Backpacks-1.0.5.jar`).
 2. In den `plugins/`-Ordner deines **Paper 26.1.2 (Java 25)**-Servers legen.
 3. Server starten – der Datenordner **`plugins/yourShika Backpack's/`** wird automatisch
    mit `config.yml`, `messages_de.yml` und der Datenbank erstellt.
@@ -656,7 +671,7 @@ mvn clean package
 Das fertige Plugin liegt anschließend unter:
 
 ```
-target/yourShika-Backpacks-1.0.4.jar
+target/yourShika-Backpacks-1.0.5.jar
 ```
 
 Die Ziel-Paper-Version lässt sich über die Eigenschaft `paper.version` in der

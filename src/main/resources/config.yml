@@ -63,9 +63,15 @@ rename:
 #  Achievements (eigener Reiter über /bp achievements)
 # ---------------------------------------------------------------------------
 achievements:
-  enabled: true          # Achievement-System global an/aus
-  broadcast: false       # true = Freischaltung an alle Spieler ansagen
-  # IDs hier listen, um einzelne Achievements abzuschalten (siehe /bp achievements).
+  enabled: true          # Achievement-System global an/aus (echte MC-Advancements)
+  broadcast: true        # true = Freischaltung im Chat ansagen (respektiert announceAdvancements-Gamerule)
+  # Hintergrund-Textur des Achievement-Reiters. Je nach MC-Version unterscheidet
+  # sich das Format. Standard ist die neue Textur-ID (1.21.4+). Falls der
+  # Hintergrund lila/schwarz erscheint, die jeweils andere Variante probieren:
+  #   neu  (1.21.4+):  "minecraft:gui/advancements/backgrounds/gravel"
+  #   alt  (≤1.21.3):  "minecraft:textures/gui/advancements/backgrounds/gravel.png"
+  background: "minecraft:gui/advancements/backgrounds/gravel"
+  # IDs hier listen, um einzelne Achievements abzuschalten.
   # Beispiel: disabled: ["collector", "fill"]
   disabled: []
 
