@@ -22,7 +22,10 @@ public final class ItemUpdateListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         // Einen Tick warten, damit das Inventar vollständig geladen ist.
-        plugin.getServer().getScheduler().runTask(plugin,
-                () -> plugin.refreshPlayerItems(event.getPlayer()));
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            plugin.refreshPlayerItems(event.getPlayer());
+            // Root-Advancement vergeben -> Achievement-Reiter erscheint, alle sichtbar.
+            if (plugin.achievements() != null) plugin.achievements().grantRoot(event.getPlayer());
+        });
     }
 }
