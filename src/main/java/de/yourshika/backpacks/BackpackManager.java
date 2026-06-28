@@ -112,6 +112,9 @@ public final class BackpackManager {
         // ohne ID, Farbe, Besitzer oder Inhalt zu verändern. So aktualisieren sich
         // bereits existierende Backpacks automatisch nach Updates.
         items.refresh(item, tier);
+        // Zusätzlich ALLE getragenen Backpacks/Upgrades auffrischen, damit bereits
+        // eingefärbte Rucksäcke (z.B. mit altem Akzent-Modell) ihren Stand nachziehen.
+        plugin.refreshPlayerItems(player);
 
         BackpackData data = storage.load(id);
         if (data == null) {

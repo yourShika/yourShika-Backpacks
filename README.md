@@ -30,6 +30,9 @@ Paper/Spigot plugin.**
   only re-tinted the main color and lore but kept the old Oraxen accent model, so
   the accent stayed at its previous color. The item is now fully refreshed so the
   accent texture switches to the new color too.
+- 🔁 **Existing backpacks get updated** – opening a backpack now also refreshes all
+  other backpacks carried by the player, so previously dyed backpacks pull the
+  corrected accent model (in addition to the existing refresh on join).
 
 ---
 
