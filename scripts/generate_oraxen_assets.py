@@ -796,25 +796,30 @@ def model_palette(path, base_hex, accent=False):
     img.save(path, optimize=True)
 
 
-def model_face(texture, uv):
-    return {"uv": uv, "texture": texture}
+def model_face(texture, uv, tint=False):
+    f = {"uv": uv, "texture": texture}
+    if tint:
+        f["tintindex"] = 0
+    return f
 
 
-def model_cuboid(start, end, texture, uv, side_uv=None, top_uv=None, bottom_texture=None, bottom_uv=None):
+def model_cuboid(start, end, texture, uv, side_uv=None, top_uv=None, bottom_texture=None, bottom_uv=None, tint=False):
     side_uv = side_uv or uv
     top_uv = top_uv or side_uv
     bottom_uv = bottom_uv or top_uv
     bottom_texture = bottom_texture or texture
+    # tint: alle Flächen, die die Haupt-Textur nutzen, werden über die Leder-Farbe
+    # eingefärbt (tintindex 0) – die Bodenfläche (bottom_texture) bleibt ungetönt.
     return {
         "from": start,
         "to": end,
         "faces": {
-            "north": model_face(texture, uv),
-            "south": model_face(texture, uv),
-            "east": model_face(texture, side_uv),
-            "west": model_face(texture, side_uv),
-            "up": model_face(texture, top_uv),
-            "down": model_face(bottom_texture, bottom_uv),
+            "north": model_face(texture, uv, tint),
+            "south": model_face(texture, uv, tint),
+            "east": model_face(texture, side_uv, tint),
+            "west": model_face(texture, side_uv, tint),
+            "up": model_face(texture, top_uv, tint),
+            "down": model_face(bottom_texture, bottom_uv, tint and bottom_texture == texture),
         },
     }
 
@@ -836,6 +841,7 @@ def write_placed_model(path, tier, accent):
                 top_uv=[3, 5, 13, 13],
                 bottom_texture="#detail",
                 bottom_uv=[3, 5, 13, 13],
+                tint=True,
             ),
             model_cuboid([4, 9, 4.25], [12, 13, 5.25], "#accent", [4, 2, 12, 6]),
             model_cuboid([5, 3, 3.8], [11, 8, 5.0], "#accent", [5, 8, 11, 13]),
@@ -869,7 +875,9 @@ def write_placed_model(path, tier, accent):
 
 def generate_placed_models():
     for tier, (main, accent, _cmd, _name) in TIER.items():
-        model_palette(TEXTURES / f"placed/main/{tier}.png", main)
+        # Hauptkörper neutral/hell, damit ihn die Leder-Hauptfarbe (tintindex 0)
+        # auf die gewählte Farbe einfärbt – statt die Tier-Farbe fest einzubacken.
+        model_palette(TEXTURES / f"placed/main/{tier}.png", "#ffffff")
         model_palette(TEXTURES / f"placed/detail/{tier}.png", accent, True)
     for dye, dye_hex in DYES.items():
         model_palette(TEXTURES / f"placed/accent/{dye}.png", dye_hex, True)

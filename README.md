@@ -3,7 +3,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.0.8-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.0.9-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -21,6 +21,17 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🐞 v1.0.9
+
+- 🎨 **Placed backpack now uses the main color** – the body of a placed Oraxen
+  backpack had the tier's default main color baked in (e.g. an Emerald backpack
+  stayed green) regardless of the chosen color. The body texture is now dyeable
+  (`tintindex 0` + neutral base), so the placed backpack body takes your main
+  color while the accent variant still colors the frame/side parts. *(Resource-
+  pack change – run `/oraxen reload` after updating.)*
 
 ---
 
@@ -390,7 +401,7 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.0.8.jar`).
+   (`yourShika-Backpacks-1.0.9.jar`).
 2. Put it into the `plugins/` folder of your **Paper 26.1.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
@@ -600,7 +611,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.0.8.jar
+target/yourShika-Backpacks-1.0.9.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in
