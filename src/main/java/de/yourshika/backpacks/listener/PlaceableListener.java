@@ -33,6 +33,22 @@ public final class PlaceableListener implements Listener {
     }
 
     /**
+     * Beim Laden von Chunk-Entities die platzierten Backpack-Displays an den
+     * aktuellen Anbieter-Status angleichen. So übernehmen auch Displays in bislang
+     * nicht geladenen Chunks eine Änderung (Oraxen an/aus bzw. Reload), und nach
+     * einem Entfernen von Oraxen fallen sie auf die Vanilla-Optik zurück, statt
+     * eine fehlende Textur zu zeigen.
+     */
+    @EventHandler
+    public void onEntitiesLoad(org.bukkit.event.world.EntitiesLoadEvent event) {
+        for (Entity e : event.getEntities()) {
+            if (e instanceof org.bukkit.entity.ItemDisplay display) {
+                placeable.refreshPlacedDisplay(display);
+            }
+        }
+    }
+
+    /**
      * Rechtsklick auf ein platziertes Backpack → öffnen.
      * Sneak-Rechtsklick → aufheben (zuverlässig, da Interaction-Entities keine
      * verlässlichen Angriffs-Events liefern).

@@ -221,6 +221,44 @@ public final class PlaceableManager {
     }
 
     /**
+     * Rendert alle aktuell geladenen platzierten Backpack-Displays neu, damit sie
+     * dem aktuellen Anbieter-Status folgen. Wird beim Umschalten des Oraxen-Moduls
+     * und nach einem Oraxen-Reload aufgerufen: ist der Hook aus (oder Oraxen ganz
+     * entfernt), fallen die 3D-Modelle auf die Vanilla-Optik zurück – sonst blieben
+     * fehlende/tote Texturen im Spiel stehen. Gibt die Anzahl aktualisierter
+     * Displays zurück.
+     */
+    public int refreshPlacedDisplays() {
+        int count = 0;
+        for (org.bukkit.World world : org.bukkit.Bukkit.getWorlds()) {
+            for (ItemDisplay display : world.getEntitiesByClass(ItemDisplay.class)) {
+                if (refreshPlacedDisplay(display)) count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Rendert ein einzelnes platziertes Display neu (Optik folgt dem aktuellen
+     * Anbieter-Status). Gibt true zurück, wenn es ein platziertes Backpack war.
+     */
+    public boolean refreshPlacedDisplay(ItemDisplay display) {
+        if (!isPlacedEntity(display)) return false;
+        UUID id = backpackIdOf(display);
+        if (id == null) return false;
+        BackpackData data = manager.storage().load(id);
+        if (data == null || !data.placed()) return false;
+        BackpackTier tier = tiers.get(data.tier());
+        if (tier == null) tier = tiers.all().iterator().next();
+        String main = data.mainColor() != null ? data.mainColor() : tier.defaultMainColor();
+        String accent = data.accentColor() != null ? data.accentColor() : tier.defaultAccentColor();
+        ItemStack visual = items.create(tier, id, main, accent);
+        applyPlacedVisualModel(visual, tier, accent);
+        display.setItemStack(visual);
+        return true;
+    }
+
+    /**
      * Ruft alle platzierten Backpacks des Spielers mit Recall-Upgrade zurück:
      * Entities entfernen, Persistenz aktualisieren, Item ins Inventar geben.
      * Gibt die Anzahl zurückgeholter Backpacks zurück.

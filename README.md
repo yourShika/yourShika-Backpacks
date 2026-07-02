@@ -3,7 +3,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.1.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.1.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -21,6 +21,22 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🐞 v1.1.1
+
+- 🔄 **Textures update after `/oraxen reload`** – after redeploying assets and
+  reloading Oraxen, freshly added/changed textures didn't apply to crafted, given
+  or `/bp info` items (the plugin still served its cached item models) until you
+  toggled the module off and on. The plugin now listens for Oraxen's reload event
+  and **auto-resyncs** its canonical items, carried backpacks and placed models, so
+  new textures apply immediately – no module toggle needed.
+- 🧍 **Placed models follow the module state** – disabling the Oraxen module (or
+  removing Oraxen entirely) left placed backpack 3D models in the world, which would
+  show missing textures once Oraxen is gone. Placed models now **fall back to the
+  vanilla look** when the hook is off – updated on toggle/reload for loaded ones and
+  automatically when their chunks load.
 
 ---
 
@@ -420,7 +436,7 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.1.0.jar`).
+   (`yourShika-Backpacks-1.1.1.jar`).
 2. Put it into the `plugins/` folder of your **Paper 26.1.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
@@ -630,7 +646,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.1.0.jar
+target/yourShika-Backpacks-1.1.1.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in

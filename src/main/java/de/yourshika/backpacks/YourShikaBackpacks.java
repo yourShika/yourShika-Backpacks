@@ -280,6 +280,24 @@ public final class YourShikaBackpacks extends JavaPlugin {
         if (functionUpgrades != null) functionUpgrades.rebuildItems();
         refreshOnlineBackpacks();
         refreshOnlineUpgrades();
+        // Auch die platzierten 3D-Modelle angleichen: ist der Hook aus, fallen sie
+        // auf die Vanilla-Optik zurück (sonst blieben tote Texturen stehen).
+        if (placeableManager != null) placeableManager.refreshPlacedDisplays();
+    }
+
+    /**
+     * Gleicht die vom externen Item-Hook (Oraxen) abhängigen Items/Modelle an den
+     * aktuellen Stand an – ohne den Hook an-/auszuschalten. Wird nach einem Oraxen-
+     * Reload aufgerufen ({@code /oraxen reload}), damit frisch bereitgestellte
+     * Texturen sofort greifen (gecraftete/gegebene Items, {@code /bp info} und
+     * platzierte Modelle), ohne dass man das Modul erst aus- und einschalten muss.
+     */
+    public void resyncExternalAssets() {
+        if (upgradeManager != null) upgradeManager.rebuildItems();
+        if (functionUpgrades != null) functionUpgrades.rebuildItems();
+        refreshOnlineBackpacks();
+        if (placeableManager != null) placeableManager.refreshPlacedDisplays();
+        getLogger().info("Externe Assets neu synchronisiert (Oraxen-Reload).");
     }
 
     /** Aktualisiert Modell/Textur aller Backpack-Items online befindlicher Spieler. */

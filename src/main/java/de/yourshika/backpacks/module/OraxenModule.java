@@ -10,6 +10,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public final class OraxenModule extends ExternalItemModule {
 
+    /** Dynamisch registrierter Listener für Oraxens Reload-Event (per Reflection). */
+    private org.bukkit.event.Listener reloadListener;
+
     public OraxenModule(YourShikaBackpacks plugin) {
         super(plugin, "oraxen", "Oraxen",
                 "Custom-Modelle/Texturen für Backpacks", "Oraxen");
@@ -20,6 +23,46 @@ public final class OraxenModule extends ExternalItemModule {
         verifyApi();
         // Mitgelieferte Texturen/Item-Definitionen bereitstellen (best-effort).
         new OraxenAssetDeployer(plugin).deploy();
+        registerReloadListener();
+    }
+
+    @Override
+    protected void onDisable() {
+        if (reloadListener != null) {
+            org.bukkit.event.HandlerList.unregisterAll(reloadListener);
+            reloadListener = null;
+        }
+    }
+
+    /**
+     * Registriert – nur wenn Oraxen vorhanden ist – einen Listener auf Oraxens
+     * {@code OraxenItemsLoadedEvent}. Nach einem {@code /oraxen reload} (bzw.
+     * {@code /oraxen rl all}) werden dadurch die vom Hook abhängigen Items/Modelle
+     * automatisch neu synchronisiert, sodass frisch bereitgestellte Texturen sofort
+     * greifen – ohne dass man das Modul erst aus- und wieder einschalten muss.
+     *
+     * <p>Bewusst per Reflection + {@link org.bukkit.plugin.EventExecutor}, damit das
+     * Plugin ohne Oraxen auf dem Klassenpfad kompiliert und läuft.</p>
+     */
+    @SuppressWarnings("unchecked")
+    private void registerReloadListener() {
+        try {
+            Class<? extends org.bukkit.event.Event> eventClass =
+                    (Class<? extends org.bukkit.event.Event>) Class.forName(
+                            "io.th0rgal.oraxen.api.events.OraxenItemsLoadedEvent");
+            reloadListener = new org.bukkit.event.Listener() {};
+            org.bukkit.plugin.EventExecutor executor = (listener, event) ->
+                    // Einen Tick verzögern: erst wenn Oraxen den Reload abgeschlossen
+                    // hat, sind alle Items via getItemById wieder verfügbar.
+                    org.bukkit.Bukkit.getScheduler().runTask(plugin, plugin::resyncExternalAssets);
+            org.bukkit.Bukkit.getPluginManager().registerEvent(
+                    eventClass, reloadListener, org.bukkit.event.EventPriority.MONITOR,
+                    executor, plugin);
+            plugin.debug("Oraxen-Reload-Listener aktiv (Auto-Resync nach /oraxen reload).");
+        } catch (Throwable t) {
+            // Ältere Oraxen-Version ohne dieses Event: kein Auto-Resync, kein Fehler.
+            plugin.debug("Oraxen-Reload-Listener nicht verfügbar: " + t.getMessage());
+        }
     }
 
     @Override
