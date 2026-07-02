@@ -268,7 +268,7 @@ public final class OraxenAssetDeployer {
     private void saveState(Path path, Properties state, Properties bundled) {
         try {
             Files.createDirectories(path.getParent());
-            state.setProperty("asset-version", bundled.getProperty("asset-version", "6"));
+            state.setProperty("asset-version", bundled.getProperty("asset-version", "7"));
             try (var out = Files.newOutputStream(path)) {
                 state.store(out, "yourShika Backpack's Oraxen asset state");
             }

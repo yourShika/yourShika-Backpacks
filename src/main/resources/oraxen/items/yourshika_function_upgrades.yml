@@ -451,6 +451,16 @@ ysbp_upgrade_everlasting:
       - ysbp/upgrades/functions/everlasting.png
     custom_model_data: 2144
 
+ysbp_upgrade_soulbound:
+  displayname: "<#7ce0ff><bold>Soulbound Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/soulbound.png
+    custom_model_data: 2156
+
 ysbp_upgrade_infinity_admin:
   displayname: "<#6e5bc8><bold>Infinity Upgrade Admin</bold>"
   material: PAPER

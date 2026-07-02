@@ -127,6 +127,14 @@ public enum FunctionUpgrade {
                     "<dark_gray>Needs a Nether Star (Wither)."),
             List.of("OSO", "NUN", "OOO"),
             Map.of('O', Material.OBSIDIAN, 'S', Material.NETHER_STAR, 'N', Material.NETHERITE_INGOT),
+            0, null),
+
+    SOULBOUND("soulbound", "<#7CE0FF><bold>Soulbound Upgrade</bold></#7CE0FF>", 2156,
+            List.of("<gray>The backpack <white>stays with you when you die</white>",
+                    "<gray>instead of dropping – you keep it after respawn.",
+                    "<dark_gray>Needs a Totem of Undying."),
+            List.of(" T ", "SUS", " S "),
+            Map.of('T', Material.TOTEM_OF_UNDYING, 'S', Material.SOUL_SOIL),
             0, null);
 
     private final String id;

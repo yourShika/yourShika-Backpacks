@@ -46,7 +46,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BukkitTask autosaveTask;
 
     /** Aktuelle Struktur-Version der config.yml. */
-    private static final int CONFIG_VERSION = 8;
+    private static final int CONFIG_VERSION = 9;
 
     @Override
     public void onEnable() {
@@ -124,6 +124,8 @@ public final class YourShikaBackpacks extends JavaPlugin {
         this.functionUpgrades.registerAll();
         Bukkit.getPluginManager().registerEvents(
                 new de.yourshika.backpacks.listener.UpgradeEffectListener(this, manager), this);
+        Bukkit.getPluginManager().registerEvents(
+                new de.yourshika.backpacks.listener.SoulboundDeathListener(this, manager), this);
         Bukkit.getPluginManager().registerEvents(
                 new de.yourshika.backpacks.listener.ItemUpdateListener(this), this);
         Bukkit.getPluginManager().registerEvents(

@@ -3,7 +3,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.0.9-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -21,6 +21,25 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## ✨ v1.1.0
+
+- 🎒 **Soulbound Upgrade (new)** – a new functional upgrade with its own Oraxen
+  texture. A backpack with this upgrade **stays with you when you die** instead of
+  dropping, and you keep it after respawn. It is **dupe-safe next to grave/deadbody
+  plugins**: the death handler runs at `LOWEST` priority and removes soulbound
+  backpacks from the death drops *before* grave plugins read them, and the backpack
+  content lives server-side by ID (so even a stray copy shares the same storage).
+  Craft it with a **Totem of Undying** + **Soul Soil** around Upgrade Leather.
+- 🎨 **Carried backpack now uses your colors** – the carried/held Oraxen backpack
+  baked the tier color into its **overlay layer** (e.g. an Emerald backpack stayed
+  green and dyeing the accent didn't fully show). The overlay is now **neutral**
+  (tier-independent), so the body takes your **main color** (dyeable base) and the
+  accent variant colors the straps/pockets – the same fix v1.0.9 shipped for placed
+  backpacks. *(Resource-pack change – run `/oraxen reload` after updating; existing
+  backpacks refresh automatically on open/join.)*
 
 ---
 
@@ -401,7 +420,7 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.0.9.jar`).
+   (`yourShika-Backpacks-1.1.0.jar`).
 2. Put it into the `plugins/` folder of your **Paper 26.1.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
@@ -611,7 +630,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.0.9.jar
+target/yourShika-Backpacks-1.1.0.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in

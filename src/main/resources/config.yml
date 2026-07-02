@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 8
+config-version: 9
 
 # Language file messages_<language>.yml (default: en). German (de) is bundled too.
 language: en
@@ -444,6 +444,7 @@ upgrades:
       trash:           { custom-model-data: 2152, item-model: "", provider-id: "ysbp_upgrade_trash" }
       xp:              { custom-model-data: 2155, item-model: "", provider-id: "ysbp_upgrade_xp" }
       everlasting:     { custom-model-data: 2144, item-model: "", provider-id: "ysbp_upgrade_everlasting" }
+      soulbound:       { custom-model-data: 2156, item-model: "", provider-id: "ysbp_upgrade_soulbound" }
     # Crafting-Rezepte der Funktions-Upgrades – frei konfigurierbar.
     # 'U' = Upgrade-Leder (Pflicht), 'X' = das vorausgesetzte Basis-Upgrade
     # (z.B. braucht Advanced Pickup zuerst ein Pickup Upgrade). Alle anderen
@@ -498,6 +499,11 @@ upgrades:
       everlasting:
         shape: ["OSO", "NUN", "OOO"]
         ingredients: { O: OBSIDIAN, S: NETHER_STAR, N: NETHERITE_INGOT }
+      # Soulbound: the backpack stays with the player on death (kept through
+      # respawn) instead of dropping. 'U' = Upgrade Leather.
+      soulbound:
+        shape: [" T ", "SUS", " S "]
+        ingredients: { T: TOTEM_OF_UNDYING, S: SOUL_SOIL }
 
 # ---------------------------------------------------------------------------
 #  Externe Module / Hooks
