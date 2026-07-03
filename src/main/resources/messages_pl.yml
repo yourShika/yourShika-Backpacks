@@ -14,6 +14,7 @@ help:
   color: "<yellow>/bp color <kolor> [akcent] <gray>– Farbuj plecak (nazwa lub #RRGGBB)"
   list: "<yellow>/bp list [gracz] <gray>– Lista plecaków"
   recall: "<yellow>/bp recall <gray>– Przywołaj postawione plecaki (wymaga ulepszenia Recall)"
+  magnet: "<yellow>/bp magnet <on|off> <gray>– Włącz/wyłącz przyciąganie magnesu"
   give: "<yellow>/bp give <gracz> <przedmiot> [ilość] <gray>– Daj przedmiot"
   openid: "<yellow>/bp openid <id> <gray>– Otwórz plecak po ID"
   modules: "<yellow>/bp modules <gray>– Włącz/wyłącz moduły zewnętrzne"
@@ -60,6 +61,12 @@ upgrades:
   no-upgrade-item: "<red>Tutaj pasują tylko ulepszenia funkcyjne (nie skóra ani ulepszenia poziomu)."
   one-furnace: "<red>Tylko jedno ulepszenie pieca (Smelting/Blasting/Smoking) na plecak."
   too-many-stations: "<red>Tylko <max> ulepszeń-stacji na plecak (aby wszystkie przyciski były widoczne)."
+  duplicate-suppressed: "<red>Kilka plecaków z ulepszeniem Magnes/Pickup – wyłączone, dopóki nie zostanie jeden."
+
+magnet:
+  on: "<green>Magnes <white>włączony<green>."
+  off: "<yellow>Magnes <white>wyłączony<yellow>."
+  usage: "<red>Użycie: /bp magnet <on|off></red>"
 
 compact:
   preview: "<#D2B48C>Przy zamknięciu zostanie skompresowane: <white><items></white>"

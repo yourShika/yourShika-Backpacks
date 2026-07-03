@@ -69,6 +69,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "goto", "tp" -> gotoBackpack(sender, args);
             case "info", "recipes", "rezepte" -> info(sender);
             case "recall" -> recall(sender);
+            case "magnet" -> magnet(sender, args);
             case "modules", "module" -> modules(sender);
             case "assets" -> assets(sender, args);
             case "doctor" -> doctor(sender);
@@ -89,6 +90,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "help.locate");
         msg.sendRaw(sender, "help.transfer");
         msg.sendRaw(sender, "help.recall");
+        msg.sendRaw(sender, "help.magnet");
         if (sender.hasPermission("yourshika.backpack.admin.color")) msg.sendRaw(sender, "help.color");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
         if (sender.hasPermission("yourshika.backpack.admin.openid")) msg.sendRaw(sender, "help.openid");
@@ -98,6 +100,26 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         if (sender.hasPermission("yourshika.backpack.admin.update")) msg.sendRaw(sender, "help.update");
         if (sender.hasPermission("yourshika.backpack.admin.reload")) msg.sendRaw(sender, "help.reload");
         msg.sendRaw(sender, "help.footer");
+    }
+
+    private void magnet(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        boolean target;
+        if (args.length >= 2) {
+            switch (args[1].toLowerCase(java.util.Locale.ROOT)) {
+                case "on", "an", "enable", "true" -> target = true;
+                case "off", "aus", "disable", "false" -> target = false;
+                case "toggle" -> target = !manager.isMagnetOn(player.getUniqueId());
+                default -> { msg.send(sender, "magnet.usage"); return; }
+            }
+        } else {
+            target = !manager.isMagnetOn(player.getUniqueId()); // ohne Argument: umschalten
+        }
+        manager.setMagnet(player.getUniqueId(), target);
+        msg.send(player, target ? "magnet.on" : "magnet.off");
     }
 
     private void info(CommandSender sender) {
@@ -712,7 +734,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "rename", "list", "locate", "transfer", "recall", "version"));
+            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "rename", "list", "locate", "transfer", "recall", "magnet", "version"));
             if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
@@ -745,6 +767,9 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         }
         if (sub.equals("assets") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.assets")) {
             return filter(List.of("status", "redeploy"), args[1]);
+        }
+        if (sub.equals("magnet") && args.length == 2) {
+            return filter(List.of("on", "off", "toggle"), args[1]);
         }
         return List.of();
     }

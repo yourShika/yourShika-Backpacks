@@ -111,6 +111,11 @@ public final class MessageManager {
         to.sendMessage(component(key, resolvers));
     }
 
+    /** Sendet eine Nachricht in die Action Bar eines Spielers (ohne Prefix). */
+    public void sendActionBar(org.bukkit.entity.Player to, String key, TagResolver... resolvers) {
+        to.sendActionBar(component(key, resolvers));
+    }
+
     public Component prefix() {
         return prefix;
     }

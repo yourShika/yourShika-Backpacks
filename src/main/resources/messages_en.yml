@@ -16,6 +16,7 @@ help:
   locate: "<yellow>/bp locate [player|id] <gray>– Show coordinates of placed backpacks"
   transfer: "<yellow>/bp transfer <id> <player> <gray>– Transfer ownership of a backpack"
   recall: "<yellow>/bp recall <gray>– Recall your placed backpacks (needs Recall Upgrade)"
+  magnet: "<yellow>/bp magnet <on|off> <gray>– Toggle the magnet pull"
   give: "<yellow>/bp give <player> <tier> [amount] [color] [accent] <gray>– Give a backpack"
   openid: "<yellow>/bp openid <id> <gray>– Open a backpack by ID"
   modules: "<yellow>/bp modules <gray>– Toggle external modules"
@@ -71,6 +72,12 @@ upgrades:
   no-upgrade-item: "<red>Only function upgrades fit here (not upgrade leather or tier upgrades)."
   one-furnace: "<red>Only one furnace-type upgrade (Smelting/Blasting/Smoking) per backpack."
   too-many-stations: "<red>Only <max> station upgrades fit per backpack (so all buttons stay visible)."
+  duplicate-suppressed: "<red>Multiple backpacks with a Magnet/Pickup upgrade – disabled until only one remains."
+
+magnet:
+  on: "<green>Magnet <white>enabled<green>."
+  off: "<yellow>Magnet <white>disabled<yellow>."
+  usage: "<red>Usage: /bp magnet <on|off></red>"
 
 update:
   checking: "<gray>Checking GitHub for the latest version …"

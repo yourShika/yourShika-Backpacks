@@ -29,6 +29,9 @@ public final class UpgradeMagnetTask extends BukkitRunnable {
         int maxPerTick = Math.max(1, plugin.getConfig().getInt("upgrades.magnet.max-per-tick", 60));
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
+            // Gedrosselter Hinweis, wenn Magnet/Pickup wegen mehrerer gleichartiger
+            // Rucksäcke automatisch deaktiviert sind.
+            manager.maybeWarnDuplicates(player);
             int radius = manager.magnetRadius(player);
             if (radius <= 0) continue;
 

@@ -24,6 +24,7 @@ public final class BackpackData {
     private int furnaceCook;      // aktuelle Koch-Schritte (Fortschritt)
     private int furnaceBurn;      // verbleibende Items, die der gezündete Brennstoff noch schmilzt
     private ItemStack[] compactFilter; // Compacting-Whitelist (leer = alles verdichten)
+    private ItemStack[] pickupFilter;  // Pickup-Whitelist (leer = alles aufsammeln), NBT-genau
     private int storedXp;         // im Backpack gespeicherte Erfahrungs-Punkte (XP-Storage-Upgrade)
     private boolean placed;
     private String world;
@@ -72,6 +73,9 @@ public final class BackpackData {
 
     public ItemStack[] compactFilter() { return compactFilter; }
     public void compactFilter(ItemStack[] compactFilter) { this.compactFilter = compactFilter; }
+
+    public ItemStack[] pickupFilter() { return pickupFilter; }
+    public void pickupFilter(ItemStack[] pickupFilter) { this.pickupFilter = pickupFilter; }
 
     public int storedXp() { return storedXp; }
     public void storedXp(int storedXp) { this.storedXp = Math.max(0, storedXp); }

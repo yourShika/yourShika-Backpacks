@@ -17,6 +17,7 @@ help:
   locate: "<yellow>/bp locate [Spieler|ID] <gray>– Koordinaten platzierter Backpacks"
   transfer: "<yellow>/bp transfer <ID> <Spieler> <gray>– Besitzer eines Backpacks ändern"
   recall: "<yellow>/bp recall <gray>– Platzierte Backpacks zurückholen (braucht Recall-Upgrade)"
+  magnet: "<yellow>/bp magnet <on|off> <gray>– Magnet-Anziehung an-/ausschalten"
   give: "<yellow>/bp give <Spieler> <Item> [Anzahl] <gray>– Item geben"
   openid: "<yellow>/bp openid <ID> <gray>– Backpack per ID öffnen"
   modules: "<yellow>/bp modules <gray>– Externe Module an/aus schalten"
@@ -102,6 +103,12 @@ upgrades:
   no-upgrade-item: "<red>Hier passen nur Funktions-Upgrades (kein Upgrade-Leder, keine Tier-Upgrades)."
   one-furnace: "<red>Nur ein Schmelz-Upgrade (Smelting/Blasting/Smoking) pro Rucksack."
   too-many-stations: "<red>Nur <max> Stations-Upgrades pro Rucksack (damit alle Buttons sichtbar bleiben)."
+  duplicate-suppressed: "<red>Mehrere Rucksäcke mit Magnet-/Pickup-Upgrade – deaktiviert, bis nur noch einer übrig ist."
+
+magnet:
+  on: "<green>Magnet <white>aktiviert<green>."
+  off: "<yellow>Magnet <white>deaktiviert<yellow>."
+  usage: "<red>Verwendung: /bp magnet <on|off></red>"
 
 update:
   checking: "<gray>Suche nach der neuesten Version auf GitHub …"

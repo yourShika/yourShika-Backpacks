@@ -84,7 +84,7 @@ public final class BackpackGuiListener implements Listener {
         //     das passende Funktions-Upgrade verbaut ist.
         if (clickedTop && raw >= BackpackMenuHolder.CONTROL_ROW_START) {
             String station = holder.stationAt(raw);
-            if (station != null && manager.functionUpgradesOf(holder.backpackId()).contains(station)) {
+            if (station != null && manager.stationActive(holder.backpackId(), station)) {
                 event.setCancelled(true);
                 UUID id = holder.backpackId();
                 String tier = holder.tierKey();
@@ -650,10 +650,11 @@ public final class BackpackGuiListener implements Listener {
             return;
         }
 
-        // Presets / Filter leeren (#20).
+        // Presets / Filter leeren (#20). Presets gibt es nur beim Compacting-Filter;
+        // der Pickup-Filter ist NBT-genau, dort sind die Preset-Slots nur Deko.
         if (clickedTop) {
             String preset = holder.presetAt(raw);
-            if (preset != null) {
+            if (preset != null && !holder.isPickup()) {
                 event.setCancelled(true);
                 manager.applyPreset(holder, preset);
                 return;
@@ -672,7 +673,15 @@ public final class BackpackGuiListener implements Listener {
         ItemStack cursor = event.getCursor();
         if (cursor != null && !cursor.getType().isAir()) {
             if (items.isBackpack(cursor)) { denyNesting(player); return; }
-            ItemStack ghost = new ItemStack(cursor.getType());          // nur Typ als Muster
+            // Pickup-Filter merkt sich das ganze Item (NBT-genau, für Custom-Items);
+            // Compacting-Filter nur den Typ als Muster.
+            ItemStack ghost;
+            if (holder.isPickup()) {
+                ghost = cursor.clone();
+                ghost.setAmount(1);
+            } else {
+                ghost = new ItemStack(cursor.getType());
+            }
             top.setItem(raw, ghost);
         } else {
             top.setItem(raw, null);                                      // leeren

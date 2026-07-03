@@ -50,6 +50,16 @@ public final class BackpackManager {
     /** Cache: backpackId -> Set installierter Funktions-Upgrade-IDs. */
     private final Map<UUID, java.util.Set<String>> functionCache = new ConcurrentHashMap<>();
 
+    /** Pickup- bzw. Magnet-Upgrade-Familien (für Toggle & Doppel-Sperre). */
+    public static final java.util.Set<String> PICKUP_FAMILY = java.util.Set.of("pickup", "advanced_pickup");
+    public static final java.util.Set<String> MAGNET_FAMILY = java.util.Set.of("magnet", "advanced_magnet");
+
+    /** Spieler, die den Magnet per {@code /bp magnet off} deaktiviert haben (laufzeit). */
+    private final java.util.Set<UUID> magnetOff = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** Throttle für die Doppel-Rucksack-Warnung (Spieler-UUID -> letzter Hinweis in ms). */
+    private final Map<UUID, Long> dupWarn = new ConcurrentHashMap<>();
+
     public BackpackManager(YourShikaBackpacks plugin, BackpackStorage storage,
                            BackpackItemFactory items, TierRegistry tiers) {
         this.plugin = plugin;
@@ -271,8 +281,22 @@ public final class BackpackManager {
     /** Reihenfolge, in der Stations-Buttons (falls verbaut) platziert werden. */
     private static final String[] STATION_ORDER = {
             "crafting", "stonecutter", "smithing", "ender_link",
-            "smelting", "blasting", "smoking", "compacting", "xp", "trash"
+            "smelting", "blasting", "smoking", "compacting", "pickup", "xp", "trash"
     };
+
+    /**
+     * Ist die „Station" (Button) für ein Backpack verbaut? Der Pickup-Filter-Button
+     * erscheint für die gesamte Pickup-Familie (pickup ODER advanced_pickup).
+     */
+    private boolean stationInstalled(java.util.Set<String> functions, String station) {
+        if (station.equals("pickup")) return hasAny(functions, PICKUP_FAMILY);
+        return functions.contains(station);
+    }
+
+    /** Öffentlich für den GUI-Listener: darf der Stations-Button geklickt werden? */
+    public boolean stationActive(UUID backpackId, String station) {
+        return stationInstalled(functionUpgradesOf(backpackId), station);
+    }
 
     private void fillControlRow(Inventory inv, BackpackTier tier, BackpackMenuHolder holder) {
         ItemStack filler = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
@@ -307,7 +331,7 @@ public final class BackpackManager {
         int[] candidates = holder.stationCandidates();
         int idx = 0;
         for (String station : STATION_ORDER) {
-            if (!functions.contains(station)) continue;
+            if (!stationInstalled(functions, station)) continue;
             if (idx >= candidates.length) break; // keine freien Slots mehr
             int slot = candidates[idx++];
             inv.setItem(slot, stationButton(station, holder.backpackId()));
@@ -452,6 +476,7 @@ public final class BackpackManager {
             case "blasting" -> { material = Material.BLAST_FURNACE; name = "<#FFB36B><bold>Portable Blast Furnace</bold>"; desc = "Smelt ores & metals fast."; }
             case "smoking" -> { material = Material.SMOKER; name = "<#FFD27F><bold>Portable Smoker</bold>"; desc = "Cook food fast."; }
             case "compacting" -> { material = Material.PISTON; name = "<#D2B48C><bold>Compacting Filter</bold>"; desc = "Choose what compacts on close."; }
+            case "pickup" -> { material = Material.HOPPER; name = "<#5BE85B><bold>Pickup Filter</bold>"; desc = "Choose what gets picked up."; }
             case "xp" -> { material = Material.EXPERIENCE_BOTTLE; name = "<#7CFF6B><bold>XP Storage</bold>"; desc = "Store & withdraw experience."; }
             case "trash" -> { material = Material.LAVA_BUCKET; name = "<#8B8B8B><bold>Trash</bold>"; desc = "Delete unwanted items."; }
             default -> { material = Material.BARRIER; name = "<gray>Station"; desc = ""; }
@@ -552,6 +577,7 @@ public final class BackpackManager {
                 case "blasting" -> openFurnace(player, "blast", backpackId, tierKey);
                 case "smoking" -> openFurnace(player, "smoker", backpackId, tierKey);
                 case "compacting" -> openFilter(player, backpackId, tierKey);
+                case "pickup" -> openPickupFilter(player, backpackId, tierKey);
                 case "xp" -> openXp(player, backpackId, tierKey);
                 case "trash" -> openTrash(player);
                 default -> { }
@@ -744,19 +770,30 @@ public final class BackpackManager {
             Map.entry(Material.BONE_MEAL, Material.BONE_BLOCK),
             Map.entry(Material.NETHER_WART, Material.NETHER_WART_BLOCK));
 
-    // ---- Compacting-Filter -----------------------------------------------
+    // ---- Filter (Compacting / Pickup) ------------------------------------
 
     /** Öffnet die Compacting-Filter-GUI eines Backpacks. */
     public void openFilter(Player player, UUID backpackId, String tierKey) {
+        openFilterMenu(player, backpackId, tierKey, "compacting");
+    }
+
+    /** Öffnet die Pickup-Filter-GUI eines Backpacks (NBT-genaue Whitelist). */
+    public void openPickupFilter(Player player, UUID backpackId, String tierKey) {
+        openFilterMenu(player, backpackId, tierKey, "pickup");
+    }
+
+    private void openFilterMenu(Player player, UUID backpackId, String tierKey, String kind) {
+        boolean pickup = "pickup".equals(kind);
         de.yourshika.backpacks.gui.FilterMenuHolder holder =
-                new de.yourshika.backpacks.gui.FilterMenuHolder(backpackId, tierKey);
+                new de.yourshika.backpacks.gui.FilterMenuHolder(backpackId, tierKey, kind);
+        String title = pickup ? "<#5BE85B><bold>Pickup Filter</bold>" : "<#D2B48C><bold>Compacting Filter</bold>";
         Inventory inv = Bukkit.createInventory(holder,
                 de.yourshika.backpacks.gui.FilterMenuHolder.SIZE,
-                mini.deserialize("<#D2B48C><bold>Compacting Filter</bold>").decoration(TextDecoration.ITALIC, false));
+                mini.deserialize(title).decoration(TextDecoration.ITALIC, false));
         holder.setInventory(inv);
 
         BackpackData data = storage.load(backpackId);
-        ItemStack[] filter = data == null ? null : data.compactFilter();
+        ItemStack[] filter = data == null ? null : (pickup ? data.pickupFilter() : data.compactFilter());
         if (filter != null) {
             for (int i = 0; i < de.yourshika.backpacks.gui.FilterMenuHolder.FILTER_SLOTS && i < filter.length; i++) {
                 inv.setItem(i, filter[i]);
@@ -766,21 +803,23 @@ public final class BackpackManager {
         for (int i = de.yourshika.backpacks.gui.FilterMenuHolder.FILTER_SLOTS; i < holder.getInventory().getSize(); i++) {
             inv.setItem(i, pane);
         }
-        inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.INFO_SLOT, filterInfo());
+        inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.INFO_SLOT, filterInfo(pickup));
         inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.BACK_SLOT, backButton());
 
-        // Presets (#20) + Leeren-Button.
-        int[] ps = de.yourshika.backpacks.gui.FilterMenuHolder.PRESET_SLOTS;
-        inv.setItem(ps[0], presetButton(Material.IRON_INGOT, "Ores preset", "Iron, gold, copper, diamond, …"));
-        inv.setItem(ps[1], presetButton(Material.WHEAT, "Farm preset", "Wheat, kelp, nether wart, …"));
-        inv.setItem(ps[2], presetButton(Material.REDSTONE, "Redstone preset", "Redstone & lapis"));
-        inv.setItem(ps[3], presetButton(Material.NETHERITE_INGOT, "Misc preset", "All compactable items"));
+        if (!pickup) {
+            // Compacting-Presets (#20) – für Pickup nicht sinnvoll (NBT-genau).
+            int[] ps = de.yourshika.backpacks.gui.FilterMenuHolder.PRESET_SLOTS;
+            inv.setItem(ps[0], presetButton(Material.IRON_INGOT, "Ores preset", "Iron, gold, copper, diamond, …"));
+            inv.setItem(ps[1], presetButton(Material.WHEAT, "Farm preset", "Wheat, kelp, nether wart, …"));
+            inv.setItem(ps[2], presetButton(Material.REDSTONE, "Redstone preset", "Redstone & lapis"));
+            inv.setItem(ps[3], presetButton(Material.NETHERITE_INGOT, "Misc preset", "All compactable items"));
+        }
         inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.CLEAR_SLOT,
                 presetButton(Material.BARRIER, "Clear filter", "Remove all filter entries"));
 
         player.openInventory(inv);
-        // Preview (#19): zeigt im Chat, was beim Schließen verdichtet würde.
-        compactPreview(player, backpackId);
+        // Preview (#19): zeigt im Chat, was beim Schließen verdichtet würde (nur Compacting).
+        if (!pickup) compactPreview(player, backpackId);
     }
 
     private ItemStack presetButton(Material material, String name, String desc) {
@@ -854,18 +893,31 @@ public final class BackpackManager {
         return Character.toUpperCase(n.charAt(0)) + n.substring(1);
     }
 
-    private ItemStack filterInfo() {
-        ItemStack item = new ItemStack(Material.PISTON);
+    private ItemStack filterInfo(boolean pickup) {
+        ItemStack item = new ItemStack(pickup ? Material.HOPPER : Material.PISTON);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(line("<#D2B48C><bold>Compacting Filter</bold>"));
-        meta.lore(List.of(
-                line("<dark_gray><st>                    </st>"),
-                line("<gray>Place sample items here to choose"),
-                line("<gray>which items get <white>compacted</white> on close."),
-                Component.empty(),
-                line("<dark_gray>Empty filter = compact everything."),
-                line("<dark_gray><st>                    </st>")
-        ));
+        if (pickup) {
+            meta.displayName(line("<#5BE85B><bold>Pickup Filter</bold>"));
+            meta.lore(List.of(
+                    line("<dark_gray><st>                    </st>"),
+                    line("<gray>Place sample items here to choose"),
+                    line("<gray>which items are <white>picked up</white> into this backpack."),
+                    line("<gray>Matches <white>exactly</white> (incl. custom NBT / items)."),
+                    Component.empty(),
+                    line("<dark_gray>Empty filter = pick up everything."),
+                    line("<dark_gray><st>                    </st>")
+            ));
+        } else {
+            meta.displayName(line("<#D2B48C><bold>Compacting Filter</bold>"));
+            meta.lore(List.of(
+                    line("<dark_gray><st>                    </st>"),
+                    line("<gray>Place sample items here to choose"),
+                    line("<gray>which items get <white>compacted</white> on close."),
+                    Component.empty(),
+                    line("<dark_gray>Empty filter = compact everything."),
+                    line("<dark_gray><st>                    </st>")
+            ));
+        }
         item.setItemMeta(meta);
         return item;
     }
@@ -881,8 +933,30 @@ public final class BackpackManager {
         }
         ItemStack[] filter = new ItemStack[de.yourshika.backpacks.gui.FilterMenuHolder.FILTER_SLOTS];
         for (int i = 0; i < filter.length; i++) filter[i] = inv.getItem(i);
-        data.compactFilter(filter);
+        if (holder.isPickup()) {
+            data.pickupFilter(filter);
+        } else {
+            data.compactFilter(filter);
+        }
         storage.save(data);
+    }
+
+    /**
+     * Prüft, ob ein Item durch den Pickup-Filter eines Backpacks darf. Leerer
+     * Filter = alles erlaubt. Der Abgleich ist <b>NBT-genau</b> ({@link ItemStack#isSimilar})
+     * – so lassen sich auch Custom-Items / Items mit besonderem NBT gezielt whitelisten.
+     */
+    public boolean passesPickupFilter(UUID backpackId, ItemStack stack) {
+        BackpackData data = storage.load(backpackId);
+        ItemStack[] filter = data == null ? null : data.pickupFilter();
+        if (filter == null) return true;
+        boolean any = false;
+        for (ItemStack entry : filter) {
+            if (entry == null || entry.getType().isAir()) continue;
+            any = true;
+            if (entry.isSimilar(stack)) return true;
+        }
+        return !any; // kein Eintrag gesetzt -> alles erlaubt
     }
 
     /** Liefert die Whitelist-Materialien eines Backpacks (leer = alles erlaubt). */
@@ -1593,6 +1667,9 @@ public final class BackpackManager {
 
     /** Größter Magnet-Radius unter den eingebauten radius-basierten Upgrades (0 = keiner). */
     public int magnetRadius(Player player) {
+        if (magnetOff.contains(player.getUniqueId())) return 0; // per /bp magnet off deaktiviert
+        int pickupCount = countBackpacksWithFamily(player, PICKUP_FAMILY);
+        int magnetCount = countBackpacksWithFamily(player, MAGNET_FAMILY);
         int best = 0;
         for (ItemStack it : player.getInventory().getContents()) {
             if (!items.isBackpack(it)) continue;
@@ -1600,10 +1677,82 @@ public final class BackpackManager {
             if (id == null) continue;
             for (String fn : functionUpgradesOf(id)) {
                 var u = de.yourshika.backpacks.upgrade.FunctionUpgrade.byId(fn);
-                if (u != null && u.radius() > best) best = u.radius();
+                if (u == null || u.radius() <= 0) continue;
+                boolean pickupRadius = PICKUP_FAMILY.contains(fn);
+                // Doppel-Sperre: bei mehreren Rucksäcken derselben Familie im Inventar
+                // schaltet sich das Upgrade automatisch aus (Dupe-/Fehler-Schutz).
+                if (pickupRadius ? pickupCount > 1 : magnetCount > 1) continue;
+                if (u.radius() > best) best = u.radius();
             }
         }
         return best;
+    }
+
+    /** Anzahl Rucksäcke im Inventar mit mindestens einem Upgrade der Familie. */
+    public int countBackpacksWithFamily(Player player, java.util.Set<String> family) {
+        int count = 0;
+        for (ItemStack it : player.getInventory().getContents()) {
+            if (!items.isBackpack(it)) continue;
+            UUID id = items.getId(it);
+            if (id == null) continue;
+            if (hasAny(functionUpgradesOf(id), family)) count++;
+        }
+        return count;
+    }
+
+    private static boolean hasAny(java.util.Set<String> set, java.util.Set<String> family) {
+        for (String f : family) if (set.contains(f)) return true;
+        return false;
+    }
+
+    /** Ist der Magnet für diesen Spieler aktiv (nicht per Kommando ausgeschaltet)? */
+    public boolean isMagnetOn(UUID player) {
+        return !magnetOff.contains(player);
+    }
+
+    /** Schaltet den Magnet für einen Spieler an/aus (laufzeit). */
+    public void setMagnet(UUID player, boolean on) {
+        if (on) magnetOff.remove(player);
+        else magnetOff.add(player);
+    }
+
+    /**
+     * Warnt gedrosselt (Action Bar), wenn Magnet- oder Pickup-Upgrade wegen mehrerer
+     * gleichartiger Rucksäcke im Inventar automatisch deaktiviert sind.
+     */
+    public void maybeWarnDuplicates(Player player) {
+        boolean pickupDup = countBackpacksWithFamily(player, PICKUP_FAMILY) > 1;
+        boolean magnetDup = countBackpacksWithFamily(player, MAGNET_FAMILY) > 1;
+        if (!pickupDup && !magnetDup) return;
+        long now = System.currentTimeMillis();
+        Long last = dupWarn.get(player.getUniqueId());
+        if (last != null && now - last < 10_000L) return;
+        dupWarn.put(player.getUniqueId(), now);
+        plugin.messages().sendActionBar(player, "upgrades.duplicate-suppressed");
+    }
+
+    /**
+     * Sammelt ein Item über das Pickup-Upgrade in den (einzigen erlaubten) Rucksack
+     * mit Pickup-Familie ein – respektiert den Pickup-Filter und die Doppel-Sperre.
+     */
+    public boolean depositPickup(Player player, ItemStack stack) {
+        if (stack == null || stack.getType().isAir()) return false;
+        if (countBackpacksWithFamily(player, PICKUP_FAMILY) > 1) {
+            maybeWarnDuplicates(player);
+            return false; // mehrere Pickup-Rucksäcke -> automatisch aus
+        }
+        boolean moved = false;
+        for (ItemStack it : player.getInventory().getContents()) {
+            if (stack.getAmount() <= 0) break;
+            if (!items.isBackpack(it)) continue;
+            UUID id = items.getId(it);
+            if (id == null) continue;
+            if (!hasAny(functionUpgradesOf(id), PICKUP_FAMILY)) continue;
+            if (!passesPickupFilter(id, stack)) continue; // Filter: nur erlaubte Items
+            int before = stack.getAmount();
+            if (depositItem(id, stack) && stack.getAmount() < before) moved = true;
+        }
+        return moved;
     }
 
     /** Liefert eine Backpack-ID im Inventar des Spielers mit dem Upgrade (oder null). */

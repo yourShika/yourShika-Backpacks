@@ -37,15 +37,24 @@ public final class FilterMenuHolder implements InventoryHolder {
 
     private final UUID backpackId;
     private final String tierKey;
+    /** "compacting" oder "pickup" – bestimmt, in welches Feld gespeichert wird. */
+    private final String kind;
     private Inventory inventory;
 
     public FilterMenuHolder(UUID backpackId, String tierKey) {
+        this(backpackId, tierKey, "compacting");
+    }
+
+    public FilterMenuHolder(UUID backpackId, String tierKey, String kind) {
         this.backpackId = backpackId;
         this.tierKey = tierKey;
+        this.kind = kind == null ? "compacting" : kind;
     }
 
     public UUID backpackId() { return backpackId; }
     public String tierKey() { return tierKey; }
+    public String kind() { return kind; }
+    public boolean isPickup() { return "pickup".equals(kind); }
 
     /** Ist der Slot ein beschreibbarer Whitelist-Slot? */
     public boolean isFilterSlot(int rawSlot) {

@@ -47,8 +47,9 @@ public final class UpgradeEffectListener implements Listener {
         if (items.isBackpack(stack)) return; // Backpacks selbst nicht einsaugen.
 
         ItemStack work = stack.clone();
-        if (!manager.depositItemWithFunction(player, work,
-                java.util.Set.of("pickup", "advanced_pickup"))) return; // nichts ging rein -> normal aufsammeln
+        // Pickup respektiert den Pickup-Filter (NBT-genau) und die Doppel-Sperre
+        // (max. 1 Rucksack mit Pickup-Familie im Inventar).
+        if (!manager.depositPickup(player, work)) return; // nichts ging rein -> normal aufsammeln
 
         event.setCancelled(true);
         // Feedback-Sound, da der Vanilla-Aufsammel-Sound durch das Canceln entfällt.
