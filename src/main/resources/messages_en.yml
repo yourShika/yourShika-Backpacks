@@ -75,8 +75,8 @@ upgrades:
   duplicate-suppressed: "<red>Multiple backpacks with a Magnet/Pickup upgrade – disabled until only one remains."
 
 magnet:
-  on: "<green>Magnet <white>enabled<green>."
-  off: "<yellow>Magnet <white>disabled<yellow>."
+  "on": "<green>Magnet <white>enabled<green>."
+  "off": "<yellow>Magnet <white>disabled<yellow>."
   usage: "<red>Usage: /bp magnet <on|off></red>"
 
 update:

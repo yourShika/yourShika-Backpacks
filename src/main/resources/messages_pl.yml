@@ -64,8 +64,8 @@ upgrades:
   duplicate-suppressed: "<red>Kilka plecaków z ulepszeniem Magnes/Pickup – wyłączone, dopóki nie zostanie jeden."
 
 magnet:
-  on: "<green>Magnes <white>włączony<green>."
-  off: "<yellow>Magnes <white>wyłączony<yellow>."
+  "on": "<green>Magnes <white>włączony<green>."
+  "off": "<yellow>Magnes <white>wyłączony<yellow>."
   usage: "<red>Użycie: /bp magnet <on|off></red>"
 
 compact:

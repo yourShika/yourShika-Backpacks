@@ -106,8 +106,8 @@ upgrades:
   duplicate-suppressed: "<red>Mehrere Rucksäcke mit Magnet-/Pickup-Upgrade – deaktiviert, bis nur noch einer übrig ist."
 
 magnet:
-  on: "<green>Magnet <white>aktiviert<green>."
-  off: "<yellow>Magnet <white>deaktiviert<yellow>."
+  "on": "<green>Magnet <white>aktiviert<green>."
+  "off": "<yellow>Magnet <white>deaktiviert<yellow>."
   usage: "<red>Verwendung: /bp magnet <on|off></red>"
 
 update:
