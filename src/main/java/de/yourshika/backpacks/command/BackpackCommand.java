@@ -623,10 +623,6 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             msg.send(sender, "error.players-only");
             return;
         }
-        if (!sender.hasPermission("yourshika.backpack.admin.openid")) {
-            msg.send(sender, "error.no-permission");
-            return;
-        }
         if (args.length < 2) {
             msg.send(sender, "error.openid-usage");
             return;
@@ -637,6 +633,19 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         } catch (IllegalArgumentException ex) {
             msg.send(sender, "error.invalid-id", ph("input", args[1]));
             return;
+        }
+        // Admins dürfen jede ID öffnen. Normale Spieler dürfen über diesen Befehl
+        // nur ihre EIGENEN Backpacks öffnen – das treibt den [Open]-Button aus
+        // /bp list an, ohne fremde Backpacks zugänglich zu machen (B7). Für fremde
+        // oder unbekannte IDs eine einheitliche Meldung, damit die Existenz einer
+        // ID nicht abgefragt werden kann.
+        if (!player.hasPermission("yourshika.backpack.admin.openid")) {
+            BackpackData data = manager.storage().load(id);
+            if (data == null || data.owner() == null
+                    || !data.owner().equals(player.getUniqueId())) {
+                msg.send(sender, "error.no-permission");
+                return;
+            }
         }
         String error = manager.openById(player, id);
         if (error != null) {

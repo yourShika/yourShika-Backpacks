@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 9
+config-version: 10
 
 # Language file messages_<language>.yml (default: en). German (de) is bundled too.
 language: en
@@ -25,6 +25,12 @@ storage:
   autosave:
     enabled: true
     interval-minutes: 5
+  # Write-Behind-Cache: Backpack-Daten liegen im Speicher und werden gebündelt
+  # asynchron in dieses Intervall (Sekunden) zurückgeschrieben – kein Main-Thread-
+  # I/O mehr pro Aktion. Beim sauberen Server-Stopp wird immer vollständig
+  # geflusht. Kleiner = kleineres Verlustfenster bei hartem Crash, aber mehr
+  # Schreibvorgänge. Standard: 5.
+  flush-seconds: 5
 
 # ---------------------------------------------------------------------------
 #  GUI

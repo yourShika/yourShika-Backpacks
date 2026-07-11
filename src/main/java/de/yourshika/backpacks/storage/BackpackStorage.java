@@ -26,5 +26,15 @@ public interface BackpackStorage {
 
     int count();
 
+    /**
+     * Leichte Metadaten ALLER Backpacks (ohne die schweren Inhalts-Blobs) – für
+     * Statistiken ({@code /bp stats}), Orphan-Bereinigung ({@code /bp purge}) und
+     * das Aufwärmen des Owner-Index im Cache.
+     */
+    List<BackpackMeta> allMeta();
+
     void close();
+
+    /** Kompakte Metadaten eines Backpacks (id, Besitzer, Tier, platziert). */
+    record BackpackMeta(UUID id, UUID owner, String tier, boolean placed) {}
 }

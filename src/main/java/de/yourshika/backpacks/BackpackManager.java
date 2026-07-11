@@ -1808,7 +1808,9 @@ public final class BackpackManager {
     private boolean containsBackpack(ItemStack[] contents) {
         if (contents == null) return false;
         for (ItemStack item : contents) {
-            if (items.isBackpack(item)) return true;
+            // Tiefe Prüfung: auch ein Backpack in einer Shulkerbox/Bundle im Inhalt
+            // zählt, sonst ließe sich das Nesting-Limit umgehen (B5).
+            if (items.isOrContainsBackpack(item)) return true;
         }
         return false;
     }

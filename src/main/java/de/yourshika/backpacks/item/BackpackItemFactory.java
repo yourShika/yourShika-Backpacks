@@ -244,6 +244,7 @@ public final class BackpackItemFactory {
     /** Vergibt bei Bedarf eine neue, eindeutige ID und schreibt sie in das Item. */
     public UUID writeId(ItemStack item, UUID id) {
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) return id;
         meta.getPersistentDataContainer().set(keys.id, PersistentDataType.STRING, id.toString());
         item.setItemMeta(meta);
         return id;
@@ -251,6 +252,7 @@ public final class BackpackItemFactory {
 
     public void writeColors(ItemStack item, String main, String accent) {
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
         meta.getPersistentDataContainer().set(keys.mainColor, PersistentDataType.STRING, main);
         meta.getPersistentDataContainer().set(keys.accentColor, PersistentDataType.STRING, accent);
         item.setItemMeta(meta);
@@ -259,6 +261,7 @@ public final class BackpackItemFactory {
     /** Schreibt den Besitzer (UUID + Name) in das Item. */
     public void writeOwner(ItemStack item, UUID owner, String name) {
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
         if (owner != null) {
             meta.getPersistentDataContainer().set(keys.owner, PersistentDataType.STRING, owner.toString());
         }

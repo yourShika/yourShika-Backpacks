@@ -69,7 +69,15 @@ public final class BackpackSecurityListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (event.getClick().isKeyboardClick()) {
+        // Offhand-Swap (Taste F): getHotbarButton() liefert hier keinen gültigen
+        // Hotbar-Slot, daher explizit die Nebenhand prüfen – sonst ließe sich ein
+        // Backpack per F in ein Reittier-Inventar schieben.
+        if (event.getClick() == org.bukkit.event.inventory.ClickType.SWAP_OFFHAND) {
+            if (items.isBackpack(event.getWhoClicked().getInventory().getItemInOffHand())) {
+                event.setCancelled(true);
+                return;
+            }
+        } else if (event.getClick().isKeyboardClick()) {
             ItemStack hotbar = event.getView().getBottomInventory().getItem(event.getHotbarButton());
             if (items.isBackpack(hotbar)) {
                 event.setCancelled(true);
