@@ -132,6 +132,9 @@ public final class YourShikaBackpacks extends JavaPlugin {
                 new de.yourshika.backpacks.listener.AnvilRenameListener(this), this);
         new de.yourshika.backpacks.listener.UpgradeMagnetTask(this, manager)
                 .runTaskTimer(this, 20L, 8L);
+        // Passive Upgrades: Auto-Restock (Slots nachfüllen) + Feeding (auto-essen).
+        new de.yourshika.backpacks.listener.UpgradeUtilityTask(this, manager)
+                .runTaskTimer(this, 40L, 20L);
         // Portable Furnace im Hintergrund weiterlaufen lassen + Icon-Lore aktualisieren.
         new de.yourshika.backpacks.listener.FurnaceBackgroundTask(this, manager)
                 .runTaskTimer(this, 40L, 20L);

@@ -135,6 +135,20 @@ public enum FunctionUpgrade {
                     "<dark_gray>Needs a Totem of Undying."),
             List.of(" T ", "SUS", " S "),
             Map.of('T', Material.TOTEM_OF_UNDYING, 'S', Material.SOUL_SOIL),
+            0, null),
+
+    AUTO_RESTOCK("auto_restock", "<#FFD95B><bold>Auto-Restock Upgrade</bold></#FFD95B>", 2130,
+            List.of("<gray>When a hotbar/inventory stack runs out, it is",
+                    "<gray><white>refilled from the backpack</white> with the same item."),
+            List.of(" R ", "CUC", " R "),
+            Map.of('R', Material.COMPARATOR, 'C', Material.CHEST),
+            0, null),
+
+    FEEDING("feeding", "<#FF9E6B><bold>Feeding Upgrade</bold></#FF9E6B>", 2140,
+            List.of("<gray>Automatically <white>eats food</white> from the backpack",
+                    "<gray>when you get hungry."),
+            List.of(" H ", "BUB", " H "),
+            Map.of('H', Material.HAY_BLOCK, 'B', Material.BREAD),
             0, null);
 
     private final String id;

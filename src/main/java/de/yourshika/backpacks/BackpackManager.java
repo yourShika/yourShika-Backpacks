@@ -60,6 +60,9 @@ public final class BackpackManager {
     /** Throttle für die Doppel-Rucksack-Warnung (Spieler-UUID -> letzter Hinweis in ms). */
     private final Map<UUID, Long> dupWarn = new ConcurrentHashMap<>();
 
+    /** Zuletzt betrachtete Seite je Backpack (für "auf letzter Seite wieder öffnen"). */
+    private final Map<UUID, Integer> lastPage = new ConcurrentHashMap<>();
+
     public BackpackManager(YourShikaBackpacks plugin, BackpackStorage storage,
                            BackpackItemFactory items, TierRegistry tiers) {
         this.plugin = plugin;
@@ -178,6 +181,10 @@ public final class BackpackManager {
 
         BackpackMenuHolder holder = new BackpackMenuHolder(
                 data.id(), tier.key(), capacity, slotsPerPage, buffer, main, accent);
+
+        // Auf der zuletzt betrachteten Seite wieder öffnen (#F6).
+        Integer remembered = lastPage.get(data.id());
+        if (remembered != null) holder.currentPage(remembered);
 
         Inventory inv = Bukkit.createInventory(holder, BackpackMenuHolder.INVENTORY_SIZE,
                 title(tier, data, main, accent, holder));
@@ -347,6 +354,7 @@ public final class BackpackManager {
         flushVisiblePage(holder);
         persistOpen(holder); // Auto-Recovery (#55): bei jedem Seitenwechsel sichern
         holder.currentPage(target);
+        lastPage.put(holder.backpackId(), holder.currentPage());
         renderPage(holder);
     }
 
@@ -358,6 +366,7 @@ public final class BackpackManager {
         flushVisiblePage(holder);
         persistOpen(holder); // Auto-Recovery (#55)
         holder.currentPage(target);
+        lastPage.put(holder.backpackId(), holder.currentPage());
         renderPage(holder);
     }
 
@@ -400,6 +409,86 @@ public final class BackpackManager {
                 buffer[global] = inv.getItem(slot);
             }
         }
+    }
+
+    /**
+     * Legt {@code moving} in den kompletten Buffer eines offenen Backpacks – über
+     * <b>alle</b> Seiten, nicht nur die sichtbare. Gibt den Rest zurück (oder null).
+     * Verändert das übergebene {@code moving}. Kein Render/Save (macht der Aufrufer).
+     */
+    private ItemStack depositIntoBuffer(ItemStack[] buffer, int capacity, ItemStack moving) {
+        int max = moving.getMaxStackSize();
+        for (int i = 0; i < capacity && i < buffer.length && moving.getAmount() > 0; i++) {
+            ItemStack slot = buffer[i];
+            if (slot != null && slot.isSimilar(moving)) {
+                int space = slot.getMaxStackSize() - slot.getAmount();
+                if (space > 0) {
+                    int add = Math.min(space, moving.getAmount());
+                    slot.setAmount(slot.getAmount() + add);
+                    moving.setAmount(moving.getAmount() - add);
+                }
+            }
+        }
+        for (int i = 0; i < capacity && i < buffer.length && moving.getAmount() > 0; i++) {
+            if (buffer[i] == null || buffer[i].getType().isAir()) {
+                int add = Math.min(max, moving.getAmount());
+                ItemStack copy = moving.clone();
+                copy.setAmount(add);
+                buffer[i] = copy;
+                moving.setAmount(moving.getAmount() - add);
+            }
+        }
+        return moving.getAmount() > 0 ? moving : null;
+    }
+
+    /**
+     * Shift-Klick aus dem Spieler-Inventar: verteilt das Item über ALLE Seiten des
+     * Backpacks (nicht nur die aktive Seite) (#F5). Gibt den Rest zurück (oder null).
+     */
+    public ItemStack depositAcrossPages(BackpackMenuHolder holder, ItemStack moving) {
+        if (moving == null || moving.getType().isAir()) return null;
+        flushVisiblePage(holder);
+        ItemStack leftover = depositIntoBuffer(holder.buffer(), holder.capacity(), moving);
+        renderPage(holder);
+        persistOpen(holder);
+        return leftover;
+    }
+
+    /**
+     * "Quick Stack" (#F4): schiebt alle Items aus dem Spieler-Inventar, deren Sorte
+     * bereits im Backpack liegt, in das Backpack (über alle Seiten). Backpacks selbst
+     * werden nie verschoben.
+     */
+    public void quickStack(BackpackMenuHolder holder, Player player) {
+        flushVisiblePage(holder);
+        ItemStack[] buffer = holder.buffer();
+        int capacity = holder.capacity();
+        java.util.List<ItemStack> present = new ArrayList<>();
+        for (int i = 0; i < capacity && i < buffer.length; i++) {
+            ItemStack s = buffer[i];
+            if (s != null && !s.getType().isAir()) present.add(s);
+        }
+        if (present.isEmpty()) { player.updateInventory(); return; }
+
+        ItemStack[] inv = player.getInventory().getStorageContents();
+        boolean moved = false;
+        for (int i = 0; i < inv.length; i++) {
+            ItemStack it = inv[i];
+            if (it == null || it.getType().isAir() || items.isBackpack(it)) continue;
+            boolean match = false;
+            for (ItemStack p : present) { if (p.isSimilar(it)) { match = true; break; } }
+            if (!match) continue;
+            ItemStack leftover = depositIntoBuffer(buffer, capacity, it.clone());
+            inv[i] = leftover;
+            moved = true;
+        }
+        if (moved) {
+            player.getInventory().setStorageContents(inv);
+            renderPage(holder);
+            persistOpen(holder);
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_ITEM_PICKUP, 0.7f, 1.2f);
+        }
+        player.updateInventory();
     }
 
     private Component title(BackpackTier tier, BackpackData data, String main, String accent,
@@ -452,6 +541,7 @@ public final class BackpackManager {
         }
         lore.add(Component.empty());
         lore.add(line("<yellow>Click <gray>to sort the contents"));
+        lore.add(line("<yellow>Shift-Click <gray>to quick-stack matching items"));
         lore.add(line("<dark_gray><st>                    </st>"));
         meta.lore(lore);
         item.setItemMeta(meta);
@@ -1865,6 +1955,68 @@ public final class BackpackManager {
         data.contents(contents);
         storage.save(data);
         return true;
+    }
+
+    /** Erstes im Inventar getragenes Backpack mit dem Funktions-Upgrade {@code fn} (oder null). */
+    public UUID firstCarriedBackpackWith(Player player, String fn) {
+        for (ItemStack it : player.getInventory().getContents()) {
+            if (!items.isBackpack(it)) continue;
+            UUID id = items.getId(it);
+            if (id == null) continue;
+            if (functionUpgradesOf(id).contains(fn)) return id;
+        }
+        return null;
+    }
+
+    /**
+     * Zieht bis zu {@code amount} Einheiten eines zu {@code match} passenden Items
+     * aus dem Lager eines (nicht geöffneten) Backpacks und gibt sie als Stack
+     * zurück (oder null). Für das Auto-Restock-Upgrade.
+     */
+    public ItemStack withdrawMatching(UUID backpackId, ItemStack match, int amount) {
+        if (match == null || match.getType().isAir() || amount <= 0) return null;
+        if (isOpen(backpackId)) return null;
+        BackpackData data = storage.load(backpackId);
+        if (data == null || data.contents() == null) return null;
+        ItemStack[] contents = data.contents();
+        int collected = 0;
+        for (int i = 0; i < contents.length && collected < amount; i++) {
+            ItemStack slot = contents[i];
+            if (slot == null || !slot.isSimilar(match)) continue;
+            int take = Math.min(amount - collected, slot.getAmount());
+            collected += take;
+            int rem = slot.getAmount() - take;
+            if (rem <= 0) contents[i] = null; else slot.setAmount(rem);
+        }
+        if (collected <= 0) return null;
+        data.contents(contents);
+        storage.save(data);
+        ItemStack out = match.clone();
+        out.setAmount(collected);
+        return out;
+    }
+
+    /**
+     * Entnimmt genau EIN essbares Item aus dem Lager (für das Feeding-Upgrade)
+     * und gibt es zurück (oder null).
+     */
+    public ItemStack withdrawFood(UUID backpackId) {
+        if (isOpen(backpackId)) return null;
+        BackpackData data = storage.load(backpackId);
+        if (data == null || data.contents() == null) return null;
+        ItemStack[] contents = data.contents();
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack slot = contents[i];
+            if (slot == null || slot.getType().isAir() || !slot.getType().isEdible()) continue;
+            ItemStack one = slot.clone();
+            one.setAmount(1);
+            int rem = slot.getAmount() - 1;
+            if (rem <= 0) contents[i] = null; else slot.setAmount(rem);
+            data.contents(contents);
+            storage.save(data);
+            return one;
+        }
+        return null;
     }
 
     private ItemStack backButton() {

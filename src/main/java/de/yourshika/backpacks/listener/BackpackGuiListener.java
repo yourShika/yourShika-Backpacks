@@ -94,10 +94,12 @@ public final class BackpackGuiListener implements Listener {
             }
         }
 
-        // 0d) Klick auf das Info-Item sortiert den Backpack-Inhalt.
+        // 0d) Info-Item: Klick sortiert, Shift-Klick macht "Quick Stack" (alle
+        //     passenden Items aus dem Inventar ins Backpack schieben) (#F4).
         if (clickedTop && holder.isInfoButton(raw)) {
             event.setCancelled(true);
-            manager.sortBackpack(holder, player);
+            if (event.isShiftClick()) manager.quickStack(holder, player);
+            else manager.sortBackpack(holder, player);
             return;
         }
 
@@ -154,9 +156,10 @@ public final class BackpackGuiListener implements Listener {
                     denyNesting(player);
                     return;
                 }
-                // Manuelles, sicheres Verschieben ausschließlich in aktive Lager-Slots.
+                // Sicheres Verschieben über ALLE Seiten des Backpacks (nicht nur die
+                // sichtbare Seite) (#F5).
                 event.setCancelled(true);
-                ItemStack leftover = moveIntoStorage(top, holder.activeCount(), moving.clone());
+                ItemStack leftover = manager.depositAcrossPages(holder, moving.clone());
                 event.setCurrentItem(leftover);
                 player.updateInventory();
                 return;
