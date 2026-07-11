@@ -46,7 +46,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BukkitTask autosaveTask;
 
     /** Aktuelle Struktur-Version der config.yml. */
-    private static final int CONFIG_VERSION = 9;
+    private static final int CONFIG_VERSION = 10;
 
     @Override
     public void onEnable() {
@@ -132,6 +132,9 @@ public final class YourShikaBackpacks extends JavaPlugin {
                 new de.yourshika.backpacks.listener.AnvilRenameListener(this), this);
         new de.yourshika.backpacks.listener.UpgradeMagnetTask(this, manager)
                 .runTaskTimer(this, 20L, 8L);
+        // Passive Upgrades: Auto-Restock (Slots nachfüllen) + Feeding (auto-essen).
+        new de.yourshika.backpacks.listener.UpgradeUtilityTask(this, manager)
+                .runTaskTimer(this, 40L, 20L);
         // Portable Furnace im Hintergrund weiterlaufen lassen + Icon-Lore aktualisieren.
         new de.yourshika.backpacks.listener.FurnaceBackgroundTask(this, manager)
                 .runTaskTimer(this, 40L, 20L);
@@ -189,11 +192,18 @@ public final class YourShikaBackpacks extends JavaPlugin {
 
     private BackpackStorage createStorage() {
         File dir = getDataFolder();
+        BackpackStorage backend;
         if ("YAML".equals(pluginConfig.storageType())) {
-            return new YamlBackpackStorage(this, new File(dir, "backpacks.yml"));
+            backend = new YamlBackpackStorage(this, new File(dir, "backpacks.yml"));
+        } else {
+            // Standard: SQLite.
+            backend = new SqliteBackpackStorage(this, new File(dir, "backpacks.db"));
         }
-        // Standard: SQLite.
-        return new SqliteBackpackStorage(this, new File(dir, "backpacks.db"));
+        // In-Memory-Cache mit asynchronem Write-Behind vor das Backend schalten:
+        // Lesezugriffe aus dem Speicher, gebündelte asynchrone Writes (kein
+        // Main-Thread-I/O mehr pro Aktion).
+        long flushTicks = Math.max(1, getConfig().getInt("storage.flush-seconds", 5)) * 20L;
+        return new de.yourshika.backpacks.storage.CachedBackpackStorage(this, backend, flushTicks);
     }
 
     private void startAutosave() {
@@ -216,6 +226,17 @@ public final class YourShikaBackpacks extends JavaPlugin {
         messages.load(pluginConfig.language());
         tiers.load(getConfig().getConfigurationSection("tiers"));
         moduleManager.reload();
+        // Achievements neu ausrollen (Hash-geschützt, günstig wenn unverändert), damit
+        // Änderungen an achievements.* auch per /bp reload greifen (B9). VOR der Rezept-
+        // Registrierung, da deploy() bei Änderungen reloadData() aufruft.
+        if (achievements != null) achievements.deploy();
+        // Rezepte/Upgrades zuerst ENTFERNEN und dann neu registrieren, damit geänderte
+        // Rezept-Shapes/Zutaten aus der config.yml tatsächlich greifen (B8). Bewusst nur
+        // hier (expliziter Admin-Reload) – NICHT beim Modul-Umschalten, wo removeRecipe
+        // zu teuer wäre.
+        recipeManager.unregisterAll();
+        upgradeManager.unregisterAll();
+        functionUpgrades.unregisterAll();
         recipeManager.registerAll();
         upgradeManager.registerAll();
         functionUpgrades.registerAll();
@@ -241,15 +262,39 @@ public final class YourShikaBackpacks extends JavaPlugin {
         File cfg = new File(getDataFolder(), "config.yml");
         String backupName = "config-backup-v" + version + "-" + System.currentTimeMillis() + ".yml";
         try {
+            // Bisherige Werte sichern und einlesen, BEVOR die Datei überschrieben wird.
+            org.bukkit.configuration.file.YamlConfiguration previous =
+                    cfg.exists() ? org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(cfg) : null;
             if (cfg.exists()) {
                 java.nio.file.Files.copy(cfg.toPath(),
                         new File(getDataFolder(), backupName).toPath());
             }
-            saveResource("config.yml", true); // mit aktuellen Defaults überschreiben
+
+            // Frische Standard-Config (inkl. Kommentaren) einspielen ...
+            saveResource("config.yml", true);
             reloadConfig();
-            getLogger().warning("config.yml war veraltet (v" + version + ") und wurde auf v"
-                    + CONFIG_VERSION + " aktualisiert. Die alte Datei wurde als '" + backupName
-                    + "' gesichert – bitte eigene Anpassungen ggf. erneut übertragen.");
+
+            // ... und danach die zuvor gesetzten Werte des Admins wieder darüberlegen,
+            // sofern der Schlüssel in der neuen Struktur noch existiert. So bleiben
+            // sowohl die Kommentare der neuen Datei als auch die eigenen Einstellungen
+            // erhalten (Config-Merge statt Überschreiben).
+            int carried = 0;
+            if (previous != null) {
+                for (String key : previous.getKeys(true)) {
+                    if (previous.isConfigurationSection(key)) continue; // nur Blattwerte
+                    if ("config-version".equals(key)) continue;         // Version nicht übernehmen
+                    if (!getConfig().contains(key)) continue;           // Schlüssel entfällt in neuer Struktur
+                    getConfig().set(key, previous.get(key));
+                    carried++;
+                }
+            }
+            getConfig().set("config-version", CONFIG_VERSION);
+            saveConfig();
+            reloadConfig();
+
+            getLogger().warning("config.yml von v" + version + " auf v" + CONFIG_VERSION
+                    + " zusammengeführt: " + carried + " eigene Werte übernommen, neue Schlüssel/Kommentare ergänzt."
+                    + " Backup: '" + backupName + "'.");
         } catch (Exception ex) {
             getLogger().severe("config.yml konnte nicht migriert werden: " + ex.getMessage());
         }

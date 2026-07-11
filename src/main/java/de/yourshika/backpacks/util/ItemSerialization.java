@@ -85,7 +85,18 @@ public final class ItemSerialization {
                 int len = data.readInt();
                 byte[] bytes = new byte[len];
                 data.readFully(bytes);
-                items[i] = ItemStack.deserializeBytes(bytes);
+                // Pro Slot absichern: ein einzelnes beschädigtes Item darf NICHT das
+                // Einlesen des ganzen Rucksacks abbrechen (B4). Da jeder Eintrag
+                // längen-präfixiert ist, bleibt der Stream nach dem Überspringen
+                // korrekt ausgerichtet – der betroffene Slot wird leer.
+                try {
+                    items[i] = ItemStack.deserializeBytes(bytes);
+                } catch (Exception ex) {
+                    items[i] = null;
+                    org.bukkit.Bukkit.getLogger().warning(
+                            "[yourShika Backpacks] Beschädigtes Item in Slot " + i
+                            + " übersprungen: " + ex.getMessage());
+                }
             }
             return items;
         } catch (Exception ex) {

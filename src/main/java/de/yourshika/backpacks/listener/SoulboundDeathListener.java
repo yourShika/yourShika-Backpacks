@@ -48,6 +48,17 @@ public final class SoulboundDeathListener implements Listener {
     /** Pro Spieler zwischengelagerte Soulbound-Rucksäcke bis zum Respawn. */
     private final Map<UUID, List<ItemStack>> stash = new ConcurrentHashMap<>();
 
+    /**
+     * Pro Tod (innerhalb einer Event-Auslieferung) aus den Drops entnommene
+     * Soulbound-Rucksäcke – zwischen dem {@code LOWEST}- und dem {@code MONITOR}-
+     * Handler gehalten, damit ein spät gesetztes {@code keepInventory} noch
+     * berücksichtigt werden kann (Dupe-Schutz, B1).
+     */
+    private final Map<UUID, List<ItemStack>> pendingDeath = new ConcurrentHashMap<>();
+
+    /** Verhindert doppelte Auslieferung (Respawn + Join im selben Tick) (B10). */
+    private final java.util.Set<UUID> delivering = ConcurrentHashMap.newKeySet();
+
     public SoulboundDeathListener(YourShikaBackpacks plugin, BackpackManager manager) {
         this.plugin = plugin;
         this.manager = manager;
@@ -69,8 +80,27 @@ public final class SoulboundDeathListener implements Listener {
         }
         if (kept.isEmpty()) return;
 
-        // Bereits vorhandene Zwischenlagerung ergänzen (Mehrfachtod ohne Respawn).
-        stash.merge(player.getUniqueId(), kept, (a, b) -> { a.addAll(b); return a; });
+        // Noch NICHT in den Respawn-Stash übernehmen: erst nach allen Plugins
+        // (MONITOR) entscheiden, ob keepInventory nachträglich gesetzt wurde.
+        pendingDeath.merge(player.getUniqueId(), kept, (a, b) -> { a.addAll(b); return a; });
+    }
+
+    /**
+     * Läuft NACH allen anderen Plugins. Hat ein Plugin (Combat/Region/Essentials)
+     * {@code keepInventory} erst nach unserem {@code LOWEST}-Handler auf {@code true}
+     * gesetzt, bleibt der Rucksack im Inventar des Spielers – dann darf er NICHT
+     * zusätzlich zwischengelagert werden, sonst entsteht beim Respawn ein Duplikat.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onDeathFinalize(PlayerDeathEvent event) {
+        List<ItemStack> pending = pendingDeath.remove(event.getEntity().getUniqueId());
+        if (pending == null || pending.isEmpty()) return;
+        if (event.getKeepInventory()) {
+            // Inventar wird behalten -> Rucksack ist noch im Inventar. Drops werden
+            // bei keepInventory ohnehin ignoriert. Nichts zwischenlagern (Dupe-Schutz).
+            return;
+        }
+        stash.merge(event.getEntity().getUniqueId(), pending, (a, b) -> { a.addAll(b); return a; });
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -87,14 +117,29 @@ public final class SoulboundDeathListener implements Listener {
     }
 
     private void giveBack(Player player) {
-        List<ItemStack> kept = stash.remove(player.getUniqueId());
-        if (kept == null || kept.isEmpty()) return;
+        UUID uuid = player.getUniqueId();
+        if (!stash.containsKey(uuid)) return;
+        // Doppelte Auslieferung (Respawn + Join) verhindern.
+        if (!delivering.add(uuid)) return;
         // Einen Tick warten, damit Inventar/Respawn vollständig sind.
         plugin.getServer().getScheduler().runTask(plugin, () -> {
-            for (ItemStack item : kept) {
-                for (ItemStack rest : player.getInventory().addItem(item).values()) {
-                    player.getWorld().dropItemNaturally(player.getLocation(), rest);
+            try {
+                Player online = plugin.getServer().getPlayer(uuid);
+                if (online == null || !online.isOnline()) {
+                    // Spieler ist zwischenzeitlich offline -> im Stash lassen und beim
+                    // nächsten Join erneut ausliefern (kein Item-Verlust, B10).
+                    return;
                 }
+                // Erst JETZT aus dem Stash nehmen, da die Auslieferung garantiert läuft.
+                List<ItemStack> kept = stash.remove(uuid);
+                if (kept == null || kept.isEmpty()) return;
+                for (ItemStack item : kept) {
+                    for (ItemStack rest : online.getInventory().addItem(item).values()) {
+                        online.getWorld().dropItemNaturally(online.getLocation(), rest);
+                    }
+                }
+            } finally {
+                delivering.remove(uuid);
             }
         });
     }

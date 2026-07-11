@@ -22,6 +22,8 @@ help:
   modules: "<yellow>/bp modules <gray>– Toggle external modules"
   assets: "<yellow>/bp assets <status|redeploy> <gray>– Oraxen asset status / redeploy"
   doctor: "<yellow>/bp doctor <gray>– Diagnostics (Oraxen, config, DB, assets, versions)"
+  stats: "<yellow>/bp stats <gray>– Backpack statistics (total, per tier, DB size)"
+  purge: "<yellow>/bp purge [dry] <gray>– Remove empty orphaned backpack data"
   update: "<yellow>/bp update <gray>– Download the latest version from GitHub"
   reload: "<yellow>/bp reload <gray>– Reload the configuration"
   footer: "<dark_gray>Inspired by Sophisticated Backpacks – a standalone server plugin."
@@ -115,6 +117,18 @@ assets:
 doctor:
   header: "<gold><bold>yourShika Backpack's – Doctor</bold></gold>"
   line: "<gray><label>: <white><value></white>"
+
+stats:
+  header: "<gold><bold>Backpack Statistics</bold></gold>"
+  total: "<gray>Total backpacks: <white><count></white>"
+  placed: "<gray>Placed: <white><count></white>"
+  size: "<gray>Storage size: <white><size></white>"
+  tier: "<dark_gray> • <gray><tier>: <white><count></white>"
+
+purge:
+  none: "<gray>No empty orphaned backpacks found."
+  dry: "<yellow><count></yellow> <gray>empty orphaned backpack(s) would be removed. <dark_gray>Run /bp purge confirm to delete."
+  done: "<green>Removed <white><count></white> empty orphaned backpack(s)."
 
 trash:
   deleted: "<gray>Deleted <white><count></white> item(s)."

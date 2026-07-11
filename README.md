@@ -3,7 +3,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.1.3-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.2.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -21,6 +21,46 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## ✨ v1.2.0
+
+**New features & QoL**
+
+- ⚡ **Async storage cache** – backpack data now lives in an in-memory cache with
+  **asynchronous, batched write-behind**. Reads (open, page-flip, pickup, furnace
+  ticks, `%ysbp_*%` placeholders) no longer hit the disk on the main thread, and
+  writes are bundled off-thread. A full flush always runs on a clean shutdown.
+  Tune the interval with `storage.flush-seconds` (default 5).
+- 🧷 **Config merge on update** – updating to a new config version now **keeps your
+  own settings** and only adds the new keys/comments (a timestamped backup is still
+  written), instead of overwriting the whole file.
+- 🧲 **Auto-Restock Upgrade** *(new)* – when a hotbar/inventory stack runs out, it is
+  refilled from the backpack with the same item. Craft with Comparators + Chests
+  around Upgrade Leather.
+- 🍗 **Feeding Upgrade** *(new)* – automatically eats food from the backpack when you
+  get hungry (with an eat sound). Craft with Hay Bales + Bread around Upgrade Leather.
+- 📦 **Quick-Stack** – **Shift-click the Info button** to sweep all matching items from
+  your inventory into the backpack. (Normal click still sorts.)
+- 📄 **Shift-click fills all pages** – shift-clicking items in now spreads them across
+  **every** page of a multi-page backpack, not just the visible one.
+- 🔖 **Last page remembered** – a multi-page backpack reopens on the page you last used.
+- 📊 **`/bp stats`** – total / placed / per-tier backpack counts and storage size.
+- 🧹 **`/bp purge [dry|confirm]`** – safely removes **empty, orphaned** backpack data
+  (destroyed or churned empties). Non-empty data is never touched, so nothing an
+  offline player still holds can be lost.
+
+**Bug fixes & hardening**
+
+- 🩸 **Soulbound dupe fixed** – a backpack no longer duplicates when another plugin sets
+  `keepInventory` after the death event starts; give-back is now loss-safe on disconnect.
+- 🐴 **Off-hand swap (F)** can no longer sneak a backpack into a mount inventory.
+- 🎨 **Creative protection** now covers every sub-GUI (Upgrade / Furnace / Filter / Trash / XP).
+- 💾 **Corruption resilience** – a single broken item no longer aborts loading the whole
+  backpack; per-slot recovery keeps the rest.
+- 🔒 **Deeper nesting check**, **`/bp list` [Open]** works for owners, **recipe/achievement
+  edits apply on `/bp reload`**, and assorted null-safety fixes.
 
 ---
 
@@ -465,7 +505,7 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.1.3.jar`).
+   (`yourShika-Backpacks-1.2.0.jar`).
 2. Put it into the `plugins/` folder of your **Paper 26.1.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
@@ -494,6 +534,8 @@ Main command: `/backpack` · aliases: `/bp`, `/ybackpack`, `/ysbackpack`
 | `/bp modules` | Toggle external modules **via GUI** (admin) |
 | `/bp assets <status\|redeploy>` | Check / redeploy Oraxen assets (admin) |
 | `/bp doctor` | Diagnostics (Oraxen, config, DB, assets, versions) (admin) |
+| `/bp stats` | Backpack statistics: total, placed, per tier, storage size (admin) |
+| `/bp purge [dry\|confirm]` | Remove empty, orphaned backpack data — safe, non-empty data untouched (admin) |
 | `/bp update` | Download the latest version from GitHub (admin, restart needed) |
 | `/bp reload` | Reload the configuration (admin) |
 | `/bp version` | Plugin info |
@@ -675,7 +717,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.1.3.jar
+target/yourShika-Backpacks-1.2.0.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in

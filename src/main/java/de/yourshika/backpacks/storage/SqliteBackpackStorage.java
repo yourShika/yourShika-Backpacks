@@ -95,7 +95,10 @@ public final class SqliteBackpackStorage implements BackpackStorage {
                     if (!rs.next()) return null;
                     return read(rs);
                 }
-            } catch (SQLException ex) {
+            } catch (SQLException | RuntimeException ex) {
+                // Auch beschädigte/nicht lesbare Inhalte (RuntimeException aus der
+                // Deserialisierung) abfangen, damit ein einzelner defekter Datensatz
+                // nicht die Autosave-Schleife für ALLE Backpacks abbricht (B4).
                 plugin.getLogger().severe("Backpack " + id + " konnte nicht geladen werden: " + ex.getMessage());
                 return null;
             }
@@ -220,6 +223,28 @@ public final class SqliteBackpackStorage implements BackpackStorage {
                 return 0;
             }
         }
+    }
+
+    @Override
+    public List<BackpackMeta> allMeta() {
+        List<BackpackMeta> result = new ArrayList<>();
+        synchronized (lock) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT id, owner, tier, placed FROM backpacks");
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String owner = rs.getString("owner");
+                    result.add(new BackpackMeta(
+                            UUID.fromString(rs.getString("id")),
+                            owner == null ? null : UUID.fromString(owner),
+                            rs.getString("tier"),
+                            rs.getInt("placed") != 0));
+                }
+            } catch (SQLException | RuntimeException ex) {
+                plugin.getLogger().severe("Backpack-Metadaten konnten nicht gelesen werden: " + ex.getMessage());
+            }
+        }
+        return result;
     }
 
     @Override

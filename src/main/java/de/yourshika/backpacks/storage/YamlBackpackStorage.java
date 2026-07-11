@@ -50,27 +50,34 @@ public final class YamlBackpackStorage implements BackpackStorage {
         synchronized (lock) {
             ConfigurationSection sec = config.getConfigurationSection(id.toString());
             if (sec == null) return null;
-            BackpackData data = new BackpackData(id);
-            String owner = sec.getString("owner");
-            data.owner(owner == null ? null : UUID.fromString(owner));
-            data.tier(sec.getString("tier"));
-            data.mainColor(sec.getString("main-color"));
-            data.accentColor(sec.getString("accent-color"));
-            data.contents(ItemSerialization.fromBase64(sec.getString("contents")));
-            data.upgrades(ItemSerialization.fromBase64(sec.getString("upgrades")));
-            data.furnace(ItemSerialization.fromBase64(sec.getString("furnace")));
-            data.furnaceCook(sec.getInt("furnace-cook"));
-            data.furnaceBurn(sec.getInt("furnace-burn"));
-            data.compactFilter(ItemSerialization.fromBase64(sec.getString("compact-filter")));
-            data.pickupFilter(ItemSerialization.fromBase64(sec.getString("pickup-filter")));
-            data.name(sec.getString("name"));
-            data.storedXp(sec.getInt("stored-xp"));
-            data.placed(sec.getBoolean("placed"));
-            data.world(sec.getString("world"));
-            data.position(sec.getDouble("x"), sec.getDouble("y"), sec.getDouble("z"));
-            data.created(sec.getLong("created"));
-            data.modified(sec.getLong("modified"));
-            return data;
+            try {
+                BackpackData data = new BackpackData(id);
+                String owner = sec.getString("owner");
+                data.owner(owner == null ? null : UUID.fromString(owner));
+                data.tier(sec.getString("tier"));
+                data.mainColor(sec.getString("main-color"));
+                data.accentColor(sec.getString("accent-color"));
+                data.contents(ItemSerialization.fromBase64(sec.getString("contents")));
+                data.upgrades(ItemSerialization.fromBase64(sec.getString("upgrades")));
+                data.furnace(ItemSerialization.fromBase64(sec.getString("furnace")));
+                data.furnaceCook(sec.getInt("furnace-cook"));
+                data.furnaceBurn(sec.getInt("furnace-burn"));
+                data.compactFilter(ItemSerialization.fromBase64(sec.getString("compact-filter")));
+                data.pickupFilter(ItemSerialization.fromBase64(sec.getString("pickup-filter")));
+                data.name(sec.getString("name"));
+                data.storedXp(sec.getInt("stored-xp"));
+                data.placed(sec.getBoolean("placed"));
+                data.world(sec.getString("world"));
+                data.position(sec.getDouble("x"), sec.getDouble("y"), sec.getDouble("z"));
+                data.created(sec.getLong("created"));
+                data.modified(sec.getLong("modified"));
+                return data;
+            } catch (RuntimeException ex) {
+                // Beschädigter Datensatz darf nicht die Autosave-Schleife für ALLE
+                // Backpacks abbrechen (B4).
+                plugin.getLogger().severe("Backpack " + id + " konnte nicht geladen werden: " + ex.getMessage());
+                return null;
+            }
         }
     }
 
@@ -141,6 +148,27 @@ public final class YamlBackpackStorage implements BackpackStorage {
         synchronized (lock) {
             return config.getKeys(false).size();
         }
+    }
+
+    @Override
+    public List<BackpackMeta> allMeta() {
+        List<BackpackMeta> result = new ArrayList<>();
+        synchronized (lock) {
+            for (String key : config.getKeys(false)) {
+                ConfigurationSection sec = config.getConfigurationSection(key);
+                if (sec == null) continue;
+                try {
+                    String owner = sec.getString("owner");
+                    result.add(new BackpackMeta(
+                            UUID.fromString(key),
+                            owner == null ? null : UUID.fromString(owner),
+                            sec.getString("tier"),
+                            sec.getBoolean("placed")));
+                } catch (IllegalArgumentException ignored) {
+                }
+            }
+        }
+        return result;
     }
 
     @Override

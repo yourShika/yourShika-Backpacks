@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 9
+config-version: 10
 
 # Language file messages_<language>.yml (default: en). German (de) is bundled too.
 language: en
@@ -25,6 +25,12 @@ storage:
   autosave:
     enabled: true
     interval-minutes: 5
+  # Write-Behind-Cache: Backpack-Daten liegen im Speicher und werden gebündelt
+  # asynchron in dieses Intervall (Sekunden) zurückgeschrieben – kein Main-Thread-
+  # I/O mehr pro Aktion. Beim sauberen Server-Stopp wird immer vollständig
+  # geflusht. Kleiner = kleineres Verlustfenster bei hartem Crash, aber mehr
+  # Schreibvorgänge. Standard: 5.
+  flush-seconds: 5
 
 # ---------------------------------------------------------------------------
 #  GUI
@@ -445,6 +451,8 @@ upgrades:
       xp:              { custom-model-data: 2155, item-model: "", provider-id: "ysbp_upgrade_xp" }
       everlasting:     { custom-model-data: 2144, item-model: "", provider-id: "ysbp_upgrade_everlasting" }
       soulbound:       { custom-model-data: 2156, item-model: "", provider-id: "ysbp_upgrade_soulbound" }
+      auto_restock:    { custom-model-data: 2130, item-model: "", provider-id: "ysbp_upgrade_auto_restock" }
+      feeding:         { custom-model-data: 2140, item-model: "", provider-id: "ysbp_upgrade_feeding" }
     # Crafting-Rezepte der Funktions-Upgrades – frei konfigurierbar.
     # 'U' = Upgrade-Leder (Pflicht), 'X' = das vorausgesetzte Basis-Upgrade
     # (z.B. braucht Advanced Pickup zuerst ein Pickup Upgrade). Alle anderen
@@ -504,6 +512,15 @@ upgrades:
       soulbound:
         shape: [" T ", "SUS", " S "]
         ingredients: { T: TOTEM_OF_UNDYING, S: SOUL_SOIL }
+      # Auto-Restock: leergewordene Hotbar-/Inventar-Stacks werden aus dem Backpack
+      # mit demselben Item nachgefüllt. 'U' = Upgrade-Leder.
+      auto_restock:
+        shape: [" R ", "CUC", " R "]
+        ingredients: { R: COMPARATOR, C: CHEST }
+      # Feeding: isst bei Hunger automatisch Nahrung aus dem Backpack. 'U' = Upgrade-Leder.
+      feeding:
+        shape: [" H ", "BUB", " H "]
+        ingredients: { H: HAY_BLOCK, B: BREAD }
 
 # ---------------------------------------------------------------------------
 #  Externe Module / Hooks

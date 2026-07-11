@@ -94,10 +94,12 @@ public final class BackpackGuiListener implements Listener {
             }
         }
 
-        // 0d) Klick auf das Info-Item sortiert den Backpack-Inhalt.
+        // 0d) Info-Item: Klick sortiert, Shift-Klick macht "Quick Stack" (alle
+        //     passenden Items aus dem Inventar ins Backpack schieben) (#F4).
         if (clickedTop && holder.isInfoButton(raw)) {
             event.setCancelled(true);
-            manager.sortBackpack(holder, player);
+            if (event.isShiftClick()) manager.quickStack(holder, player);
+            else manager.sortBackpack(holder, player);
             return;
         }
 
@@ -154,9 +156,10 @@ public final class BackpackGuiListener implements Listener {
                     denyNesting(player);
                     return;
                 }
-                // Manuelles, sicheres Verschieben ausschließlich in aktive Lager-Slots.
+                // Sicheres Verschieben über ALLE Seiten des Backpacks (nicht nur die
+                // sichtbare Seite) (#F5).
                 event.setCancelled(true);
-                ItemStack leftover = moveIntoStorage(top, holder.activeCount(), moving.clone());
+                ItemStack leftover = manager.depositAcrossPages(holder, moving.clone());
                 event.setCurrentItem(leftover);
                 player.updateInventory();
                 return;
@@ -397,15 +400,36 @@ public final class BackpackGuiListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onCreative(InventoryCreativeEvent event) {
         Inventory top = event.getView().getTopInventory();
-        if (!(top.getHolder() instanceof BackpackMenuHolder holder)) return;
+        var topHolder = top.getHolder();
         int raw = event.getRawSlot();
-        if (raw < top.getSize() && holder.isLocked(raw)) {
-            event.setCancelled(true);
+
+        if (topHolder instanceof BackpackMenuHolder holder) {
+            if (raw < top.getSize() && holder.isLocked(raw)) {
+                event.setCancelled(true);
+            }
+            if (raw < top.getSize() && !canStoreBackpack(holder, event.getCursor())) {
+                event.setCancelled(true);
+                if (event.getWhoClicked() instanceof Player player) denyNesting(player);
+            }
+            return;
         }
-        if (raw < top.getSize() && !canStoreBackpack(holder, event.getCursor())) {
+
+        // Alle übrigen Plugin-GUIs (Upgrade, Furnace, Filter, Trash, XP, ...) haben
+        // ebenfalls keine Creative-Absicherung: ein Creative-Set könnte ein Backpack
+        // in einen Upgrade-/Furnace-Slot oder in den Trash schieben und damit die
+        // Nesting-/Verlust-Schutzmechanismen umgehen (B3). Kein Backpack darf per
+        // Creative in eine dieser GUIs gelangen.
+        if (raw < top.getSize() && isPluginGuiHolder(topHolder)
+                && plugin.itemFactory().isOrContainsBackpack(event.getCursor())) {
             event.setCancelled(true);
             if (event.getWhoClicked() instanceof Player player) denyNesting(player);
         }
+    }
+
+    /** true, wenn der Holder eine der Plugin-eigenen GUIs ist. */
+    private boolean isPluginGuiHolder(org.bukkit.inventory.InventoryHolder holder) {
+        return holder != null
+                && holder.getClass().getName().startsWith("de.yourshika.backpacks.gui.");
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
