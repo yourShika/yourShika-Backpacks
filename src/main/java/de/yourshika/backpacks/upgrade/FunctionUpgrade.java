@@ -137,14 +137,16 @@ public enum FunctionUpgrade {
             Map.of('T', Material.TOTEM_OF_UNDYING, 'S', Material.SOUL_SOIL),
             0, null),
 
-    AUTO_RESTOCK("auto_restock", "<#FFD95B><bold>Auto-Restock Upgrade</bold></#FFD95B>", 2130,
+    // Bindet an das vorbereitete Oraxen-Asset "ysbp_upgrade_restock" (restock.png, cmd 2110).
+    RESTOCK("restock", "<#53BD74><bold>Restock Upgrade</bold></#53BD74>", 2110,
             List.of("<gray>When a hotbar/inventory stack runs out, it is",
                     "<gray><white>refilled from the backpack</white> with the same item."),
             List.of(" R ", "CUC", " R "),
             Map.of('R', Material.COMPARATOR, 'C', Material.CHEST),
             0, null),
 
-    FEEDING("feeding", "<#FF9E6B><bold>Feeding Upgrade</bold></#FF9E6B>", 2140,
+    // Bindet an das vorbereitete Oraxen-Asset "ysbp_upgrade_feeding" (feeding.png, cmd 2137).
+    FEEDING("feeding", "<#E0A843><bold>Feeding Upgrade</bold></#E0A843>", 2137,
             List.of("<gray>Automatically <white>eats food</white> from the backpack",
                     "<gray>when you get hungry."),
             List.of(" H ", "BUB", " H "),
