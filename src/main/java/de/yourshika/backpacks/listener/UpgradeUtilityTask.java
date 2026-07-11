@@ -53,7 +53,7 @@ public final class UpgradeUtilityTask extends BukkitRunnable {
     }
 
     private void autoRestock(Player player) {
-        UUID id = manager.firstCarriedBackpackWith(player, "auto_restock");
+        UUID id = manager.firstCarriedBackpackWith(player, "restock");
         if (id == null) {
             lastInv.remove(player.getUniqueId());
             return;

@@ -3,7 +3,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.2.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.2.3-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -21,6 +21,19 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🖼️ v1.2.3
+
+- 🖼️ **Restock & Feeding upgrades use their prepared Oraxen textures** – in v1.2.0
+  these two new upgrades were bound to made-up model IDs that collided with other
+  items, so with Oraxen active they showed the wrong texture. They now bind to the
+  bundled assets `ysbp_upgrade_restock` (`restock.png`, CMD 2110) and
+  `ysbp_upgrade_feeding` (`feeding.png`, CMD 2137). The Auto-Restock upgrade is now
+  simply called **Restock**. *(config-version 11; fresh/merged configs pick this up —
+  a test server from v1.2.0–1.2.2 should delete its `config.yml` to regenerate, or set
+  `feeding` CMD 2137 / rename `auto_restock`→`restock` by hand.)*
 
 ---
 
@@ -528,7 +541,7 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.2.2.jar`).
+   (`yourShika-Backpacks-1.2.3.jar`).
 2. Put it into the `plugins/` folder of your **Paper 26.1.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
@@ -740,7 +753,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.2.2.jar
+target/yourShika-Backpacks-1.2.3.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in
