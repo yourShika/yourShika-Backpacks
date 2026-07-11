@@ -11,13 +11,18 @@ help:
   open: "<yellow>/bp open <gray>– Otwórz plecak trzymany w ręce"
   info: "<yellow>/bp info <gray>– Zobacz plecaki, ulepszenia i przepisy"
   achievements: "<yellow>/bp achievements <gray>– Zobacz swoje osiągnięcia plecaków"
+  rename: "<yellow>/bp rename <nazwa|reset> <gray>– Zmień nazwę trzymanego plecaka"
   color: "<yellow>/bp color <kolor> [akcent] <gray>– Farbuj plecak (nazwa lub #RRGGBB)"
   list: "<yellow>/bp list [gracz] <gray>– Lista plecaków"
+  locate: "<yellow>/bp locate [gracz|id] <gray>– Pokaż współrzędne postawionych plecaków"
+  transfer: "<yellow>/bp transfer <id> <gracz> <gray>– Przekaż własność plecaka"
   recall: "<yellow>/bp recall <gray>– Przywołaj postawione plecaki (wymaga ulepszenia Recall)"
   magnet: "<yellow>/bp magnet <on|off> <gray>– Włącz/wyłącz przyciąganie magnesu"
   give: "<yellow>/bp give <gracz> <przedmiot> [ilość] <gray>– Daj przedmiot"
   openid: "<yellow>/bp openid <id> <gray>– Otwórz plecak po ID"
   modules: "<yellow>/bp modules <gray>– Włącz/wyłącz moduły zewnętrzne"
+  assets: "<yellow>/bp assets <status|redeploy> <gray>– Status/ponowne wdrożenie zasobów Oraxen"
+  doctor: "<yellow>/bp doctor <gray>– Diagnostyka (Oraxen, config, DB, zasoby, wersje)"
   stats: "<yellow>/bp stats <gray>– Statystyki plecaków (łącznie, wg poziomu, rozmiar DB)"
   purge: "<yellow>/bp purge [dry] <gray>– Usuń puste, osierocone dane plecaków"
   update: "<yellow>/bp update <gray>– Pobierz najnowszą wersję z GitHub"
@@ -38,6 +43,8 @@ error:
   color-usage: "<red>Użycie: /bp color <kolor> [akcent] <gray>(nazwa lub #RRGGBB)"
   give-usage: "<red>Użycie: /bp give <gracz> <przedmiot> [ilość]"
   openid-usage: "<red>Użycie: /bp openid <id>"
+  transfer-usage: "<red>Użycie: /bp transfer <id> <gracz>"
+  locate-usage: "<red>Użycie: /bp locate [gracz|id]"
   invalid-color: "<red>Nieznany kolor: <white><input></white>"
   invalid-tier: "<red>Nieznany przedmiot: <white><input></white>"
   invalid-number: "<red>Nieprawidłowa liczba: <white><input></white>"
@@ -51,6 +58,11 @@ error:
 
 color:
   success: "<green>Plecak ufarbowany: <white><main></white> <gray>/</gray> <white><accent></white>"
+
+rename:
+  success: "<green>Zmieniono nazwę plecaka na <white><name></white>."
+  cleared: "<green>Przywrócono domyślną nazwę plecaka."
+  disabled: "<red>Zmiana nazw plecaków jest wyłączona na tym serwerze."
 
 place:
   success: "<green>Plecak postawiony. <gray>PPM otwiera, Shift+PPM podnosi."
@@ -89,6 +101,31 @@ list:
 give:
   success: "<green>Dano <amount>x <white><tier></white> graczowi <white><player></white>."
   received: "<green>Otrzymałeś <white><amount>x <tier></white>."
+
+transfer:
+  success: "<green>Plecak <white><id></white> przekazany graczowi <white><player></white>."
+  received: "<green>Otrzymałeś własność plecaka <white><id></white> od <white><player></white>."
+
+locate:
+  header: "<gold>Postawione plecaki gracza <white><player></white>: <yellow><count></yellow>"
+  not-placed: "<gray>Ten plecak nie jest postawiony."
+  teleported: "<green>Teleportowano do plecaka <white><id></white>."
+  world-missing: "<red>Świat plecaka nie jest załadowany."
+
+assets:
+  no-oraxen: "<red>Moduł Oraxen nie jest aktywny."
+  redeployed: "<green>Zasoby Oraxen ponownie wdrożone. <yellow>Uruchom /oraxen reload, aby przebudować paczkę."
+  status-header: "<gold><bold>Status zasobów Oraxen</bold></gold>"
+  status-oraxen: "<gray>Oraxen obecny: <white><value></white>"
+  status-version: "<gray>Wersja zasobów: <white><deployed></white> <dark_gray>(w pakiecie <bundled>)"
+  status-files: "<gray>Zarządzane: <white><managed></white><gray>/<white><total></white> <dark_gray>•</dark_gray> <gray>brakujące: <white><missing></white>"
+
+doctor:
+  header: "<gold><bold>yourShika Backpack's – Doctor</bold></gold>"
+  line: "<gray><label>: <white><value></white>"
+
+trash:
+  deleted: "<gray>Usunięto <white><count></white> przedmiot(ów)."
 
 achievement:
   unlocked: "<gradient:#6E5BC8:#5BE8D4><bold>Osiągnięcie odblokowane!</bold></gradient> <white><title></white> <dark_gray>– <gray><desc>"
