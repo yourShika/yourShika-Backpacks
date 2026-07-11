@@ -18,6 +18,8 @@ help:
   give: "<yellow>/bp give <gracz> <przedmiot> [ilość] <gray>– Daj przedmiot"
   openid: "<yellow>/bp openid <id> <gray>– Otwórz plecak po ID"
   modules: "<yellow>/bp modules <gray>– Włącz/wyłącz moduły zewnętrzne"
+  stats: "<yellow>/bp stats <gray>– Statystyki plecaków (łącznie, wg poziomu, rozmiar DB)"
+  purge: "<yellow>/bp purge [dry] <gray>– Usuń puste, osierocone dane plecaków"
   update: "<yellow>/bp update <gray>– Pobierz najnowszą wersję z GitHub"
   reload: "<yellow>/bp reload <gray>– Przeładuj konfigurację"
   footer: "<dark_gray>Inspirowane Sophisticated Backpacks – samodzielny plugin serwerowy."
@@ -97,3 +99,15 @@ reload:
 
 version:
   info: "<gray>yourShika Backpack's <white>v<version></white> <dark_gray>| <gray>Tiery: <white><tiers></white> <dark_gray>| <gray>zapisane: <white><count></white>"
+
+stats:
+  header: "<gold><bold>Statystyki plecaków</bold></gold>"
+  total: "<gray>Plecaki łącznie: <white><count></white>"
+  placed: "<gray>Postawione: <white><count></white>"
+  size: "<gray>Rozmiar zapisu: <white><size></white>"
+  tier: "<dark_gray> • <gray><tier>: <white><count></white>"
+
+purge:
+  none: "<gray>Nie znaleziono pustych, osieroconych plecaków."
+  dry: "<yellow><count></yellow> <gray>pustych, osieroconych plecaków zostałoby usuniętych. <dark_gray>/bp purge confirm aby usunąć."
+  done: "<green>Usunięto <white><count></white> pustych, osieroconych plecaków."

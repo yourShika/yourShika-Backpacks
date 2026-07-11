@@ -23,6 +23,8 @@ help:
   modules: "<yellow>/bp modules <gray>– Externe Module an/aus schalten"
   assets: "<yellow>/bp assets <status|redeploy> <gray>– Oraxen-Assets prüfen / neu ausrollen"
   doctor: "<yellow>/bp doctor <gray>– Diagnose (Oraxen, Config, DB, Assets, Versionen)"
+  stats: "<yellow>/bp stats <gray>– Backpack-Statistik (gesamt, je Tier, DB-Größe)"
+  purge: "<yellow>/bp purge [dry] <gray>– Leere, verwaiste Backpack-Daten entfernen"
   update: "<yellow>/bp update <gray>– Neueste Version von GitHub laden"
   reload: "<yellow>/bp reload <gray>– Konfiguration neu laden"
   footer: "<dark_gray>Inspiriert von Sophisticated Backpacks – eigenständiges Server-Plugin."
@@ -83,6 +85,18 @@ assets:
 doctor:
   header: "<gold><bold>yourShika Backpack's – Doctor</bold></gold>"
   line: "<gray><label>: <white><value></white>"
+
+stats:
+  header: "<gold><bold>Backpack-Statistik</bold></gold>"
+  total: "<gray>Backpacks gesamt: <white><count></white>"
+  placed: "<gray>Platziert: <white><count></white>"
+  size: "<gray>Speichergröße: <white><size></white>"
+  tier: "<dark_gray> • <gray><tier>: <white><count></white>"
+
+purge:
+  none: "<gray>Keine leeren, verwaisten Backpacks gefunden."
+  dry: "<yellow><count></yellow> <gray>leere, verwaiste Backpack(s) würden entfernt. <dark_gray>/bp purge confirm zum Löschen."
+  done: "<green><white><count></white> leere, verwaiste Backpack(s) entfernt."
 
 trash:
   deleted: "<gray><white><count></white> Item(s) gelöscht."

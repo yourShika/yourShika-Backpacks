@@ -73,6 +73,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "modules", "module" -> modules(sender);
             case "assets" -> assets(sender, args);
             case "doctor" -> doctor(sender);
+            case "stats" -> stats(sender);
+            case "purge" -> purge(sender, args);
             case "update" -> update(sender);
             case "reload" -> reload(sender);
             case "version", "ver" -> version(sender);
@@ -97,6 +99,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         if (sender.hasPermission("yourshika.backpack.admin.modules")) msg.sendRaw(sender, "help.modules");
         if (sender.hasPermission("yourshika.backpack.admin.assets")) msg.sendRaw(sender, "help.assets");
         if (sender.hasPermission("yourshika.backpack.admin.doctor")) msg.sendRaw(sender, "help.doctor");
+        if (sender.hasPermission("yourshika.backpack.admin.stats")) msg.sendRaw(sender, "help.stats");
+        if (sender.hasPermission("yourshika.backpack.admin.purge")) msg.sendRaw(sender, "help.purge");
         if (sender.hasPermission("yourshika.backpack.admin.update")) msg.sendRaw(sender, "help.update");
         if (sender.hasPermission("yourshika.backpack.admin.reload")) msg.sendRaw(sender, "help.reload");
         msg.sendRaw(sender, "help.footer");
@@ -720,6 +724,92 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "doctor.line", ph("label", label), ph("value", value));
     }
 
+    private void stats(CommandSender sender) {
+        if (!sender.hasPermission("yourshika.backpack.admin.stats")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        var metas = manager.storage().allMeta();
+        int placed = 0;
+        java.util.Map<String, Integer> perTier = new java.util.TreeMap<>();
+        for (var m : metas) {
+            if (m.placed()) placed++;
+            perTier.merge(m.tier() == null ? "?" : m.tier(), 1, Integer::sum);
+        }
+        java.io.File db = new java.io.File(plugin.getDataFolder(), "backpacks.db");
+        java.io.File yml = new java.io.File(plugin.getDataFolder(), "backpacks.yml");
+        long bytes = db.exists() ? db.length() : (yml.exists() ? yml.length() : 0L);
+
+        msg.send(sender, "stats.header");
+        msg.sendRaw(sender, "stats.total", ph("count", String.valueOf(metas.size())));
+        msg.sendRaw(sender, "stats.placed", ph("count", String.valueOf(placed)));
+        msg.sendRaw(sender, "stats.size", ph("size", humanBytes(bytes)));
+        for (var e : perTier.entrySet()) {
+            msg.sendRaw(sender, "stats.tier",
+                    ph("tier", e.getKey()), ph("count", String.valueOf(e.getValue())));
+        }
+    }
+
+    /**
+     * Entfernt verwaiste Backpack-Datensätze. <b>Sicher:</b> gelöscht werden nur
+     * LEERE, nicht platzierte Backpacks – existiert das zugehörige Item noch, legt
+     * es beim nächsten Öffnen ohnehin wieder einen (leeren) Datensatz an, es geht
+     * also nichts verloren. Nicht-leere Datensätze (deren Item evtl. bei einem
+     * offline Spieler liegt) werden nie angefasst. "dry"/"preview" zeigt nur an.
+     */
+    private void purge(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("yourshika.backpack.admin.purge")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        boolean dryRun = args.length >= 2 && (args[1].equalsIgnoreCase("dry")
+                || args[1].equalsIgnoreCase("preview") || args[1].equalsIgnoreCase("--dry-run"));
+
+        List<UUID> orphans = new ArrayList<>();
+        for (var meta : manager.storage().allMeta()) {
+            if (meta.placed()) continue; // platzierte nie löschen
+            if (manager.isOpen(meta.id())) continue; // gerade in Benutzung
+            BackpackData data = manager.storage().load(meta.id());
+            if (data == null) continue;
+            if (isBackpackEmpty(data)) orphans.add(meta.id());
+        }
+
+        if (orphans.isEmpty()) {
+            msg.send(sender, "purge.none");
+            return;
+        }
+        if (dryRun) {
+            msg.send(sender, "purge.dry", ph("count", String.valueOf(orphans.size())));
+            return;
+        }
+        for (UUID id : orphans) manager.storage().delete(id);
+        String actor = sender instanceof Player p ? p.getName() : "CONSOLE";
+        plugin.audit(actor, "PURGE", orphans.size() + " empty backpacks");
+        msg.send(sender, "purge.done", ph("count", String.valueOf(orphans.size())));
+    }
+
+    /** Leerer Datensatz: kein Lager-Inhalt, kein Furnace-Inhalt, keine gespeicherte XP. */
+    private boolean isBackpackEmpty(BackpackData data) {
+        if (data.storedXp() > 0) return false;
+        if (hasAnyItem(data.contents())) return false;
+        if (hasAnyItem(data.furnace())) return false;
+        return true;
+    }
+
+    private boolean hasAnyItem(ItemStack[] arr) {
+        if (arr == null) return false;
+        for (ItemStack it : arr) {
+            if (it != null && !it.getType().isAir()) return true;
+        }
+        return false;
+    }
+
+    private static String humanBytes(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return String.format(java.util.Locale.ROOT, "%.1f KiB", bytes / 1024.0);
+        return String.format(java.util.Locale.ROOT, "%.1f MiB", bytes / (1024.0 * 1024.0));
+    }
+
     private void reload(CommandSender sender) {
         if (!sender.hasPermission("yourshika.backpack.admin.reload")) {
             msg.send(sender, "error.no-permission");
@@ -750,6 +840,8 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             if (sender.hasPermission("yourshika.backpack.admin.modules")) subs.add("modules");
             if (sender.hasPermission("yourshika.backpack.admin.assets")) subs.add("assets");
             if (sender.hasPermission("yourshika.backpack.admin.doctor")) subs.add("doctor");
+            if (sender.hasPermission("yourshika.backpack.admin.stats")) subs.add("stats");
+            if (sender.hasPermission("yourshika.backpack.admin.purge")) subs.add("purge");
             if (sender.hasPermission("yourshika.backpack.admin.update")) subs.add("update");
             if (sender.hasPermission("yourshika.backpack.admin.reload")) subs.add("reload");
             return filter(subs, args[0]);
@@ -779,6 +871,9 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         }
         if (sub.equals("magnet") && args.length == 2) {
             return filter(List.of("on", "off", "toggle"), args[1]);
+        }
+        if (sub.equals("purge") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.purge")) {
+            return filter(List.of("dry", "confirm"), args[1]);
         }
         return List.of();
     }
