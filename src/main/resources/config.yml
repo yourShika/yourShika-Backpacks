@@ -10,7 +10,11 @@
 # (die alte Datei wird dabei gesichert).
 config-version: 10
 
-# Language file messages_<language>.yml (default: en). German (de) is bundled too.
+# Sprache / Language: wählt messages_<language>.yml.
+# Mitgeliefert & automatisch als editierbare Datei angelegt: en, de, pl.
+# Alle Sprachdateien werden beim Start extrahiert und beim Versionswechsel um
+# neue Schlüssel ergänzt, OHNE eigene Änderungen zu überschreiben. Eine eigene
+# Sprache: Datei messages_<code>.yml selbst anlegen und hier den Code eintragen.
 language: en
 
 # Debug-Ausgaben in der Server-Konsole.
