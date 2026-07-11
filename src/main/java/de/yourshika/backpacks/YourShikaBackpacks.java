@@ -52,13 +52,16 @@ public final class YourShikaBackpacks extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         migrateConfig();
-        saveResourceIfMissing("messages_en.yml");
         checkCrashMarker();
 
         this.pluginConfig = new PluginConfig(this);
         this.pluginConfig.load();
 
         this.messages = new MessageManager(this);
+        // Alle mitgelieferten Sprachen (en/de/pl) auf die Platte extrahieren und
+        // aktualisieren, damit jede per config.yml wählbar/editierbar ist und beim
+        // Versionswechsel keine eigenen Übersetzungen verloren gehen.
+        this.messages.syncBundledLanguages();
         this.messages.load(pluginConfig.language());
 
         this.keys = new BackpackKeys(this);
@@ -297,13 +300,6 @@ public final class YourShikaBackpacks extends JavaPlugin {
                     + " Backup: '" + backupName + "'.");
         } catch (Exception ex) {
             getLogger().severe("config.yml konnte nicht migriert werden: " + ex.getMessage());
-        }
-    }
-
-    private void saveResourceIfMissing(String name) {
-        File f = new File(getDataFolder(), name);
-        if (!f.exists() && getResource(name) != null) {
-            saveResource(name, false);
         }
     }
 

@@ -29,43 +29,71 @@ public final class MessageManager {
         this.plugin = plugin;
     }
 
-    public void load(String language) {
+    /** Alle mitgelieferten Sprachen – werden beim Start auf die Platte extrahiert. */
+    public static final String[] BUNDLED_LANGUAGES = {"en", "de", "pl"};
+
+    /**
+     * Extrahiert (falls fehlend) und aktualisiert ALLE mitgelieferten Sprachdateien
+     * auf der Platte, damit der Admin jede Sprache frei per {@code language:} wählen
+     * und editieren kann – und beim Versionswechsel nichts verloren geht: neue
+     * Schlüssel werden ergänzt, bestehende (eigene) Werte bleiben erhalten.
+     */
+    public void syncBundledLanguages() {
+        for (String lang : BUNDLED_LANGUAGES) {
+            syncLanguageFile(lang);
+        }
+    }
+
+    /**
+     * Stellt sicher, dass {@code messages_<lang>.yml} existiert und alle neuen
+     * Schlüssel der mitgelieferten Datei enthält (bestehende Werte bleiben
+     * unangetastet). Gibt die Datei zurück (oder null, wenn die Sprache nicht
+     * mitgeliefert wird und keine Datei existiert).
+     */
+    private File syncLanguageFile(String language) {
         String fileName = "messages_" + language.toLowerCase() + ".yml";
         File file = new File(plugin.getDataFolder(), fileName);
+        InputStream bundledStream = plugin.getResource(fileName);
+        if (bundledStream == null) {
+            // Nicht mitgelieferte Sprache: nur nutzbar, wenn der Admin die Datei selbst anlegt.
+            return file.exists() ? file : null;
+        }
         if (!file.exists()) {
-            // If the requested language does not exist, fall back to English.
-            if (plugin.getResource(fileName) != null) {
-                plugin.saveResource(fileName, false);
-            } else {
-                plugin.saveResource("messages_en.yml", false);
-                file = new File(plugin.getDataFolder(), "messages_en.yml");
+            plugin.saveResource(fileName, false); // frische Standarddatei (inkl. Kommentare)
+        }
+        // Merge: neue Schlüssel der mitgelieferten Datei ergänzen, eigene Werte behalten.
+        YamlConfiguration current = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration bundled = YamlConfiguration.loadConfiguration(
+                new InputStreamReader(bundledStream, StandardCharsets.UTF_8));
+        boolean changed = false;
+        for (String key : bundled.getKeys(true)) {
+            if (bundled.isConfigurationSection(key)) continue; // nur Blattwerte setzen
+            if (!current.contains(key)) {
+                current.set(key, bundled.get(key));
+                changed = true;
             }
+        }
+        if (changed) {
+            try {
+                current.save(file);
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Sprachdatei " + fileName + " konnte nicht aktualisiert werden: " + ex.getMessage());
+            }
+        }
+        return file;
+    }
+
+    public void load(String language) {
+        // Aktive Sprachdatei sicherstellen + auf den neuesten Stand bringen.
+        File file = syncLanguageFile(language);
+        if (file == null || !file.exists()) {
+            // Unbekannte/fehlende Sprache -> auf Englisch zurückfallen.
+            file = syncLanguageFile("en");
+            if (file == null) file = new File(plugin.getDataFolder(), "messages_en.yml");
         }
         messages = YamlConfiguration.loadConfiguration(file);
 
-        // Auto-update: merge any NEW keys from the bundled file of the SAME
-        // language into the user's file (and persist), so messages stay current
-        // across plugin updates without overwriting existing edits.
-        InputStream sameLang = plugin.getResource(fileName);
-        if (sameLang != null) {
-            YamlConfiguration bundled = YamlConfiguration.loadConfiguration(
-                    new InputStreamReader(sameLang, StandardCharsets.UTF_8));
-            boolean changed = false;
-            for (String key : bundled.getKeys(true)) {
-                if (!messages.contains(key)) {
-                    messages.set(key, bundled.get(key));
-                    changed = true;
-                }
-            }
-            if (changed) {
-                try {
-                    messages.save(file);
-                } catch (Exception ignored) {
-                }
-            }
-        }
-
-        // Runtime fallback to bundled English for anything still missing.
+        // Runtime-Fallback auf gebündeltes Englisch für alles noch Fehlende.
         InputStream def = plugin.getResource("messages_en.yml");
         if (def != null) {
             messages.setDefaults(YamlConfiguration.loadConfiguration(
