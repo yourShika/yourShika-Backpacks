@@ -153,7 +153,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
         // Autosave.
         startAutosave();
 
-        getLogger().info("yourShika Backpack's v" + getPluginMeta().getVersion() + " aktiviert (Paper 26.1.x / Java 25).");
+        getLogger().info("yourShika Backpack's v" + getPluginMeta().getVersion() + " aktiviert (Paper 26.1.2–26.2 / Java 25).");
     }
 
     @Override

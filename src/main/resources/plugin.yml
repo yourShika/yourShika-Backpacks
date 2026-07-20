@@ -1,7 +1,7 @@
 name: yourShikaBackpacks
 version: '${project.version}'
 main: de.yourshika.backpacks.YourShikaBackpacks
-api-version: '1.21'
+api-version: '26.1.2'
 author: yourShika
 description: Eigenständiges, serverseitiges Backpack-System (inspiriert von Sophisticated Backpacks).
 website: https://github.com/yourShika/yourShika-Backpacks

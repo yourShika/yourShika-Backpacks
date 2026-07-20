@@ -53,7 +53,9 @@ public final class AnvilRenameListener implements Listener {
         BackpackTier tier = plugin.tiers().get(items.getTierKey(base));
         if (tier == null) return;
 
-        String renameText = event.getInventory().getRenameText();
+        // AnvilView statt AnvilInventory: getInventory().getRenameText() ist seit
+        // dem InventoryView-Split veraltet und zur Entfernung markiert.
+        String renameText = event.getView().getRenameText();
         UUID id = items.getId(base);
         String main = items.getMainColor(base, tier.defaultMainColor());
         String accent = items.getAccentColor(base, tier.defaultAccentColor());
