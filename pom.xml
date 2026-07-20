@@ -6,7 +6,7 @@
 
     <groupId>de.yourshika</groupId>
     <artifactId>yourshika-backpacks</artifactId>
-    <version>1.2.3</version>
+    <version>1.3.0</version>
     <packaging>jar</packaging>
 
     <name>yourShika Backpacks</name>
@@ -14,12 +14,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Minecraft 26.1.x benötigt Java 25 (Microsoft OpenJDK 25). -->
+        <!-- Minecraft 26.x benötigt Java 25 (auch 26.2: paper-api ist Class-Version 69). -->
         <maven.compiler.release>25</maven.compiler.release>
         <!-- Ziel-Paper-/Minecraft-Version. Leicht änderbar – siehe README.
              Seit dem neuen YY.D.H-Schema verwendet die Paper-API
              "<version>.build.<n>-<stage>" statt "-R0.1-SNAPSHOT". -->
-        <paper.version>26.1.2.build.72-stable</paper.version>
+        <paper.version>26.2.build.62-beta</paper.version>
     </properties>
 
     <repositories>

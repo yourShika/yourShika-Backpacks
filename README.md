@@ -3,8 +3,8 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.2.3-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
-[![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2-5BE8D4)](https://papermc.io)
+[![Version](https://img.shields.io/badge/version-1.3.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -21,6 +21,26 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🧱 v1.3.0
+
+- 🧱 **Minecraft / Paper 26.2 support** – the plugin is now built against
+  `paper-api:26.2.build.62-beta` and runs on **Paper 26.1.2 – 26.2**. No API
+  breakage was needed: 26.2 still targets **Java 25**, and no 26.2-exclusive API
+  is used, so the same jar works on both.
+- 🏷️ **`api-version` updated to `'26.1.2'`** – the old `'1.21'` declaration
+  predates the new `YY.D.H` versioning scheme. `api-version` is the *minimum*
+  server version, so `26.1.2` keeps 26.1.2 servers working while correctly
+  declaring modern-scheme compatibility.
+- 🧹 **Anvil rename future-proofed** – switched from the deprecated
+  `AnvilInventory#getRenameText()` (marked for removal) to `AnvilView#getRenameText()`.
+  The build is now warning-free.
+
+> **Note:** Paper 26.2 currently only publishes **alpha/beta** builds (latest
+> `26.2.build.62-beta`); there is no `-stable` 26.2 build yet. The API surface this
+> plugin uses is unaffected.
 
 ---
 
@@ -508,8 +528,9 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🧱 Minecraft/Paper version
 
 - **Target platform:** Paper (also runs on Spigot, with possibly limited MiniMessage visuals)
-- **Built against:** `io.papermc.paper:paper-api:26.1.2.build.72-stable`
-- **Java:** **25** required (Minecraft 26.1.x requires Java 25, Microsoft OpenJDK 25)
+- **Built against:** `io.papermc.paper:paper-api:26.2.build.62-beta`
+- **Runs on:** Paper **26.1.2 – 26.2** (`api-version: '26.1.2'`; no 26.2-exclusive API is used)
+- **Java:** **25** required (Minecraft 26.x requires Java 25, Microsoft OpenJDK 25)
 - **Version scheme:** since the new `YY.D.H` scheme, the Paper API uses
   `<version>.build.<n>-<stage>` instead of `-R0.1-SNAPSHOT`. The target version is
   easily changed via the `paper.version` property in [`pom.xml`](pom.xml).
@@ -541,8 +562,8 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.2.3.jar`).
-2. Put it into the `plugins/` folder of your **Paper 26.1.2 (Java 25)** server.
+   (`yourShika-Backpacks-1.3.0.jar`).
+2. Put it into the `plugins/` folder of your **Paper 26.1.2 – 26.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
 4. Optionally adjust `config.yml` and run `/bp reload`.
@@ -753,7 +774,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.2.3.jar
+target/yourShika-Backpacks-1.3.0.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in
