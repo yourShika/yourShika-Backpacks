@@ -3,7 +3,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.3.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.3.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -21,6 +21,19 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🗜️ v1.3.1
+
+- 💾 **Compacting filter no longer resets on rejoin** – the filter now stores an
+  independent copy of its sample items instead of live inventory references. With
+  the async write-behind cache (v1.2.0), those references could go stale before the
+  delayed save, so the filter serialized empty and looked cleared after a relog. The
+  same hardening applies to the Pickup filter.
+- 🔘 **Compacting on/off toggle** – each backpack's Compacting upgrade now has an
+  **ON/OFF switch** in its filter menu. When OFF, items are no longer compacted into
+  blocks on close. The state is saved per backpack.
 
 ---
 
@@ -562,7 +575,7 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.3.0.jar`).
+   (`yourShika-Backpacks-1.3.1.jar`).
 2. Put it into the `plugins/` folder of your **Paper 26.1.2 – 26.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
@@ -774,7 +787,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.3.0.jar
+target/yourShika-Backpacks-1.3.1.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in

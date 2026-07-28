@@ -795,8 +795,14 @@ public final class BackpackManager {
     public void saveAndRelease(BackpackMenuHolder holder, Player closer) {
         try {
             flushVisiblePage(holder);
-            // Compacting-Upgrade: 9er-Stacks zu Blöcken verdichten (nach Filter).
-            if (functionUpgradesOf(holder.backpackId()).contains("compacting")) {
+            BackpackData data = storage.load(holder.backpackId());
+            if (data == null) {
+                data = new BackpackData(holder.backpackId());
+                data.tier(holder.tierKey());
+            }
+            // Compacting-Upgrade: 9er-Stacks zu Blöcken verdichten (nach Filter) –
+            // nur wenn das Upgrade verbaut UND für dieses Backpack eingeschaltet ist.
+            if (data.compactEnabled() && functionUpgradesOf(holder.backpackId()).contains("compacting")) {
                 java.util.Map<Material, Integer> created =
                         compact(holder.buffer(), compactWhitelist(holder.backpackId()));
                 if (closer != null && !created.isEmpty()) {
@@ -808,11 +814,6 @@ public final class BackpackManager {
                             de.yourshika.backpacks.config.MessageManager.ph("items", String.join(", ", parts)));
                     if (plugin.achievements() != null) plugin.achievements().trigger(closer, "compact");
                 }
-            }
-            BackpackData data = storage.load(holder.backpackId());
-            if (data == null) {
-                data = new BackpackData(holder.backpackId());
-                data.tier(holder.tierKey());
             }
             data.contents(holder.buffer());
             storage.save(data);
@@ -907,9 +908,15 @@ public final class BackpackManager {
         inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.CLEAR_SLOT,
                 presetButton(Material.BARRIER, "Clear filter", "Remove all filter entries"));
 
+        if (!pickup) {
+            // An/Aus-Schalter für das Compacting-Upgrade dieses Backpacks.
+            boolean enabled = data == null || data.compactEnabled();
+            inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.TOGGLE_SLOT, compactToggleButton(enabled));
+        }
+
         player.openInventory(inv);
         // Preview (#19): zeigt im Chat, was beim Schließen verdichtet würde (nur Compacting).
-        if (!pickup) compactPreview(player, backpackId);
+        if (!pickup && (data == null || data.compactEnabled())) compactPreview(player, backpackId);
     }
 
     private ItemStack presetButton(Material material, String name, String desc) {
@@ -919,6 +926,36 @@ public final class BackpackManager {
         meta.lore(List.of(line("<gray>" + desc), line("<dark_gray>Click to apply")));
         item.setItemMeta(meta);
         return item;
+    }
+
+    /** An/Aus-Knopf für das Compacting-Upgrade. */
+    private ItemStack compactToggleButton(boolean enabled) {
+        ItemStack item = new ItemStack(enabled ? Material.LIME_DYE : Material.GRAY_DYE);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line("<bold>Compacting: " + (enabled ? "<green>ON</green>" : "<red>OFF</red>") + "</bold>"));
+        meta.lore(List.of(
+                line("<gray>When ON, matching items are compacted"),
+                line("<gray>into blocks when you close the backpack."),
+                line("<dark_gray>Click to turn " + (enabled ? "OFF" : "ON"))));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    /** Schaltet das Compacting-Upgrade eines Backpacks an/aus (persistiert). */
+    public void toggleCompacting(de.yourshika.backpacks.gui.FilterMenuHolder holder) {
+        BackpackData data = storage.load(holder.backpackId());
+        if (data == null) {
+            data = new BackpackData(holder.backpackId());
+            data.tier(holder.tierKey());
+        }
+        boolean now = !data.compactEnabled();
+        data.compactEnabled(now);
+        storage.save(data);
+        // Knopf in der offenen GUI aktualisieren.
+        Inventory inv = holder.getInventory();
+        if (inv != null) {
+            inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.TOGGLE_SLOT, compactToggleButton(now));
+        }
     }
 
     /** Compacting-Presets: Whitelist-Vorlagen (#20). */
@@ -1022,7 +1059,13 @@ public final class BackpackManager {
             data.tier(holder.tierKey());
         }
         ItemStack[] filter = new ItemStack[de.yourshika.backpacks.gui.FilterMenuHolder.FILTER_SLOTS];
-        for (int i = 0; i < filter.length; i++) filter[i] = inv.getItem(i);
+        for (int i = 0; i < filter.length; i++) {
+            ItemStack it = inv.getItem(i);
+            // WICHTIG: klonen. Sonst landen lebende Inventar-Spiegel-Items im Cache, die
+            // beim späteren asynchronen Write-Behind bereits ungültig sein können und dann
+            // leer serialisiert werden -> Filter "verschwindet" nach dem Neu-Joinen.
+            filter[i] = (it == null || it.getType().isAir()) ? null : it.clone();
+        }
         if (holder.isPickup()) {
             data.pickupFilter(filter);
         } else {
