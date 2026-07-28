@@ -63,6 +63,7 @@ public final class YamlBackpackStorage implements BackpackStorage {
                 data.furnaceCook(sec.getInt("furnace-cook"));
                 data.furnaceBurn(sec.getInt("furnace-burn"));
                 data.compactFilter(ItemSerialization.fromBase64(sec.getString("compact-filter")));
+                data.compactEnabled(sec.getBoolean("compact-enabled", true));
                 data.pickupFilter(ItemSerialization.fromBase64(sec.getString("pickup-filter")));
                 data.name(sec.getString("name"));
                 data.storedXp(sec.getInt("stored-xp"));
@@ -96,6 +97,7 @@ public final class YamlBackpackStorage implements BackpackStorage {
             sec.set("furnace-cook", data.furnaceCook());
             sec.set("furnace-burn", data.furnaceBurn());
             sec.set("compact-filter", ItemSerialization.toBase64(data.compactFilter()));
+            sec.set("compact-enabled", data.compactEnabled());
             sec.set("pickup-filter", ItemSerialization.toBase64(data.pickupFilter()));
             sec.set("name", data.name());
             sec.set("stored-xp", data.storedXp());

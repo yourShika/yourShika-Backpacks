@@ -22,6 +22,12 @@ public final class FilterMenuHolder implements InventoryHolder {
     public static final int[] PRESET_SLOTS = {18, 19, 20, 21};
     public static final String[] PRESET_IDS = {"ores", "farm", "redstone", "misc"};
     public static final int CLEAR_SLOT = 23;
+    /** An/Aus-Schalter für das Compacting-Upgrade (nur Compacting-Filter). */
+    public static final int TOGGLE_SLOT = 24;
+
+    public boolean isToggle(int rawSlot) {
+        return rawSlot == TOGGLE_SLOT;
+    }
 
     /** Preset-ID an einem Slot oder null. */
     public String presetAt(int rawSlot) {

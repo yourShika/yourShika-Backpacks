@@ -69,6 +69,7 @@ public final class SqliteBackpackStorage implements BackpackStorage {
         addColumnIfMissing("furnace_cook", "INTEGER DEFAULT 0");
         addColumnIfMissing("furnace_burn", "INTEGER DEFAULT 0");
         addColumnIfMissing("compact_filter", "TEXT");
+        addColumnIfMissing("compact_enabled", "INTEGER DEFAULT 1");
         addColumnIfMissing("pickup_filter", "TEXT");
         addColumnIfMissing("name", "TEXT");
         addColumnIfMissing("stored_xp", "INTEGER DEFAULT 0");
@@ -118,6 +119,8 @@ public final class SqliteBackpackStorage implements BackpackStorage {
         data.furnaceCook(rs.getInt("furnace_cook"));
         data.furnaceBurn(rs.getInt("furnace_burn"));
         data.compactFilter(ItemSerialization.fromBase64(rs.getString("compact_filter")));
+        int compactEnabled = rs.getInt("compact_enabled");
+        data.compactEnabled(rs.wasNull() || compactEnabled != 0); // NULL (Altbestand) = an
         data.pickupFilter(ItemSerialization.fromBase64(rs.getString("pickup_filter")));
         data.name(rs.getString("name"));
         data.storedXp(rs.getInt("stored_xp"));
@@ -134,15 +137,15 @@ public final class SqliteBackpackStorage implements BackpackStorage {
         data.touch();
         synchronized (lock) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO backpacks (id, owner, tier, main_color, accent_color, contents, upgrades, furnace, furnace_cook, furnace_burn, compact_filter, name, stored_xp, placed, world, x, y, z, created, modified, pickup_filter) " +
-                            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
+                    "INSERT INTO backpacks (id, owner, tier, main_color, accent_color, contents, upgrades, furnace, furnace_cook, furnace_burn, compact_filter, name, stored_xp, placed, world, x, y, z, created, modified, pickup_filter, compact_enabled) " +
+                            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
                             "ON CONFLICT(id) DO UPDATE SET " +
                             "owner=excluded.owner, tier=excluded.tier, main_color=excluded.main_color, " +
                             "accent_color=excluded.accent_color, contents=excluded.contents, upgrades=excluded.upgrades, " +
                             "furnace=excluded.furnace, furnace_cook=excluded.furnace_cook, furnace_burn=excluded.furnace_burn, " +
                             "compact_filter=excluded.compact_filter, name=excluded.name, stored_xp=excluded.stored_xp, " +
                             "placed=excluded.placed, world=excluded.world, x=excluded.x, y=excluded.y, z=excluded.z, " +
-                            "modified=excluded.modified, pickup_filter=excluded.pickup_filter")) {
+                            "modified=excluded.modified, pickup_filter=excluded.pickup_filter, compact_enabled=excluded.compact_enabled")) {
                 ps.setString(1, data.id().toString());
                 ps.setString(2, data.owner() == null ? null : data.owner().toString());
                 ps.setString(3, data.tier());
@@ -164,6 +167,7 @@ public final class SqliteBackpackStorage implements BackpackStorage {
                 ps.setLong(19, data.created());
                 ps.setLong(20, data.modified());
                 ps.setString(21, ItemSerialization.toBase64(data.pickupFilter()));
+                ps.setInt(22, data.compactEnabled() ? 1 : 0);
                 ps.executeUpdate();
             } catch (SQLException ex) {
                 plugin.getLogger().severe("Backpack " + data.id() + " konnte nicht gespeichert werden: " + ex.getMessage());

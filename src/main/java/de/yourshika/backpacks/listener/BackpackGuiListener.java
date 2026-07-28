@@ -688,6 +688,12 @@ public final class BackpackGuiListener implements Listener {
                 manager.clearFilter(holder);
                 return;
             }
+            // Compacting an/aus (nur Compacting-Filter).
+            if (holder.isToggle(raw) && !holder.isPickup()) {
+                event.setCancelled(true);
+                manager.toggleCompacting(holder);
+                return;
+            }
         }
 
         if (!clickedTop) return; // Klicks im Spieler-Inventar normal lassen.
