@@ -35,7 +35,9 @@ public final class UpgradeMagnetTask extends BukkitRunnable {
             int radius = manager.magnetRadius(player);
             if (radius <= 0) continue;
 
-            Location target = player.getLocation().add(0, 0.6, 0);
+            // Ziel ist die BRUSTHÖHE des Spielers (~1 Block über den Füßen) = Zentrum
+            // der Aufsammel-Box. So werden Items IN die Box gezogen statt über den Kopf.
+            Location target = player.getLocation().add(0, 1.0, 0);
             int processed = 0;
             for (var entity : player.getNearbyEntities(radius, radius, radius)) {
                 if (processed >= maxPerTick) break;                 // Drossel
@@ -51,11 +53,24 @@ public final class UpgradeMagnetTask extends BukkitRunnable {
 
                 Vector dir = target.toVector().subtract(item.getLocation().toVector());
                 double dist = dir.length();
-                if (dist < 1.2 || dist > radius) continue;          // sehr nah -> normales Aufsammeln
-                Vector pull = dir.normalize().multiply(Math.min(0.6, 0.18 * dist));
-                // Items über Blöcke gleiten lassen statt in den Boden zu ziehen (#…):
-                // ein leichter Auftrieb verhindert, dass sie in Blöcken verschwinden.
-                if (pull.getY() < 0.18) pull.setY(0.18);
+                if (dist > radius) continue;
+
+                // Sehr nah: den Restschwung DÄMPFEN, damit das Item in die Aufsammel-Box
+                // fällt und von der Vanilla-Mechanik sicher aufgesammelt wird – statt mit
+                // Aufwärts-Restschwung darüber hinweg zu gleiten (Ursache für "nicht sammelbar").
+                if (dist < 1.0) {
+                    item.setVelocity(dir.multiply(0.25));           // sanft Richtung Spieler, kein Boost
+                    processed++;
+                    continue;
+                }
+
+                Vector pull = dir.normalize().multiply(Math.min(0.6, 0.2 * dist));
+                // Leichten Auftrieb NUR, wenn das Item deutlich UNTER dem Ziel liegt
+                // (damit es nicht am Boden klebt). Liegt es schon auf/über Zielhöhe, wird
+                // NICHT nach oben gedrückt – sonst fliegt es über den Kopf.
+                if (item.getLocation().getY() < target.getY() - 0.5 && pull.getY() < 0.1) {
+                    pull.setY(0.1);
+                }
                 item.setVelocity(pull);
                 processed++;
             }
