@@ -124,31 +124,22 @@ public final class UpgradeItemFactory {
         return MINI.deserialize(mm).decoration(TextDecoration.ITALIC, false);
     }
 
-    /** Ist aktuell ein externer Custom-Item-Anbieter (z.B. Oraxen) aktiv? */
-    private boolean externalActive() {
-        return plugin.moduleManager() != null
-                && plugin.moduleManager().activeItemProvider() != null;
-    }
-
     /**
-     * Setzt CustomModelData und item_model NUR, wenn ein externer Custom-Item-Hook
-     * (z.B. Oraxen) aktiv ist. Ist das Modul aus, bleiben die Upgrade-Items
-     * normale Vanilla-Items (Papier/Leder) – analog dazu, wie Backpacks zur
-     * normalen Pferderüstung zurückkehren. Andernfalls werden die Komponenten
-     * sauber geleert, damit ein abgeschalteter Hook keine Custom-Textur hinterlässt.
+     * Setzt CustomModelData und {@code item_model} rein aus der Konfiguration –
+     * <b>unabhängig</b> von einem externen Hook (Oraxen). Beides sind Vanilla-
+     * Komponenten und funktionieren auch mit einem eigenen Resourcepack ohne Oraxen
+     * (Issue #8). Ist ein Feld nicht gesetzt (cmd ≤ 0 bzw. leeres item-model), wird
+     * die jeweilige Komponente geleert (Vanilla-Optik). Ein aktiver externer Anbieter
+     * überschreibt das Modell danach in {@link #applyExternalModel} ohnehin wieder –
+     * analog zum Verhalten der Backpack-Items ({@code BackpackItemFactory#applyModel}).
      */
     private void applyCustomModel(ItemMeta meta, int cmd, String itemModel) {
         CustomModelDataComponent c = meta.getCustomModelDataComponent();
-        if (externalActive() && cmd > 0) {
-            c.setFloats(List.of((float) cmd));
-        } else {
-            c.setFloats(List.of());
-        }
+        c.setFloats(cmd > 0 ? List.of((float) cmd) : List.of());
         meta.setCustomModelDataComponent(c);
 
-        if (externalActive() && itemModel != null && !itemModel.isBlank()) {
-            org.bukkit.NamespacedKey key = org.bukkit.NamespacedKey.fromString(itemModel);
-            if (key != null) meta.setItemModel(key);
+        if (itemModel != null && !itemModel.isBlank()) {
+            meta.setItemModel(org.bukkit.NamespacedKey.fromString(itemModel)); // null bei ungültig -> Reset
         } else {
             meta.setItemModel(null); // zurücksetzen -> Vanilla-Optik
         }
