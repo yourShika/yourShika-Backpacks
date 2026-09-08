@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.3.3-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.3.4-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,24 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🔓 v1.3.4
+
+- 🔓 **Backpacks can no longer get stuck as "already open"** – if a player left the
+  server abruptly (crash / kick / timeout) with a backpack open, the in-memory
+  "open" lock could stay set, so the backpack refused to open again with *"already
+  open"* even though nobody had it open. Three safeguards now prevent this:
+  - **Self-healing:** the open check verifies the recorded viewer is actually online
+    and really viewing that backpack; a stale lock is cleared automatically on the
+    next open attempt.
+  - **Logout fallback:** on quit, an open backpack's current contents are **saved
+    first**, then released — no data loss.
+  - **`/bp unblock`** – hold the stuck backpack and run it to clear the lock yourself
+    (only ever releases a *stale* lock; a genuinely open backpack is left alone).
+    Admins can force-clear by id with `/bp unblock <id>` (`yourshika.backpack.admin.unblock`),
+    which closes the current viewer cleanly first so their contents are saved.
 
 ---
 
@@ -607,7 +625,7 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.3.3.jar`).
+   (`yourShika-Backpacks-1.3.4.jar`).
 2. Put it into the `plugins/` folder of your **Paper 26.1.2 – 26.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
@@ -819,7 +837,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.3.3.jar
+target/yourShika-Backpacks-1.3.4.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in

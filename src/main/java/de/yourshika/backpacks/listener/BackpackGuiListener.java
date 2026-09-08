@@ -442,6 +442,24 @@ public final class BackpackGuiListener implements Listener {
         }
     }
 
+    /**
+     * Fallback beim Verlassen des Servers: Kommt bei einem abrupten Logout/Kick/
+     * Timeout kein {@link InventoryCloseEvent}, bliebe das Backpack sonst dauerhaft
+     * als "offen" gesperrt (Symptom: lässt sich nicht mehr öffnen, "already-open").
+     * Ist die Backpack-GUI beim Quit noch offen, wird ihr aktueller Stand ZUERST
+     * gespeichert und dann freigegeben (kein Datenverlust); anschließend werden alle
+     * evtl. hängengebliebenen Sperren dieses Spielers vorsorglich gelöst.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onQuit(org.bukkit.event.player.PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackMenuHolder holder) {
+            manager.saveAndRelease(holder, player); // sichert aktuellen Inhalt + gibt frei
+            plugin.debug("Backpack " + holder.backpackId() + " beim Quit gesichert & freigegeben.");
+        }
+        manager.releaseAllFor(player.getUniqueId());
+    }
+
     // --- Upgrade-GUI -------------------------------------------------------
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

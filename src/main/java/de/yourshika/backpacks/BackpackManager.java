@@ -75,8 +75,64 @@ public final class BackpackManager {
     public BackpackItemFactory items() { return items; }
 
     public boolean isOpen(UUID backpackId) {
-        return openBackpacks.containsKey(backpackId);
+        UUID viewer = openBackpacks.get(backpackId);
+        if (viewer == null) return false;
+        // Selbstheilung gegen "hängt dauerhaft offen": Ist der eingetragene Betrachter
+        // offline ODER betrachtet er dieses Backpack gar nicht (mehr) – z.B. weil bei
+        // einem abrupten Logout/Kick/Timeout kein InventoryCloseEvent kam –, war der
+        // Status veraltet. Dann Eintrag entfernen, damit sich das Backpack wieder
+        // öffnen lässt (kein "already-open"-Dauerzustand).
+        Player viewerPlayer = Bukkit.getPlayer(viewer);
+        if (viewerPlayer == null || !viewerPlayer.isOnline()) {
+            openBackpacks.remove(backpackId);
+            return false;
+        }
+        var holder = viewerPlayer.getOpenInventory().getTopInventory().getHolder();
+        if (holder instanceof BackpackMenuHolder h && backpackId.equals(h.backpackId())) {
+            return true;
+        }
+        openBackpacks.remove(backpackId);
+        return false;
     }
+
+    /**
+     * Gibt die "offen"-Sperre eines Backpacks frei. {@code force=false} gibt nur
+     * frei, wenn der Status veraltet ist (der eingetragene Betrachter das Backpack
+     * gar nicht mehr offen hat) – sicher, kann keine echte Sitzung stören.
+     * {@code force=true} (Admin) gibt immer frei. Rückgabe beschreibt das Ergebnis.
+     */
+    public UnblockResult unblock(UUID backpackId, boolean force) {
+        if (!openBackpacks.containsKey(backpackId)) return UnblockResult.NOT_BLOCKED;
+        // isOpen(...) heilt einen veralteten Eintrag selbst und liefert nur bei
+        // echter, laufender Betrachtung true.
+        boolean genuine = isOpen(backpackId);
+        if (!genuine) {
+            openBackpacks.remove(backpackId); // war veraltet -> sicher freigeben (kein Inhalt betroffen)
+            return UnblockResult.RELEASED;
+        }
+        if (!force) return UnblockResult.IN_USE;
+        // Erzwungen und WIRKLICH offen: den aktuellen Betrachter zuerst SAUBER schließen
+        // (das speichert seinen Stand über InventoryCloseEvent) – so geht nichts verloren
+        // und es entstehen keine zwei Betrachter (Dupe-Schutz).
+        UUID viewer = openBackpacks.get(backpackId);
+        Player p = viewer == null ? null : Bukkit.getPlayer(viewer);
+        if (p != null) {
+            var top = p.getOpenInventory().getTopInventory();
+            if (top.getHolder() instanceof BackpackMenuHolder h && backpackId.equals(h.backpackId())) {
+                p.closeInventory(); // -> saveAndRelease speichert & gibt frei
+            }
+        }
+        openBackpacks.remove(backpackId); // falls closeInventory nichts bewirkt hat
+        return UnblockResult.RELEASED;
+    }
+
+    /** Gibt alle "offen"-Sperren frei, deren Betrachter der gegebene Spieler ist. */
+    public void releaseAllFor(UUID viewer) {
+        openBackpacks.entrySet().removeIf(e -> viewer.equals(e.getValue()));
+    }
+
+    /** Ergebnis von {@link #unblock(UUID, boolean)}. */
+    public enum UnblockResult { NOT_BLOCKED, IN_USE, RELEASED }
 
     /**
      * Darf der Spieler ein Backpack mit dem gegebenen Besitzer öffnen/aufheben?
@@ -114,7 +170,7 @@ public final class BackpackManager {
             fresh = true;
         }
 
-        if (openBackpacks.containsKey(id)) {
+        if (isOpen(id)) {
             return "error.already-open";
         }
 
@@ -164,7 +220,7 @@ public final class BackpackManager {
         if (!canAccess(player, data.owner())) {
             return "error.not-owner";
         }
-        if (openBackpacks.containsKey(id)) {
+        if (isOpen(id)) {
             return "error.already-open";
         }
         String main = data.mainColor() != null ? data.mainColor() : tier.defaultMainColor();

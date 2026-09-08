@@ -18,6 +18,7 @@ help:
   transfer: "<yellow>/bp transfer <id> <gracz> <gray>– Przekaż własność plecaka"
   recall: "<yellow>/bp recall <gray>– Przywołaj postawione plecaki (wymaga ulepszenia Recall)"
   magnet: "<yellow>/bp magnet <on|off> <gray>– Włącz/wyłącz przyciąganie magnesu"
+  unblock: "<yellow>/bp unblock <gray>– Odblokuj plecak zablokowany jako \"już otwarty\" (trzymaj go w ręce)"
   give: "<yellow>/bp give <gracz> <przedmiot> [ilość] <gray>– Daj przedmiot"
   openid: "<yellow>/bp openid <id> <gray>– Otwórz plecak po ID"
   modules: "<yellow>/bp modules <gray>– Włącz/wyłącz moduły zewnętrzne"
@@ -130,6 +131,11 @@ trash:
 achievement:
   unlocked: "<gradient:#6E5BC8:#5BE8D4><bold>Osiągnięcie odblokowane!</bold></gradient> <white><title></white> <dark_gray>– <gray><desc>"
   broadcast: "<gray><player> odblokował osiągnięcie <white><title></white>."
+
+unblock:
+  success: "<green>Plecak odblokowany – możesz go teraz znów otworzyć."
+  not-blocked: "<gray>Ten plecak nie jest zablokowany."
+  in-use: "<red>Ten plecak jest teraz faktycznie otwarty, więc nie można go odblokować."
 
 reload:
   success: "<green>Konfiguracja przeładowana."

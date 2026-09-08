@@ -75,6 +75,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "doctor" -> doctor(sender);
             case "stats" -> stats(sender);
             case "purge" -> purge(sender, args);
+            case "unblock", "unlock" -> unblock(sender, args);
             case "update" -> update(sender);
             case "reload" -> reload(sender);
             case "version", "ver" -> version(sender);
@@ -93,6 +94,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "help.transfer");
         msg.sendRaw(sender, "help.recall");
         msg.sendRaw(sender, "help.magnet");
+        msg.sendRaw(sender, "help.unblock");
         if (sender.hasPermission("yourshika.backpack.admin.color")) msg.sendRaw(sender, "help.color");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
         if (sender.hasPermission("yourshika.backpack.admin.openid")) msg.sendRaw(sender, "help.openid");
@@ -810,6 +812,57 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         return String.format(java.util.Locale.ROOT, "%.1f MiB", bytes / (1024.0 * 1024.0));
     }
 
+    /**
+     * Hebt eine hängengebliebene "offen"-Sperre auf (Symptom: Backpack lässt sich
+     * nicht öffnen, "already-open", obwohl es niemand offen hat). Ohne Argument gibt
+     * ein Spieler die Sperre seines in der Hand gehaltenen Backpacks frei – aber nur,
+     * wenn sie veraltet ist (nichts geht verloren, keine echte Sitzung wird gestört).
+     * Mit einer ID erzwingt ein Admin die Freigabe (schließt einen echten Betrachter
+     * vorher sauber, damit sein Stand gespeichert wird).
+     */
+    private void unblock(CommandSender sender, String[] args) {
+        if (args.length >= 2) {
+            if (!sender.hasPermission("yourshika.backpack.admin.unblock")) {
+                msg.send(sender, "error.no-permission");
+                return;
+            }
+            UUID id = tryUuid(args[1]);
+            if (id == null) {
+                msg.send(sender, "error.invalid-id", ph("input", args[1]));
+                return;
+            }
+            BackpackManager.UnblockResult res = manager.unblock(id, true);
+            if (res == BackpackManager.UnblockResult.NOT_BLOCKED) {
+                msg.send(sender, "unblock.not-blocked");
+            } else {
+                msg.send(sender, "unblock.success");
+                String actor = sender instanceof Player p ? p.getName() : "CONSOLE";
+                plugin.audit(actor, "UNBLOCK", id.toString());
+            }
+            return;
+        }
+
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        ItemStack held = player.getInventory().getItemInMainHand();
+        if (!items.isBackpack(held)) {
+            msg.send(sender, "error.hold-backpack");
+            return;
+        }
+        UUID id = items.getId(held);
+        if (id == null) {
+            msg.send(sender, "unblock.not-blocked"); // ohne ID war es nie gesperrt
+            return;
+        }
+        switch (manager.unblock(id, false)) {
+            case NOT_BLOCKED -> msg.send(sender, "unblock.not-blocked");
+            case IN_USE -> msg.send(sender, "unblock.in-use");
+            case RELEASED -> msg.send(sender, "unblock.success");
+        }
+    }
+
     private void reload(CommandSender sender) {
         if (!sender.hasPermission("yourshika.backpack.admin.reload")) {
             msg.send(sender, "error.no-permission");
@@ -833,7 +886,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "rename", "list", "locate", "transfer", "recall", "magnet", "version"));
+            List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "rename", "list", "locate", "transfer", "recall", "magnet", "unblock", "version"));
             if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");

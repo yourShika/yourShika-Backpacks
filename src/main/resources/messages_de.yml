@@ -18,6 +18,7 @@ help:
   transfer: "<yellow>/bp transfer <ID> <Spieler> <gray>– Besitzer eines Backpacks ändern"
   recall: "<yellow>/bp recall <gray>– Platzierte Backpacks zurückholen (braucht Recall-Upgrade)"
   magnet: "<yellow>/bp magnet <on|off> <gray>– Magnet-Anziehung an-/ausschalten"
+  unblock: "<yellow>/bp unblock <gray>– Backpack entsperren, das als \"bereits offen\" hängt (in der Hand halten)"
   give: "<yellow>/bp give <Spieler> <Item> [Anzahl] <gray>– Item geben"
   openid: "<yellow>/bp openid <ID> <gray>– Backpack per ID öffnen"
   modules: "<yellow>/bp modules <gray>– Externe Module an/aus schalten"
@@ -142,6 +143,11 @@ give:
 achievement:
   unlocked: "<gradient:#6E5BC8:#5BE8D4><bold>Erfolg freigeschaltet!</bold></gradient> <white><title></white> <dark_gray>– <gray><desc>"
   broadcast: "<gray><player> hat den Erfolg <white><title></white> freigeschaltet."
+
+unblock:
+  success: "<green>Backpack entsperrt – du kannst es jetzt wieder öffnen."
+  not-blocked: "<gray>Dieses Backpack ist nicht gesperrt."
+  in-use: "<red>Dieses Backpack ist gerade wirklich offen und kann nicht entsperrt werden."
 
 reload:
   success: "<green>Konfiguration neu geladen."
