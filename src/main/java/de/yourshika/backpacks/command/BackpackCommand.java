@@ -76,6 +76,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "stats" -> stats(sender);
             case "purge" -> purge(sender, args);
             case "unblock", "unlock" -> unblock(sender, args);
+            case "restore", "recover" -> restore(sender, args);
             case "update" -> update(sender);
             case "reload" -> reload(sender);
             case "version", "ver" -> version(sender);
@@ -98,6 +99,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         if (sender.hasPermission("yourshika.backpack.admin.color")) msg.sendRaw(sender, "help.color");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
         if (sender.hasPermission("yourshika.backpack.admin.openid")) msg.sendRaw(sender, "help.openid");
+        if (sender.hasPermission("yourshika.backpack.admin.restore")) msg.sendRaw(sender, "help.restore");
         if (sender.hasPermission("yourshika.backpack.admin.modules")) msg.sendRaw(sender, "help.modules");
         if (sender.hasPermission("yourshika.backpack.admin.assets")) msg.sendRaw(sender, "help.assets");
         if (sender.hasPermission("yourshika.backpack.admin.doctor")) msg.sendRaw(sender, "help.doctor");
@@ -863,6 +865,50 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    /**
+     * Gibt ein verloren gegangenes Backpack-Item zurück: baut es aus den
+     * server-seitig gespeicherten Daten neu (gleiche ID, gleicher Inhalt) und gibt
+     * es dem Zielspieler. {@code /bp restore <player> <id>}. Der Inhalt wird nicht
+     * verändert; existiert das Item noch woanders, teilen sich beide dieselbe ID/den
+     * selben Inhalt (kein Inhalts-Dupe).
+     */
+    private void restore(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("yourshika.backpack.admin.restore")) {
+            msg.send(sender, "error.no-permission");
+            return;
+        }
+        if (args.length < 3) {
+            msg.send(sender, "error.restore-usage");
+            return;
+        }
+        Player target = Bukkit.getPlayerExact(args[1]);
+        if (target == null) {
+            msg.send(sender, "error.player-not-found", ph("input", args[1]));
+            return;
+        }
+        UUID id = tryUuid(args[2]);
+        if (id == null) {
+            msg.send(sender, "error.invalid-id", ph("input", args[2]));
+            return;
+        }
+        ItemStack item = manager.restoreItem(id);
+        if (item == null) {
+            msg.send(sender, "error.id-not-found");
+            return;
+        }
+        // Ins Inventar geben, Überschuss vor dem Spieler fallen lassen (kein Verlust).
+        for (ItemStack rest : target.getInventory().addItem(item).values()) {
+            target.getWorld().dropItemNaturally(target.getLocation(), rest);
+        }
+        String actor = sender instanceof Player p ? p.getName() : "CONSOLE";
+        plugin.audit(actor, "RESTORE", id + " -> " + target.getName());
+        msg.send(sender, "restore.success", ph("id", id.toString().substring(0, 8)),
+                ph("player", target.getName()));
+        if (target != sender) {
+            msg.send(target, "restore.received", ph("id", id.toString().substring(0, 8)));
+        }
+    }
+
     private void reload(CommandSender sender) {
         if (!sender.hasPermission("yourshika.backpack.admin.reload")) {
             msg.send(sender, "error.no-permission");
@@ -890,6 +936,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
+            if (sender.hasPermission("yourshika.backpack.admin.restore")) subs.add("restore");
             if (sender.hasPermission("yourshika.backpack.admin.modules")) subs.add("modules");
             if (sender.hasPermission("yourshika.backpack.admin.assets")) subs.add("assets");
             if (sender.hasPermission("yourshika.backpack.admin.doctor")) subs.add("doctor");
@@ -927,6 +974,17 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         }
         if (sub.equals("purge") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.purge")) {
             return filter(List.of("dry", "confirm"), args[1]);
+        }
+        if ((sub.equals("restore") || sub.equals("recover")) && sender.hasPermission("yourshika.backpack.admin.restore")) {
+            if (args.length == 2) return filter(onlinePlayers(), args[1]);
+            if (args.length == 3) {
+                Player t = Bukkit.getPlayerExact(args[1]);
+                if (t != null) {
+                    List<String> ids = new ArrayList<>();
+                    for (UUID id : manager.storage().listByOwner(t.getUniqueId())) ids.add(id.toString());
+                    return filter(ids, args[2]);
+                }
+            }
         }
         return List.of();
     }

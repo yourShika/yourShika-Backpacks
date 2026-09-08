@@ -20,6 +20,7 @@ help:
   unblock: "<yellow>/bp unblock <gray>– Fix a backpack stuck as \"already open\" (hold it)"
   give: "<yellow>/bp give <player> <tier> [amount] [color] [accent] <gray>– Give a backpack"
   openid: "<yellow>/bp openid <id> <gray>– Open a backpack by ID"
+  restore: "<yellow>/bp restore <player> <id> <gray>– Give a lost backpack (same contents) back to a player"
   modules: "<yellow>/bp modules <gray>– Toggle external modules"
   assets: "<yellow>/bp assets <status|redeploy> <gray>– Oraxen asset status / redeploy"
   doctor: "<yellow>/bp doctor <gray>– Diagnostics (Oraxen, config, DB, assets, versions)"
@@ -43,6 +44,7 @@ error:
   color-usage: "<red>Usage: /bp color <color> [accent] <gray>(name or #RRGGBB)"
   give-usage: "<red>Usage: /bp give <player> <tier> [amount] [color] [accent]"
   openid-usage: "<red>Usage: /bp openid <id>"
+  restore-usage: "<red>Usage: /bp restore <player> <id> <gray>(use /bp list <player> to find the ID)"
   transfer-usage: "<red>Usage: /bp transfer <id> <player>"
   locate-usage: "<red>Usage: /bp locate [player|id]"
   invalid-color: "<red>Unknown color: <white><input></white>"
@@ -142,6 +144,10 @@ compact:
 achievement:
   unlocked: "<gradient:#6E5BC8:#5BE8D4><bold>Achievement unlocked!</bold></gradient> <white><title></white> <dark_gray>– <gray><desc>"
   broadcast: "<gray><player> unlocked the achievement <white><title></white>."
+
+restore:
+  success: "<green>Restored backpack <white><id></white> to <white><player></white>."
+  received: "<green>A lost backpack (<white><id></white>) was restored to you – its contents are intact."
 
 unblock:
   success: "<green>Backpack unblocked – you can open it again now."

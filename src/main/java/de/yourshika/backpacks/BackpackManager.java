@@ -2144,4 +2144,35 @@ public final class BackpackManager {
         storage.save(data);
         return item;
     }
+
+    /**
+     * Baut aus den bereits GESPEICHERTEN Daten das Backpack-Item einer ID neu –
+     * gleiche ID bedeutet denselben, server-seitig gespeicherten Inhalt. Für
+     * {@code /bp restore}, wenn das Item verloren ging (zerstört/despawnt). Es
+     * werden KEINE neuen Daten angelegt und der Inhalt wird NICHT verändert.
+     * Gibt {@code null} zurück, wenn zu der ID keine (gültigen) Daten existieren.
+     */
+    public ItemStack restoreItem(UUID id) {
+        BackpackData data = storage.load(id);
+        if (data == null) return null;
+        BackpackTier tier = tiers.get(data.tier());
+        if (tier == null) return null;
+        String main = data.mainColor() != null ? data.mainColor() : tier.defaultMainColor();
+        String accent = data.accentColor() != null ? data.accentColor() : tier.defaultAccentColor();
+        ItemStack item = items.create(tier, id, main, accent);
+        if (data.owner() != null) {
+            items.writeOwner(item, data.owner(), Bukkit.getOfflinePlayer(data.owner()).getName());
+        }
+        if (data.name() != null && !data.name().isBlank()) {
+            items.writeName(item, data.name());
+        }
+        items.refresh(item, tier); // Name/Lore/Modell aus den PDC-Daten rendern
+        return item;
+    }
+
+    /** Recorded owner of a stored backpack (or null). */
+    public UUID ownerOf(UUID id) {
+        BackpackData data = storage.load(id);
+        return data == null ? null : data.owner();
+    }
 }

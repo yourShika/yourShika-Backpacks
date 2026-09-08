@@ -21,6 +21,7 @@ help:
   unblock: "<yellow>/bp unblock <gray>– Odblokuj plecak zablokowany jako \"już otwarty\" (trzymaj go w ręce)"
   give: "<yellow>/bp give <gracz> <przedmiot> [ilość] <gray>– Daj przedmiot"
   openid: "<yellow>/bp openid <id> <gray>– Otwórz plecak po ID"
+  restore: "<yellow>/bp restore <gracz> <id> <gray>– Oddaj utracony plecak (ta sama zawartość) graczowi"
   modules: "<yellow>/bp modules <gray>– Włącz/wyłącz moduły zewnętrzne"
   assets: "<yellow>/bp assets <status|redeploy> <gray>– Status/ponowne wdrożenie zasobów Oraxen"
   doctor: "<yellow>/bp doctor <gray>– Diagnostyka (Oraxen, config, DB, zasoby, wersje)"
@@ -44,6 +45,7 @@ error:
   color-usage: "<red>Użycie: /bp color <kolor> [akcent] <gray>(nazwa lub #RRGGBB)"
   give-usage: "<red>Użycie: /bp give <gracz> <przedmiot> [ilość]"
   openid-usage: "<red>Użycie: /bp openid <id>"
+  restore-usage: "<red>Użycie: /bp restore <gracz> <id> <gray>(ID znajdziesz przez /bp list <gracz>)"
   transfer-usage: "<red>Użycie: /bp transfer <id> <gracz>"
   locate-usage: "<red>Użycie: /bp locate [gracz|id]"
   invalid-color: "<red>Nieznany kolor: <white><input></white>"
@@ -131,6 +133,10 @@ trash:
 achievement:
   unlocked: "<gradient:#6E5BC8:#5BE8D4><bold>Osiągnięcie odblokowane!</bold></gradient> <white><title></white> <dark_gray>– <gray><desc>"
   broadcast: "<gray><player> odblokował osiągnięcie <white><title></white>."
+
+restore:
+  success: "<green>Przywrócono plecak <white><id></white> graczowi <white><player></white>."
+  received: "<green>Przywrócono Ci utracony plecak (<white><id></white>) – zawartość jest nienaruszona."
 
 unblock:
   success: "<green>Plecak odblokowany – możesz go teraz znów otworzyć."
