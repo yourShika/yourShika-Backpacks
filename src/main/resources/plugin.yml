@@ -90,6 +90,7 @@ permissions:
       yourshika.backpack.admin.doctor: true
       yourshika.backpack.admin.stats: true
       yourshika.backpack.admin.purge: true
+      yourshika.backpack.admin.unblock: true
       yourshika.backpack.admin.audit: true
       yourshika.backpack.admin.reload: true
       yourshika.backpack.admin.modules: true
@@ -107,6 +108,7 @@ permissions:
   yourshika.backpack.admin.doctor: { default: op }
   yourshika.backpack.admin.stats: { default: op }
   yourshika.backpack.admin.purge: { default: op }
+  yourshika.backpack.admin.unblock: { default: op }
   yourshika.backpack.admin.audit: { default: op }
   yourshika.backpack.admin.reload: { default: op }
   yourshika.backpack.admin.modules: { default: op }
