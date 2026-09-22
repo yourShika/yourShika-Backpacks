@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 12
+config-version: 13
 
 # Sprache / Language: wählt messages_<language>.yml.
 # Mitgeliefert & automatisch als editierbare Datei angelegt: en, de, pl.
@@ -502,6 +502,7 @@ upgrades:
       soulbound:       { custom-model-data: 2156, item-model: "", provider-id: "ysbp_upgrade_soulbound" }
       restock:         { custom-model-data: 2110, item-model: "", provider-id: "ysbp_upgrade_restock" }
       feeding:         { custom-model-data: 2137, item-model: "", provider-id: "ysbp_upgrade_feeding" }
+      pet_booster:     { custom-model-data: 2157, item-model: "", provider-id: "ysbp_upgrade_pet_booster" }
     # Crafting-Rezepte der Funktions-Upgrades – frei konfigurierbar.
     # 'U' = Upgrade-Leder (Pflicht), 'X' = das vorausgesetzte Basis-Upgrade
     # (z.B. braucht Advanced Pickup zuerst ein Pickup Upgrade). Alle anderen
@@ -570,6 +571,11 @@ upgrades:
       feeding:
         shape: [" H ", "BUB", " H "]
         ingredients: { H: HAY_BLOCK, B: BREAD }
+      # Pet-Booster (nur mit BetterPets): aktiviert im Kampf automatisch einen Pet-XP-
+      # Booster aus dem Backpack. 'U' = Upgrade-Leder.
+      pet_booster:
+        shape: [" E ", "BUB", " E "]
+        ingredients: { E: EXPERIENCE_BOTTLE, B: BONE }
 
 # ---------------------------------------------------------------------------
 #  Externe Module / Hooks

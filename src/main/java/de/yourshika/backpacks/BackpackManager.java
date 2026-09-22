@@ -57,6 +57,9 @@ public final class BackpackManager {
     /** Spieler, die den Magnet per {@code /bp magnet off} deaktiviert haben (laufzeit). */
     private final java.util.Set<UUID> magnetOff = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
+    /** Spieler, die das Pet-Booster-Auto-Aktivieren per {@code /bp booster off} deaktiviert haben. */
+    private final java.util.Set<UUID> boosterOff = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
     /** Throttle für die Doppel-Rucksack-Warnung (Spieler-UUID -> letzter Hinweis in ms). */
     private final Map<UUID, Long> dupWarn = new ConcurrentHashMap<>();
 
@@ -2116,6 +2119,55 @@ public final class BackpackManager {
             return one;
         }
         return null;
+    }
+
+    // ---- Pet-Booster-Upgrade (BetterPets) --------------------------------
+
+    /** Ist das Pet-Booster-Auto-Aktivieren für diesen Spieler an? (Standard: an) */
+    public boolean isBoosterAutoOn(UUID player) {
+        return !boosterOff.contains(player);
+    }
+
+    /** Schaltet das Pet-Booster-Auto-Aktivieren für einen Spieler an/aus. */
+    public void setBoosterAuto(UUID player, boolean on) {
+        if (on) boosterOff.remove(player); else boosterOff.add(player);
+    }
+
+    /**
+     * Versucht, einen im getragenen Backpack liegenden Pet-XP-Booster automatisch
+     * zu aktivieren (via BetterPets). Passiert nur, wenn: BetterPets aktiv, der
+     * Spieler das Feature nicht abgeschaltet hat, gerade KEIN Booster läuft, ein
+     * Backpack mit dem Pet-Booster-Upgrade getragen wird und darin ein Booster liegt.
+     * Bei Erfolg wird genau EIN Booster aus dem Backpack entfernt. Gibt true zurück,
+     * wenn aktiviert wurde.
+     */
+    public boolean tryActivateStoredBooster(Player player) {
+        if (!de.yourshika.backpacks.hook.BetterPetsHook.isAvailable()) return false;
+        if (!isBoosterAutoOn(player.getUniqueId())) return false;
+        if (de.yourshika.backpacks.hook.BetterPetsHook.hasActiveBooster(player)) return false;
+
+        UUID id = firstCarriedBackpackWith(player, "pet_booster");
+        if (id == null || isOpen(id)) return false;
+        BackpackData data = storage.load(id);
+        if (data == null || data.contents() == null) return false;
+        ItemStack[] contents = data.contents();
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack slot = contents[i];
+            if (slot == null || slot.getType().isAir()) continue;
+            if (!de.yourshika.backpacks.hook.BetterPetsHook.isBoosterItem(slot)) continue;
+            int tier = de.yourshika.backpacks.hook.BetterPetsHook.boosterTier(slot);
+            int minutes = de.yourshika.backpacks.hook.BetterPetsHook.boosterMinutes(slot);
+            if (tier < 2) continue;
+            // Aktivieren; nur bei Erfolg ein Item verbrauchen (kein Verlust, wenn z.B.
+            // BetterPets ablehnt, weil doch schon einer läuft).
+            if (!de.yourshika.backpacks.hook.BetterPetsHook.activateBooster(player, tier, minutes)) return false;
+            int rem = slot.getAmount() - 1;
+            if (rem <= 0) contents[i] = null; else slot.setAmount(rem);
+            data.contents(contents);
+            storage.save(data);
+            return true;
+        }
+        return false;
     }
 
     private ItemStack backButton() {

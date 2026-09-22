@@ -570,3 +570,13 @@ ysbp_upgrade_xp:
     textures:
       - ysbp/upgrades/functions/xp.png
     custom_model_data: 2155
+
+ysbp_upgrade_pet_booster:
+  displayname: "<#e040fb><bold>Pet Booster Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/functions/pet_booster.png
+    custom_model_data: 2157

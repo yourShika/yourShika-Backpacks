@@ -17,6 +17,7 @@ help:
   transfer: "<yellow>/bp transfer <id> <player> <gray>– Transfer ownership of a backpack"
   recall: "<yellow>/bp recall <gray>– Recall your placed backpacks (needs Recall Upgrade)"
   magnet: "<yellow>/bp magnet <on|off> <gray>– Toggle the magnet pull"
+  booster: "<yellow>/bp booster <on|off> <gray>– Toggle auto-using Pet XP Boosters in combat"
   unblock: "<yellow>/bp unblock <gray>– Fix a backpack stuck as \"already open\" (hold it)"
   give: "<yellow>/bp give <player> <tier> [amount] [color] [accent] <gray>– Give a backpack"
   openid: "<yellow>/bp openid <id> <gray>– Open a backpack by ID"
@@ -83,6 +84,12 @@ magnet:
   "on": "<green>Magnet <white>enabled<green>."
   "off": "<yellow>Magnet <white>disabled<yellow>."
   usage: "<red>Usage: /bp magnet <on|off></red>"
+
+booster:
+  "on": "<light_purple>Auto Pet-Booster <white>enabled</white> – a booster in your backpack activates when you enter combat."
+  "off": "<yellow>Auto Pet-Booster <white>disabled</white>."
+  usage: "<red>Usage: /bp booster <on|off></red>"
+  no-betterpets: "<gray>Note: the <white>BetterPets</white> plugin is not installed, so this does nothing right now."
 
 update:
   checking: "<gray>Checking GitHub for the latest version …"
