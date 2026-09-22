@@ -18,6 +18,7 @@ help:
   transfer: "<yellow>/bp transfer <id> <gracz> <gray>– Przekaż własność plecaka"
   recall: "<yellow>/bp recall <gray>– Przywołaj postawione plecaki (wymaga ulepszenia Recall)"
   magnet: "<yellow>/bp magnet <on|off> <gray>– Włącz/wyłącz przyciąganie magnesu"
+  booster: "<yellow>/bp booster <on|off> <gray>– Auto-użycie Pet XP Boosterów w walce"
   unblock: "<yellow>/bp unblock <gray>– Odblokuj plecak zablokowany jako \"już otwarty\" (trzymaj go w ręce)"
   give: "<yellow>/bp give <gracz> <przedmiot> [ilość] <gray>– Daj przedmiot"
   openid: "<yellow>/bp openid <id> <gray>– Otwórz plecak po ID"
@@ -84,6 +85,12 @@ magnet:
   "on": "<green>Magnes <white>włączony<green>."
   "off": "<yellow>Magnes <white>wyłączony<yellow>."
   usage: "<red>Użycie: /bp magnet <on|off></red>"
+
+booster:
+  "on": "<light_purple>Auto Pet-Booster <white>włączony</white> – booster w plecaku aktywuje się w walce."
+  "off": "<yellow>Auto Pet-Booster <white>wyłączony</white>."
+  usage: "<red>Użycie: /bp booster <on|off></red>"
+  no-betterpets: "<gray>Uwaga: plugin <white>BetterPets</white> nie jest zainstalowany – to obecnie nic nie robi."
 
 compact:
   preview: "<#D2B48C>Przy zamknięciu zostanie skompresowane: <white><items></white>"

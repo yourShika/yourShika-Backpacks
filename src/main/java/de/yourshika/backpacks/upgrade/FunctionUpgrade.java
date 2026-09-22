@@ -151,6 +151,17 @@ public enum FunctionUpgrade {
                     "<gray>when you get hungry."),
             List.of(" H ", "BUB", " H "),
             Map.of('H', Material.HAY_BLOCK, 'B', Material.BREAD),
+            0, null),
+
+    // Braucht das BetterPets-Plugin: aktiviert automatisch einen im Backpack
+    // liegenden Pet-XP-Booster, sobald der Spieler in den Kampf geht.
+    PET_BOOSTER("pet_booster", "<#E040FB><bold>Pet Booster Upgrade</bold></#E040FB>", 2157,
+            List.of("<gray>Auto-activates a <white>Pet XP Booster</white> from the",
+                    "<gray>backpack when you enter <white>combat</white>.",
+                    "<dark_gray>Requires the BetterPets plugin.",
+                    "<dark_gray>Toggle with /bp booster."),
+            List.of(" E ", "BUB", " E "),
+            Map.of('E', Material.EXPERIENCE_BOTTLE, 'B', Material.BONE),
             0, null);
 
     private final String id;
@@ -192,6 +203,11 @@ public enum FunctionUpgrade {
                  "smelting", "blasting", "smoking", "compacting", "xp" -> true;
             default -> false;
         };
+    }
+
+    /** Braucht dieses Upgrade das externe BetterPets-Plugin? */
+    public boolean requiresBetterPets() {
+        return id.equals("pet_booster");
     }
 
     /** Schmelz-Upgrade (portable Furnace/Smoker/Blast Furnace)? Nur eines pro Rucksack. */

@@ -135,6 +135,8 @@ public final class InfoMenu {
         for (de.yourshika.backpacks.upgrade.FunctionUpgrade up
                 : de.yourshika.backpacks.upgrade.FunctionUpgrade.values()) {
             if (slot > 43) break;
+            // BetterPets-abhängige Upgrades nur zeigen, wenn das Plugin da ist.
+            if (up.requiresBetterPets() && !de.yourshika.backpacks.hook.BetterPetsHook.isAvailable()) continue;
             if (slot % 9 == 8) slot += 2; // Rand überspringen
             ItemStack item = plugin.functionUpgrades().item(up.id());
             if (item == null) continue;

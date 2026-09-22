@@ -43,6 +43,8 @@ public final class FunctionUpgradeManager {
         ItemStack base = tierUpgrades.baseUpgradeItem();
         int count = 0;
         for (FunctionUpgrade up : FunctionUpgrade.values()) {
+            // BetterPets-abhängige Upgrades nur registrieren, wenn das Plugin da ist.
+            if (up.requiresBetterPets() && !de.yourshika.backpacks.hook.BetterPetsHook.isAvailable()) continue;
             NamespacedKey key = new NamespacedKey(plugin, "func_" + up.id());
             if (Bukkit.getRecipe(key) != null) {           // idempotent (kein removeRecipe!)
                 if (!registered.contains(key)) registered.add(key);

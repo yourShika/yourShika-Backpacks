@@ -70,6 +70,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             case "info", "recipes", "rezepte" -> info(sender);
             case "recall" -> recall(sender);
             case "magnet" -> magnet(sender, args);
+            case "booster" -> booster(sender, args);
             case "modules", "module" -> modules(sender);
             case "assets" -> assets(sender, args);
             case "doctor" -> doctor(sender);
@@ -95,6 +96,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         msg.sendRaw(sender, "help.transfer");
         msg.sendRaw(sender, "help.recall");
         msg.sendRaw(sender, "help.magnet");
+        if (de.yourshika.backpacks.hook.BetterPetsHook.isAvailable()) msg.sendRaw(sender, "help.booster");
         msg.sendRaw(sender, "help.unblock");
         if (sender.hasPermission("yourshika.backpack.admin.color")) msg.sendRaw(sender, "help.color");
         if (sender.hasPermission("yourshika.backpack.admin.give")) msg.sendRaw(sender, "help.give");
@@ -128,6 +130,30 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
         }
         manager.setMagnet(player.getUniqueId(), target);
         msg.send(player, target ? "magnet.on" : "magnet.off");
+    }
+
+    /** Pet-Booster-Auto-Aktivieren an/aus (pro Spieler). Braucht das Pet-Booster-Upgrade + BetterPets. */
+    private void booster(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            msg.send(sender, "error.players-only");
+            return;
+        }
+        boolean target;
+        if (args.length >= 2) {
+            switch (args[1].toLowerCase(java.util.Locale.ROOT)) {
+                case "on", "an", "enable", "true" -> target = true;
+                case "off", "aus", "disable", "false" -> target = false;
+                case "toggle" -> target = !manager.isBoosterAutoOn(player.getUniqueId());
+                default -> { msg.send(sender, "booster.usage"); return; }
+            }
+        } else {
+            target = !manager.isBoosterAutoOn(player.getUniqueId());
+        }
+        manager.setBoosterAuto(player.getUniqueId(), target);
+        msg.send(player, target ? "booster.on" : "booster.off");
+        if (!de.yourshika.backpacks.hook.BetterPetsHook.isAvailable()) {
+            msg.send(player, "booster.no-betterpets");
+        }
     }
 
     private void info(CommandSender sender) {
@@ -933,6 +959,7 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
             List<String> subs = new ArrayList<>(Arrays.asList("help", "open", "info", "rename", "list", "locate", "transfer", "recall", "magnet", "unblock", "version"));
+            if (de.yourshika.backpacks.hook.BetterPetsHook.isAvailable()) subs.add("booster");
             if (sender.hasPermission("yourshika.backpack.admin.color")) subs.add("color");
             if (sender.hasPermission("yourshika.backpack.admin.give")) subs.add("give");
             if (sender.hasPermission("yourshika.backpack.admin.openid")) subs.add("openid");
@@ -970,6 +997,9 @@ public final class BackpackCommand implements CommandExecutor, TabCompleter {
             return filter(List.of("status", "redeploy"), args[1]);
         }
         if (sub.equals("magnet") && args.length == 2) {
+            return filter(List.of("on", "off", "toggle"), args[1]);
+        }
+        if (sub.equals("booster") && args.length == 2) {
             return filter(List.of("on", "off", "toggle"), args[1]);
         }
         if (sub.equals("purge") && args.length == 2 && sender.hasPermission("yourshika.backpack.admin.purge")) {
