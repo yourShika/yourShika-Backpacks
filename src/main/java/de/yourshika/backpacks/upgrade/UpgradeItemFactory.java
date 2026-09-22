@@ -51,7 +51,7 @@ public final class UpgradeItemFactory {
      * weiterverarbeitet. Identität liegt im PDC (nicht fälschbar).
      */
     public ItemStack dragonCore(int cmd, String itemModel, String providerId) {
-        ItemStack item = new ItemStack(Material.END_CRYSTAL);
+        ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().set(dragonCoreKey, PersistentDataType.BYTE, (byte) 1);
         meta.displayName(line("<gradient:#C56BFF:#7A3BFF><bold>Dragon Core</bold></gradient>"));

@@ -2497,6 +2497,363 @@ ysbp_netherite_backpack_placed_accent_black:
     model: ysbp/placed/netherite_black.json
     custom_model_data: 12616
 
+ysbp_dragon_backpack:
+  displayname: "<#2b1b45>Dragon-Rucksack"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/dragon_accent.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 1008
+
+ysbp_dragon_backpack_accent_white:
+  displayname: "<#2b1b45>Dragon-Rucksack (white)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_white.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11700
+
+ysbp_dragon_backpack_accent_orange:
+  displayname: "<#2b1b45>Dragon-Rucksack (orange)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_orange.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11701
+
+ysbp_dragon_backpack_accent_magenta:
+  displayname: "<#2b1b45>Dragon-Rucksack (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_magenta.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11702
+
+ysbp_dragon_backpack_accent_light_blue:
+  displayname: "<#2b1b45>Dragon-Rucksack (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_light_blue.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11703
+
+ysbp_dragon_backpack_accent_yellow:
+  displayname: "<#2b1b45>Dragon-Rucksack (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_yellow.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11704
+
+ysbp_dragon_backpack_accent_lime:
+  displayname: "<#2b1b45>Dragon-Rucksack (lime)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_lime.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11705
+
+ysbp_dragon_backpack_accent_pink:
+  displayname: "<#2b1b45>Dragon-Rucksack (pink)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_pink.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11706
+
+ysbp_dragon_backpack_accent_gray:
+  displayname: "<#2b1b45>Dragon-Rucksack (gray)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_gray.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11707
+
+ysbp_dragon_backpack_accent_light_gray:
+  displayname: "<#2b1b45>Dragon-Rucksack (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_light_gray.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11708
+
+ysbp_dragon_backpack_accent_cyan:
+  displayname: "<#2b1b45>Dragon-Rucksack (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_cyan.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11709
+
+ysbp_dragon_backpack_accent_purple:
+  displayname: "<#2b1b45>Dragon-Rucksack (purple)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_purple.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11710
+
+ysbp_dragon_backpack_accent_blue:
+  displayname: "<#2b1b45>Dragon-Rucksack (blue)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_blue.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11711
+
+ysbp_dragon_backpack_accent_brown:
+  displayname: "<#2b1b45>Dragon-Rucksack (brown)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_brown.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11712
+
+ysbp_dragon_backpack_accent_green:
+  displayname: "<#2b1b45>Dragon-Rucksack (green)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_green.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11713
+
+ysbp_dragon_backpack_accent_red:
+  displayname: "<#2b1b45>Dragon-Rucksack (red)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_red.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11714
+
+ysbp_dragon_backpack_accent_black:
+  displayname: "<#2b1b45>Dragon-Rucksack (black)"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/backpacks/dragon_base.png
+      - ysbp/backpacks/accents/dragon_black.png
+      - ysbp/backpacks/dragon_overlay.png
+    custom_model_data: 11715
+
+ysbp_dragon_backpack_placed:
+  displayname: "<#2b1b45>Dragon-Rucksack (placed visual)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_magenta.json
+    custom_model_data: 12700
+
+ysbp_dragon_backpack_placed_accent_white:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (white)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_white.json
+    custom_model_data: 12701
+
+ysbp_dragon_backpack_placed_accent_orange:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (orange)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_orange.json
+    custom_model_data: 12702
+
+ysbp_dragon_backpack_placed_accent_magenta:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (magenta)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_magenta.json
+    custom_model_data: 12703
+
+ysbp_dragon_backpack_placed_accent_light_blue:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (light blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_light_blue.json
+    custom_model_data: 12704
+
+ysbp_dragon_backpack_placed_accent_yellow:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (yellow)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_yellow.json
+    custom_model_data: 12705
+
+ysbp_dragon_backpack_placed_accent_lime:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (lime)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_lime.json
+    custom_model_data: 12706
+
+ysbp_dragon_backpack_placed_accent_pink:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (pink)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_pink.json
+    custom_model_data: 12707
+
+ysbp_dragon_backpack_placed_accent_gray:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_gray.json
+    custom_model_data: 12708
+
+ysbp_dragon_backpack_placed_accent_light_gray:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (light gray)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_light_gray.json
+    custom_model_data: 12709
+
+ysbp_dragon_backpack_placed_accent_cyan:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (cyan)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_cyan.json
+    custom_model_data: 12710
+
+ysbp_dragon_backpack_placed_accent_purple:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (purple)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_purple.json
+    custom_model_data: 12711
+
+ysbp_dragon_backpack_placed_accent_blue:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (blue)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_blue.json
+    custom_model_data: 12712
+
+ysbp_dragon_backpack_placed_accent_brown:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (brown)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_brown.json
+    custom_model_data: 12713
+
+ysbp_dragon_backpack_placed_accent_green:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (green)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_green.json
+    custom_model_data: 12714
+
+ysbp_dragon_backpack_placed_accent_red:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (red)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_red.json
+    custom_model_data: 12715
+
+ysbp_dragon_backpack_placed_accent_black:
+  displayname: "<#2b1b45>Dragon-Rucksack placed (black)"
+  material: LEATHER_HORSE_ARMOR
+  Pack:
+    generate_model: false
+    model: ysbp/placed/dragon_black.json
+    custom_model_data: 12716
+
 ysbp_upgrade_base:
   displayname: "<#A0703C><bold>Upgrade-Leder</bold>"
   material: LEATHER
@@ -2566,3 +2923,23 @@ ysbp_upgrade_netherite:
     textures:
       - ysbp/upgrades/netherite.png
     custom_model_data: 2006
+
+ysbp_upgrade_dragon:
+  displayname: "<#C56BFF><bold>Dragon-Upgrade</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/dragon.png
+    custom_model_data: 2007
+
+ysbp_upgrade_dragon_core:
+  displayname: "<#C56BFF><bold>Dragon Core</bold>"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/upgrades/dragon_core.png
+    custom_model_data: 2160
