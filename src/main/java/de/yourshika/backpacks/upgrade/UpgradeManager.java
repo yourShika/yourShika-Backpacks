@@ -219,7 +219,7 @@ public final class UpgradeManager implements Listener {
         // Dragon Core (Zwischenprodukt der Dragon-Kette).
         int coreCmd = plugin.getConfig().getInt("upgrades.dragon.core-model.custom-model-data", 2160);
         String coreModel = plugin.getConfig().getString("upgrades.dragon.core-model.item-model", "");
-        String coreProvider = plugin.getConfig().getString("upgrades.dragon.core-model.provider-id", "ysbp_dragon_core");
+        String coreProvider = plugin.getConfig().getString("upgrades.dragon.core-model.provider-id", "ysbp_upgrade_dragon_core");
         this.dragonCoreItem = upgrades.dragonCore(coreCmd, coreModel, coreProvider);
     }
 

@@ -463,7 +463,7 @@ upgrades:
       shape: [" B ", "CUC", " B "]
       ingredients: { B: DRAGON_BREATH }
     # Modell des Dragon Core (das Dragon-Tier-Upgrade-Modell steht unter upgrades.models.dragon).
-    core-model: { custom-model-data: 2160, item-model: "", provider-id: "ysbp_dragon_core" }
+    core-model: { custom-model-data: 2160, item-model: "", provider-id: "ysbp_upgrade_dragon_core" }
   # CustomModelData / item_model der Upgrade-Items – vorbereitet für eigene
   # Texturen via Resourcepack. 'base' = Upgrade-Leder, dann je Ziel-Tier.
   # provider-id nutzt aktive Custom-Item-Module wie Oraxen; item-model leer
