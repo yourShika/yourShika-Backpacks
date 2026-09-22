@@ -57,6 +57,8 @@ public final class UpgradeManager implements Listener {
     private final Map<String, ItemStack> upgradeItems = new HashMap<>();
     /** Kanonisches Upgrade-Leder (für ExactChoice & Rezepte). */
     private ItemStack baseItem;
+    /** Kanonischer Dragon Core (Zwischenprodukt der Dragon-Upgrade-Kette). */
+    private ItemStack dragonCoreItem;
 
     public UpgradeManager(YourShikaBackpacks plugin, TierRegistry tiers,
                           BackpackItemFactory backpacks, UpgradeItemFactory upgrades,
@@ -117,6 +119,9 @@ public final class UpgradeManager implements Listener {
         List<String> order = tiers.keys();
         for (int i = 1; i < order.size(); i++) {
             String target = order.get(i);
+            // Dragon nutzt eine eigene, mehrstufige Kette (siehe unten) statt des
+            // generischen "8x Material"-Rezepts.
+            if (target.equalsIgnoreCase("dragon")) continue;
             ItemStack result = upgradeItems.get(target);
             if (result == null) continue;
             if (!ensureAbsent(key("upgrade_" + target))) continue;
@@ -146,6 +151,12 @@ public final class UpgradeManager implements Listener {
             } catch (Exception ex) {
                 plugin.getLogger().warning("Tier-Upgrade-Rezept '" + target + "' fehlerhaft: " + ex.getMessage());
             }
+        }
+
+        // b2) Dragon-Endgame-Kette (mehrstufig), falls das Dragon-Tier existiert und
+        //     aktiviert ist: Stufe 1 = Dragon Core, Stufe 2 = Dragon-Tier-Upgrade.
+        if (tiers.exists("dragon") && plugin.getConfig().getBoolean("upgrades.dragon.enabled", true)) {
+            count += registerDragonChain();
         }
 
         // c) Smithing-Veredelung je Ziel-Tier.
@@ -204,6 +215,94 @@ public final class UpgradeManager implements Listener {
             String providerId = plugin.getConfig().getString("upgrades.models." + target + ".provider-id", "");
             upgradeItems.put(target, upgrades.tierUpgrade(target, name, cmd, model, providerId));
         }
+
+        // Dragon Core (Zwischenprodukt der Dragon-Kette).
+        int coreCmd = plugin.getConfig().getInt("upgrades.dragon.core-model.custom-model-data", 2160);
+        String coreModel = plugin.getConfig().getString("upgrades.dragon.core-model.item-model", "");
+        String coreProvider = plugin.getConfig().getString("upgrades.dragon.core-model.provider-id", "ysbp_dragon_core");
+        this.dragonCoreItem = upgrades.dragonCore(coreCmd, coreModel, coreProvider);
+    }
+
+    /** Kanonischer Dragon Core (für GUI / Give-Befehle). */
+    public ItemStack dragonCoreItem() {
+        return dragonCoreItem == null ? null : dragonCoreItem.clone();
+    }
+
+    /**
+     * Registriert die mehrstufige Dragon-Kette:
+     * Stufe 1 (Crafting): End-Materialien -> Dragon Core.
+     * Stufe 2 (Crafting): Dragon Core ('C') + Upgrade-Leder ('U') + Zutaten -> Dragon-Tier-Upgrade.
+     * Stufe 3 (Smithing) wird generisch registriert (Netherite-Backpack + Dragon-Upgrade).
+     */
+    private int registerDragonChain() {
+        int count = 0;
+        // Stufe 1: Dragon Core.
+        if (dragonCoreItem != null && ensureAbsent(key("dragon_core"))) {
+            try {
+                ShapedRecipe r = new ShapedRecipe(key("dragon_core"), dragonCoreItem);
+                List<String> shape = configShape("upgrades.dragon.core-recipe.shape",
+                        List.of("ESE", "SNS", "EDE"));
+                r.shape(shape.toArray(new String[0]));
+                String shapeStr = String.join("", shape);
+                Map<Character, Material> ing = configIngredients("upgrades.dragon.core-recipe.ingredients",
+                        Map.of('E', Material.ECHO_SHARD, 'S', Material.SHULKER_SHELL,
+                                'N', Material.NETHER_STAR, 'D', Material.DRAGON_HEAD));
+                for (Map.Entry<Character, Material> e : ing.entrySet()) {
+                    if (shapeStr.indexOf(e.getKey()) < 0) continue;
+                    r.setIngredient(e.getKey(), new RecipeChoice.MaterialChoice(e.getValue()));
+                }
+                r.setGroup("yourshika_upgrades");
+                Bukkit.addRecipe(r);
+                registered.add(r.getKey());
+                count++;
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Rezept 'dragon_core' fehlerhaft: " + ex.getMessage());
+            }
+        }
+        // Stufe 2: Dragon-Tier-Upgrade. 'U' = Upgrade-Leder, 'C' = Dragon Core (beide ExactChoice).
+        ItemStack dragonUpgrade = upgradeItems.get("dragon");
+        if (dragonUpgrade != null && dragonCoreItem != null && ensureAbsent(key("upgrade_dragon"))) {
+            try {
+                ShapedRecipe r = new ShapedRecipe(key("upgrade_dragon"), dragonUpgrade);
+                List<String> shape = configShape("upgrades.dragon.upgrade-recipe.shape",
+                        List.of(" B ", "CUC", " B "));
+                r.shape(shape.toArray(new String[0]));
+                String shapeStr = String.join("", shape);
+                Map<Character, Material> ing = configIngredients("upgrades.dragon.upgrade-recipe.ingredients",
+                        Map.of('B', Material.DRAGON_BREATH));
+                for (Map.Entry<Character, Material> e : ing.entrySet()) {
+                    if (e.getKey() == 'U' || e.getKey() == 'C') continue; // reserviert
+                    if (shapeStr.indexOf(e.getKey()) < 0) continue;
+                    r.setIngredient(e.getKey(), new RecipeChoice.MaterialChoice(e.getValue()));
+                }
+                if (shapeStr.indexOf('U') >= 0) r.setIngredient('U', new RecipeChoice.ExactChoice(baseItem));
+                if (shapeStr.indexOf('C') >= 0) r.setIngredient('C', new RecipeChoice.ExactChoice(dragonCoreItem));
+                r.setGroup("yourshika_upgrades");
+                Bukkit.addRecipe(r);
+                registered.add(r.getKey());
+                count++;
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Rezept 'upgrade_dragon' fehlerhaft: " + ex.getMessage());
+            }
+        }
+        return count;
+    }
+
+    private List<String> configShape(String path, List<String> def) {
+        List<String> shape = plugin.getConfig().getStringList(path);
+        return (shape == null || shape.isEmpty()) ? def : shape;
+    }
+
+    private Map<Character, Material> configIngredients(String path, Map<Character, Material> def) {
+        var sec = plugin.getConfig().getConfigurationSection(path);
+        if (sec == null) return def;
+        Map<Character, Material> map = new HashMap<>();
+        for (String k : sec.getKeys(false)) {
+            if (k.isEmpty()) continue;
+            Material m = Material.matchMaterial(sec.getString(k, ""));
+            if (m != null) map.put(k.charAt(0), m);
+        }
+        return map.isEmpty() ? def : map;
     }
 
     public void unregisterAll() {

@@ -34,6 +34,7 @@ public final class UpgradeItemFactory {
     private final NamespacedKey baseMarker;   // markiert das Upgrade-Leder
     private final NamespacedKey typeKey;      // Ziel-Tier eines Tier-Upgrades
     private final NamespacedKey functionKey;  // Funktions-Upgrade (pickup, magnet, ...)
+    private final NamespacedKey dragonCoreKey; // Zwischenprodukt der Dragon-Upgrade-Kette
     private final YourShikaBackpacks plugin;
 
     public UpgradeItemFactory(YourShikaBackpacks plugin) {
@@ -41,6 +42,38 @@ public final class UpgradeItemFactory {
         this.baseMarker = new NamespacedKey(plugin, "upgrade_base");
         this.typeKey = new NamespacedKey(plugin, "upgrade_type");
         this.functionKey = new NamespacedKey(plugin, "upgrade_function");
+        this.dragonCoreKey = new NamespacedKey(plugin, "dragon_core");
+    }
+
+    /**
+     * Der <b>Dragon Core</b> – Zwischenprodukt der mehrstufigen Dragon-Upgrade-Kette
+     * (Endgame). Wird aus End-Materialien gecraftet und dann zum Dragon-Tier-Upgrade
+     * weiterverarbeitet. Identität liegt im PDC (nicht fälschbar).
+     */
+    public ItemStack dragonCore(int cmd, String itemModel, String providerId) {
+        ItemStack item = new ItemStack(Material.END_CRYSTAL);
+        ItemMeta meta = item.getItemMeta();
+        meta.getPersistentDataContainer().set(dragonCoreKey, PersistentDataType.BYTE, (byte) 1);
+        meta.displayName(line("<gradient:#C56BFF:#7A3BFF><bold>Dragon Core</bold></gradient>"));
+        meta.lore(List.of(
+                line("<dark_gray><st>                    </st>"),
+                line("<gray>A core of pure End energy."),
+                Component.empty(),
+                line("<#C56BFF>❖ <gray>Combine with <white>Upgrade Leather</white> to craft"),
+                line("<gray>   the <white>Dragon Upgrade</white> (Crafting Table)."),
+                line("<dark_gray><st>                    </st>")
+        ));
+        meta.setMaxStackSize(1);
+        applyCustomModel(meta, cmd, itemModel);
+        item.setItemMeta(meta);
+        applyExternalModel(item, providerId);
+        return item;
+    }
+
+    public boolean isDragonCore(ItemStack item) {
+        if (item == null) return false;
+        ItemMeta meta = item.getItemMeta();
+        return meta != null && meta.getPersistentDataContainer().has(dragonCoreKey, PersistentDataType.BYTE);
     }
 
     /** Ein Funktions-Upgrade (z.B. "pickup", "magnet", "crafting", ...). */
@@ -169,8 +202,8 @@ public final class UpgradeItemFactory {
         return meta.getPersistentDataContainer().get(typeKey, PersistentDataType.STRING);
     }
 
-    /** Ist das Item irgendein Upgrade-Item (Basis, Tier- oder Funktions-Upgrade)? */
+    /** Ist das Item irgendein Upgrade-Item (Basis, Tier-, Funktions-Upgrade oder Dragon Core)? */
     public boolean isAnyUpgrade(ItemStack item) {
-        return isUpgradeBase(item) || isTierUpgrade(item) || isFunctionUpgrade(item);
+        return isUpgradeBase(item) || isTierUpgrade(item) || isFunctionUpgrade(item) || isDragonCore(item);
     }
 }
