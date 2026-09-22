@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 11
+config-version: 12
 
 # Sprache / Language: wählt messages_<language>.yml.
 # Mitgeliefert & automatisch als editierbare Datei angelegt: en, de, pl.
@@ -376,6 +376,32 @@ tiers:
         N: NETHERITE_INGOT
         H: CHEST
 
+  # Dragon = Endgame-Tier ÜBER Netherite. Wird NICHT direkt gecraftet, sondern nur
+  # über die mehrstufige Dragon-Upgrade-Kette (siehe upgrades.dragon) im Smithing
+  # Table aus einem Netherite-Backpack erstellt. Sehr teuer (End-Materialien).
+  dragon:
+    display-name: "<gradient:#C56BFF:#7A3BFF><bold>Dragon Backpack</bold></gradient>"
+    material: LEATHER_HORSE_ARMOR
+    custom-model-data: 1008
+    item-model: ""
+    provider-id: "ysbp_dragon_backpack"
+    storage-slots: 135
+    upgrade-slots: 7
+    default-main-color: "#2B1B45"
+    default-accent-color: "#C56BFF"
+    permission: ""
+    lore:
+      - "<dark_gray>▏ <gray>Storage: <white><storage> <gray>slots <dark_gray>(<pages> p.)"
+      - "<dark_gray>▏ <gray>Upgrades: <white><upgrades>"
+      - "<dark_gray>▏ <gray>Color: <main_color> <dark_gray>·</dark_gray> <accent_color>"
+      - "<dark_gray>▏ <gray>Owner: <white><owner>"
+      - ""
+      - "<yellow>➜ <gray>Right-click to <white>open"
+      - "<yellow>➜ <gray>Sneak-right-click to <white>place"
+      - "<dark_gray><id>"
+    recipe:
+      enabled: false
+
 # ---------------------------------------------------------------------------
 #  Upgrade-System (Tier-Kette)
 #  Leder → Copper → Eisen → Gold → Diamant → Smaragd → Netherite
@@ -420,6 +446,24 @@ upgrades:
     netherite:
       base-material: NETHERITE_INGOT
       addition-material: STRING
+  # ---------------------------------------------------------------------------
+  #  Dragon-Tier (Endgame, ÜBER Netherite) – MEHRSTUFIG & teuer.
+  #  Stufe 1: "Dragon Core" (Crafting Table) aus End-Materialien.
+  #  Stufe 2: "Dragon-Upgrade" (Crafting Table): Dragon Core + Upgrade-Leder + Zutaten.
+  #  Stufe 3: Smithing Table: Netherite-Backpack + Dragon-Upgrade -> Dragon-Backpack
+  #           (nutzt upgrades.smithing.template-material als Vorlage).
+  #  In den Rezepten reserviert: 'U' = Upgrade-Leder, 'C' = Dragon Core.
+  # ---------------------------------------------------------------------------
+  dragon:
+    enabled: true
+    core-recipe:
+      shape: ["ESE", "SNS", "EDE"]
+      ingredients: { E: ECHO_SHARD, S: SHULKER_SHELL, N: NETHER_STAR, D: DRAGON_HEAD }
+    upgrade-recipe:
+      shape: [" B ", "CUC", " B "]
+      ingredients: { B: DRAGON_BREATH }
+    # Modell des Dragon Core (das Dragon-Tier-Upgrade-Modell steht unter upgrades.models.dragon).
+    core-model: { custom-model-data: 2160, item-model: "", provider-id: "ysbp_dragon_core" }
   # CustomModelData / item_model der Upgrade-Items – vorbereitet für eigene
   # Texturen via Resourcepack. 'base' = Upgrade-Leder, dann je Ziel-Tier.
   # provider-id nutzt aktive Custom-Item-Module wie Oraxen; item-model leer
@@ -432,6 +476,7 @@ upgrades:
     diamond:   { custom-model-data: 2004, item-model: "", provider-id: "ysbp_upgrade_diamond" }
     emerald:   { custom-model-data: 2005, item-model: "", provider-id: "ysbp_upgrade_emerald" }
     netherite: { custom-model-data: 2006, item-model: "", provider-id: "ysbp_upgrade_netherite" }
+    dragon:    { custom-model-data: 2007, item-model: "", provider-id: "ysbp_upgrade_dragon" }
   # Functional upgrades that are installed INTO a backpack (via its Upgrades menu).
   # Each has a fair crafting recipe ('U' = Upgrade Leather). Models are prepared
   # for Oraxen/Resourcepacks via custom-model-data / provider-id.

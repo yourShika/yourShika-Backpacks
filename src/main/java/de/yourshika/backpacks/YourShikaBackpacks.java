@@ -46,7 +46,7 @@ public final class YourShikaBackpacks extends JavaPlugin {
     private BukkitTask autosaveTask;
 
     /** Aktuelle Struktur-Version der config.yml. */
-    private static final int CONFIG_VERSION = 11;
+    private static final int CONFIG_VERSION = 12;
 
     @Override
     public void onEnable() {

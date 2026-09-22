@@ -66,6 +66,7 @@ permissions:
       yourshika.backpack.craft.diamond: true
       yourshika.backpack.craft.emerald: true
       yourshika.backpack.craft.netherite: true
+      yourshika.backpack.craft.dragon: true
   yourshika.backpack.craft.leather: { default: true }
   yourshika.backpack.craft.copper: { default: true }
   yourshika.backpack.craft.iron: { default: true }
@@ -73,6 +74,7 @@ permissions:
   yourshika.backpack.craft.diamond: { default: true }
   yourshika.backpack.craft.emerald: { default: true }
   yourshika.backpack.craft.netherite: { default: true }
+  yourshika.backpack.craft.dragon: { default: true }
 
   yourshika.backpack.admin.*:
     description: Alle Admin-Funktionen.
