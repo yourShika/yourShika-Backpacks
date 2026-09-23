@@ -102,4 +102,45 @@ public final class BackpackData {
     public void modified(long modified) { this.modified = modified; }
 
     public void touch() { this.modified = System.currentTimeMillis(); }
+
+    /**
+     * Tiefe Kopie (inkl. aller Item-Arrays). Wird vom Write-Behind-Cache beim
+     * Speichern erzeugt, damit der asynchrone Flush eine <b>stabile</b> Momentaufnahme
+     * serialisiert und nicht das lebende Objekt, das der Haupt-Thread weiter verändert
+     * (sonst drohen zerrissene Writes / Item-Verlust).
+     */
+    public BackpackData copy() {
+        BackpackData c = new BackpackData(id);
+        c.owner = owner;
+        c.tier = tier;
+        c.name = name;
+        c.mainColor = mainColor;
+        c.accentColor = accentColor;
+        c.contents = cloneArray(contents);
+        c.upgrades = cloneArray(upgrades);
+        c.furnace = cloneArray(furnace);
+        c.furnaceCook = furnaceCook;
+        c.furnaceBurn = furnaceBurn;
+        c.compactFilter = cloneArray(compactFilter);
+        c.compactEnabled = compactEnabled;
+        c.pickupFilter = cloneArray(pickupFilter);
+        c.storedXp = storedXp;
+        c.placed = placed;
+        c.world = world;
+        c.x = x;
+        c.y = y;
+        c.z = z;
+        c.created = created;
+        c.modified = modified;
+        return c;
+    }
+
+    private static ItemStack[] cloneArray(ItemStack[] arr) {
+        if (arr == null) return null;
+        ItemStack[] out = new ItemStack[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            out[i] = arr[i] == null ? null : arr[i].clone();
+        }
+        return out;
+    }
 }
