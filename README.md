@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.5.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.5.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,24 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🛟 v1.5.1
+
+- 🛟 **Fixed a rare item-loss race in the storage cache** – with the async write-behind
+  cache (v1.2.0), a backpack save on the main thread (e.g. a Pickup upgrade depositing a
+  freshly-picked-up item) could run *while* the background flush was serialising the very
+  same live data. That could tear the write, and — worse — the flush clearing the "dirty"
+  flag could drop a save that happened during it, so an item occasionally **vanished**
+  (e.g. noticed while rerolling a villager: breaking/replacing a Lectern repeatedly, one
+  would go missing every so often). The cache now snapshots a **deep copy on the main
+  thread at save time** and only ever flushes that immutable snapshot, and re-arms the
+  dirty flag correctly, so concurrent saves can no longer be lost or corrupted. Affects
+  **all** backpack writes (pickup, furnace, XP, upgrades …), not just Lecterns.
+  - *Note:* if a Pickup / Advanced-Pickup upgrade is vacuuming items you'd rather keep in
+    hand, set a **Pickup filter** to whitelist only what you want, or toggle it off with
+    `/bp magnet off` — the items were going into the backpack (this fix stops them being lost).
 
 ---
 
@@ -690,7 +708,7 @@ assets incl. 3D models for placed backpacks, plus multi-language support (EN/DE/
 ## 🛠️ Installation
 
 1. Download the plugin JAR from the [Releases](https://github.com/yourShika/yourShika-Backpacks/releases)
-   (`yourShika-Backpacks-1.5.0.jar`).
+   (`yourShika-Backpacks-1.5.1.jar`).
 2. Put it into the `plugins/` folder of your **Paper 26.1.2 – 26.2 (Java 25)** server.
 3. Start the server – the data folder **`plugins/yourShika Backpack's/`** is created
    automatically with `config.yml`, the message files and the database.
@@ -902,7 +920,7 @@ mvn clean package
 The finished plugin is then located at:
 
 ```
-target/yourShika-Backpacks-1.5.0.jar
+target/yourShika-Backpacks-1.5.1.jar
 ```
 
 The target Paper version can be adjusted via the `paper.version` property in

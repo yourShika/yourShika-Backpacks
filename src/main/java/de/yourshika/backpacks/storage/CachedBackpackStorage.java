@@ -47,6 +47,8 @@ public final class CachedBackpackStorage implements BackpackStorage {
     private final long flushIntervalTicks;
 
     private final Map<UUID, BackpackData> cache = new ConcurrentHashMap<>();
+    /** Stabile Momentaufnahmen zum asynchronen Flushen (Deep-Copies vom save()-Zeitpunkt). */
+    private final Map<UUID, BackpackData> pending = new ConcurrentHashMap<>();
     private final Map<UUID, UUID> ownerOf = new ConcurrentHashMap<>();
     private final Map<UUID, Set<UUID>> byOwner = new ConcurrentHashMap<>();
     private final Set<UUID> known = ConcurrentHashMap.newKeySet();
@@ -95,6 +97,10 @@ public final class CachedBackpackStorage implements BackpackStorage {
     public void save(BackpackData data) {
         UUID id = data.id();
         cache.put(id, data);
+        // Stabile Momentaufnahme (Deep-Copy) auf dem Haupt-Thread anlegen – NUR diese
+        // wird später asynchron serialisiert. So kann der Flush kein halb-verändertes
+        // Live-Objekt schreiben (Torn-Write / Item-Verlust bei z.B. schnellem Pickup).
+        pending.put(id, data.copy());
         known.add(id);
         deletions.remove(id);
         reindexOwner(id, data.owner());
@@ -104,6 +110,7 @@ public final class CachedBackpackStorage implements BackpackStorage {
     @Override
     public void delete(UUID id) {
         cache.remove(id);
+        pending.remove(id);
         known.remove(id);
         dirty.remove(id);
         removeOwnerIndex(id);
@@ -163,16 +170,19 @@ public final class CachedBackpackStorage implements BackpackStorage {
             }
             if (!dirty.isEmpty()) {
                 for (UUID id : new ArrayList<>(dirty)) {
-                    BackpackData data = cache.get(id);
-                    if (data == null) {
-                        dirty.remove(id);
-                        continue;
-                    }
+                    // Dirty-Flag ZUERST entfernen: ein gleichzeitiger save() setzt es dann
+                    // erneut (+ neue Momentaufnahme) und geht nicht verloren.
+                    dirty.remove(id);
+                    BackpackData snap = pending.get(id);
+                    if (snap == null) continue;
                     try {
-                        delegate.save(data);
-                        dirty.remove(id);
+                        delegate.save(snap);
+                        // Nur DIESE Momentaufnahme entfernen – eine zwischenzeitlich neuere
+                        // (durch parallelen save()) bleibt erhalten und wird als "dirty"
+                        // beim nächsten Flush geschrieben.
+                        pending.remove(id, snap);
                     } catch (Exception ex) {
-                        // "dirty" bleibt gesetzt -> beim nächsten Flush erneut versuchen.
+                        dirty.add(id); // erneut versuchen
                         plugin.getLogger().warning("Backpack " + id + " konnte nicht gespeichert werden (Flush): " + ex.getMessage());
                     }
                 }
