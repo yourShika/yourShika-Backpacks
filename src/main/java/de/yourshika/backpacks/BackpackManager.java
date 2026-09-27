@@ -66,12 +66,18 @@ public final class BackpackManager {
     /** Zuletzt betrachtete Seite je Backpack (für "auf letzter Seite wieder öffnen"). */
     private final Map<UUID, Integer> lastPage = new ConcurrentHashMap<>();
 
+    /** Persistiert die Magnet-/Booster-Schalter über Neustarts hinweg. */
+    private final de.yourshika.backpacks.config.PlayerSettings playerSettings;
+
     public BackpackManager(YourShikaBackpacks plugin, BackpackStorage storage,
                            BackpackItemFactory items, TierRegistry tiers) {
         this.plugin = plugin;
         this.storage = storage;
         this.items = items;
         this.tiers = tiers;
+        // Gespeicherte pro-Spieler-Schalter (Magnet/Booster) laden.
+        this.playerSettings = new de.yourshika.backpacks.config.PlayerSettings(plugin);
+        this.playerSettings.load(magnetOff, boosterOff);
     }
 
     public BackpackStorage storage() { return storage; }
@@ -1902,10 +1908,11 @@ public final class BackpackManager {
         return !magnetOff.contains(player);
     }
 
-    /** Schaltet den Magnet für einen Spieler an/aus (laufzeit). */
+    /** Schaltet den Magnet für einen Spieler an/aus (persistiert über Neustarts). */
     public void setMagnet(UUID player, boolean on) {
         if (on) magnetOff.remove(player);
         else magnetOff.add(player);
+        playerSettings.save(magnetOff, boosterOff);
     }
 
     /**
@@ -2128,9 +2135,10 @@ public final class BackpackManager {
         return !boosterOff.contains(player);
     }
 
-    /** Schaltet das Pet-Booster-Auto-Aktivieren für einen Spieler an/aus. */
+    /** Schaltet das Pet-Booster-Auto-Aktivieren für einen Spieler an/aus (persistiert über Neustarts). */
     public void setBoosterAuto(UUID player, boolean on) {
         if (on) boosterOff.remove(player); else boosterOff.add(player);
+        playerSettings.save(magnetOff, boosterOff);
     }
 
     /**
