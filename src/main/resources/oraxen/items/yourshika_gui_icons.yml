@@ -10,6 +10,7 @@ ysbp_gui_backpack_info:
     parent_model: "item/generated"
     textures:
       - ysbp/gui/backpack_info.png
+      - ysbp/gui/backpack_info_gold.png
     custom_model_data: 2300
 
 ysbp_gui_arrow_left:
