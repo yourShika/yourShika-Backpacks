@@ -1,0 +1,119 @@
+{
+  "image": "sprite_sheet_16x16.png",
+  "width": 64,
+  "height": 64,
+  "icons": [
+    {
+      "file": "16x16/backpack_info.png",
+      "title": "Backpack Info",
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/arrow_right.png",
+      "title": "Pfeil rechts",
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/arrow_left.png",
+      "title": "Pfeil links",
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/enderchest.png",
+      "title": "Enderchest",
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/xp_storage.png",
+      "title": "XP Storage",
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/stonecutter.png",
+      "title": "Stonecutter",
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/crafting.png",
+      "title": "Crafting",
+      "x": 32,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/upgrades.png",
+      "title": "Upgrades",
+      "x": 48,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/smithing.png",
+      "title": "Smithing",
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/compacting_filter.png",
+      "title": "Compacting Filter",
+      "x": 16,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/smelting.png",
+      "title": "Smelting",
+      "x": 32,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/blasting.png",
+      "title": "Blasting",
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/smoking.png",
+      "title": "Smoking",
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "16x16/trash_bin.png",
+      "title": "Trash Bin",
+      "x": 16,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    }
+  ]
+}

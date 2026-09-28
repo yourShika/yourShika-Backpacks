@@ -19,6 +19,8 @@ public final class PluginConfig {
     private boolean autosaveEnabled;
     private int autosaveIntervalMinutes;
     private int storageSlotsPerPage;
+    private boolean guiCustomIcons;
+    private boolean guiBackground;
     private boolean recipesEnabled;
     private boolean placeableEnabled;
     private boolean allowNesting;
@@ -40,6 +42,8 @@ public final class PluginConfig {
         autosaveEnabled = c.getBoolean("storage.autosave.enabled", true);
         autosaveIntervalMinutes = Math.max(1, c.getInt("storage.autosave.interval-minutes", 5));
         storageSlotsPerPage = Math.max(1, Math.min(45, c.getInt("gui.storage-slots-per-page", 45)));
+        guiCustomIcons = c.getBoolean("gui.custom-icons", true);
+        guiBackground = c.getBoolean("gui.background.enabled", false);
         recipesEnabled = c.getBoolean("crafting.enabled", true);
         placeableEnabled = c.getBoolean("placeable.enabled", false);
         allowNesting = c.getBoolean("security.allow-nesting", false);
@@ -71,6 +75,13 @@ public final class PluginConfig {
     public boolean autosaveEnabled() { return autosaveEnabled; }
     public int autosaveIntervalMinutes() { return autosaveIntervalMinutes; }
     public int storageSlotsPerPage() { return storageSlotsPerPage; }
+
+    /** Custom-GUI-Icons (Oraxen) für die Control-Row im Backpack-Menü? (Standard: ja) */
+    public boolean guiCustomIcons() { return guiCustomIcons; }
+
+    /** Hintergrundbild (Font-Glyphe im Titel) für das Backpack-Menü? (Standard: nein) */
+    public boolean guiBackground() { return guiBackground; }
+
     public boolean recipesEnabled() { return recipesEnabled; }
     public boolean placeableEnabled() { return placeableEnabled; }
     public boolean allowNesting() { return allowNesting; }

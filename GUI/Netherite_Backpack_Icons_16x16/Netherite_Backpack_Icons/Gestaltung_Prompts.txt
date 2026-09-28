@@ -1,0 +1,51 @@
+Use case: stylized-concept.
+Asset type: ONE Minecraft Java custom backpack GUI icon, intended to be used at EXACTLY 16 by 16 pixels.
+References: attached image 1 is the user's actual grey inventory and purple Netherite backpack; attached image 2 is its tooltip and violet branding. Use these ONLY as palette and game-UI context, not as an image to reproduce.
+Art direction: premium charming comic-style PIXEL ART, small chunky 3/4 view, subtle bevels and carefully chosen highlights that give real readable depth, attractive rich color shading, coherent fantasy game item art. Dark charcoal-purple outline, light from upper-left, 3 to 5 crisp shades per material, small pale highlights, dark lower/right faces. Colors must read beautifully against medium-dark grey GUI slots. Violet #6E5BC8 accents, charcoal #1A1A1A and appropriately colored materials. Do not make a flat generic vector symbol.
+Critical grid: draw as a genuine logical 16x16 pixel sprite, enlarged by a whole integer for display. Every visible pixel is a uniform square on that coarse 16x16 grid. The icon should fit a 14x14 logical pixel box centered in the 16x16 canvas, leaving a one-pixel transparent margin. No fine detail smaller than a logical pixel, no anti-aliasing, no smooth curves, no high-resolution painted texture. Maximize silhouette readability at the true 16x16 size.
+Output: only ONE centered isolated icon, fully transparent actual alpha background. No background plate, no scene, no border, no caption, no checkerboard baked in, no detached ground shadow, no watermark. No other icons. Keep all of the subject inside frame.
+Subject: 
+
+MOTIVE:
+
+Backpack Info (backpack_info.png)
+Color edit of the existing backpack design: strictly neutral grayscale only, including information badge, buckle, straps and outlines. Medium-to-light gray fabric with white highlights and charcoal shadows, preserving the existing composition, silhouette, pixel clusters and depth. Fully transparent background. Designed for arbitrary later tinting. This grayscale instruction overrides the general purple and gold palette for this icon only.
+
+Pfeil rechts (arrow_right.png)
+A chunky beveled arrow pointing RIGHT, centered. Rich golden amber face, pale cream upper-left highlights, violet-charcoal one-logical-pixel outline and shaded brown lower/right bevel. Broad arrow head and short thick horizontal stem. The silhouette should fill 13x11 logical pixels within the 16x16 canvas. A polished cartoon game navigation button icon WITHOUT any surrounding square button or backdrop.
+
+Pfeil links (arrow_left.png)
+A chunky beveled arrow pointing LEFT, centered. Rich golden amber face, pale cream upper-left highlights, violet-charcoal one-logical-pixel outline and shaded brown lower/right bevel. Broad arrow head and short thick horizontal stem. The silhouette should fill 13x11 logical pixels within the 16x16 canvas. A polished cartoon game navigation button icon WITHOUT any surrounding square button or backdrop.
+
+Enderchest (enderchest.png)
+A single closed Minecraft-inspired Ender Chest, a chunky cube in three-quarter view with dark obsidian-purple body, jade teal rim and corners, tiny gold latch centered on the front, violet magical lid inset. Show top, front and right faces with different shades for depth. Recognizable mystical chest, lid seam clear. No floating particles.
+
+XP Storage (xp_storage.png)
+A squat transparent glass experience-storage bottle with rounded square belly, one small brass stopper, vivid lime-green XP essence filling the lower two thirds. Thick crisp charcoal outline, pale turquoise glass highlights at upper-left, darker emerald lower-right. One tiny light green sparkle INSIDE the glass. One dominant bottle silhouette, no lettering.
+
+Stonecutter (stonecutter.png)
+A tiny compact stonecutting workstation in three-quarter view: a large clearly visible silver-gray toothed circular saw blade protrudes above a slate-gray stone tabletop, set on a short dark warm-brown block base. A bright steel highlight on upper-left teeth, charcoal right-side shadows, a subtle violet bolt. Blade silhouette and low workstation should be readable.
+
+Crafting (crafting.png)
+A recognizable Minecraft-inspired crafting table cube, warm oak and walnut colors, in three-quarter view. On its tan top show a clear simple dark 3 by 3 crafting grid; front has a small dark tool motif; corner beams are warm brown. Bright golden wood upper-left edge, shaded right side and charcoal-purple outline. Table fills most of the square.
+
+Upgrades (upgrades.png)
+A chunky brass-gold upgrade gear with six to eight clear teeth, shown with a slight lower-right shaded bevel. A violet inset at the center contains a simple bright lavender PLUS sign. The gear is the single dominant silhouette, premium cartoon inventory icon, golden highlights, charcoal-purple outline. No arrow, no text, no extra objects.
+
+Smithing (smithing.png)
+A single chunky smithing anvil in three-quarter view, polished blue-gray steel upper face, charcoal-purple sides, short feet and a strong leftward horn. A compact small brown-handled steel hammer rests diagonally against the right side, within the same unified icon silhouette. Tiny pale highlights and warm brass detail. The anvil is large and clearly dominant, no sparks or text.
+
+Compacting Filter (compacting_filter.png)
+Compacting iron materials into a block: a compact 3 by 3 cluster of small silver iron tiles at upper-left (about 5x5 logical pixels), a short golden right-pointing chevron at center, and a large shiny iron cube at lower-right (about 7x8 logical pixels), all within the 14x14 logical-pixel drawing box. The cube has a pale silver top, medium blue-gray front and dark violet-gray right face. Clear minimal conversion composition. No letters, numbers, or extra decoration.
+
+Smelting (smelting.png)
+A regular stone furnace block in three-quarter view: cool medium-gray cobblestone body, dark rectangular fire mouth in the lower center with a bright golden-orange flame inside, small dark top-front opening, coarse stone bevels. Top face lighter, right face dark. A classic recognizable stone furnace with an unobstructed fire mouth, NOT a metal blast furnace or wooden smoker.
+
+Blasting (blasting.png)
+A heavy metallic blast furnace block in three-quarter view: dark blue-gray iron casing, two thick bright steel corner bands, a large central black vent grille with two short horizontal bars and fierce red-orange heat glowing behind. Reinforced industrial metal texture, bright steel top-left highlights, deep charcoal right side. Distinct from a stone furnace: metallic bands and grille, no wood.
+
+Smoking (smoking.png)
+A compact Minecraft-inspired wooden smoker block in three-quarter view: warm brown wood casing with a charcoal metal rim, pale steel top plate, small glowing amber cooking opening on the front and a tiny short attached dark chimney at top with ONE small pale gray puff. Cartoon warm wood shades and dark outline. Clearly distinguish it from a gray furnace and an iron blast furnace.
+
+Trash Bin (trash_bin.png)
+A compact slightly tapered metal trash bin with a lavender-violet lid and small top handle, silver-gray body with two dark vertical grooves, dark charcoal-purple outline. Slight three-quarter view with pale steel upper-left highlights and dark bluish right side. A clean recognizable wastebasket silhouette with attached lid, no trash poking out, no recycling logo or letters.

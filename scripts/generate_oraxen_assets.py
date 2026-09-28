@@ -8,9 +8,43 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parents[1]
 ORAXEN = ROOT / "src/main/resources/oraxen"
 TEXTURES = ORAXEN / "pack/textures/ysbp"
+FONTS = ORAXEN / "pack/font"
 ITEMS = ORAXEN / "items"
 SOURCE_BUNDLE = ORAXEN / "source/bundle_reference.png"
+# Quell-Icons/Hintergrund für das Backpack-Menü (vom Nutzer bereitgestellt).
+GUI_SOURCE = ROOT / "GUI/Netherite_Backpack_Icons_16x16/Netherite_Backpack_Icons/16x16"
+GUI_BACKGROUND_SOURCE = ROOT / "GUI/Rucksack_GUI_256x274.png"
 SCALE = 4
+
+# Control-Row-Icons des Backpack-Menüs. slug -> (custom_model_data, dyeable).
+# Nur "backpack_info" ist färbbar (Grau/Weiß-Textur, wird über die Backpack-
+# Hauptfarbe getönt) und nutzt daher LEATHER_HORSE_ARMOR statt PAPER.
+GUI_ICONS = {
+    "backpack_info": (2300, True),
+    "arrow_left": (2301, False),
+    "arrow_right": (2302, False),
+    "enderchest": (2303, False),
+    "xp_storage": (2304, False),
+    "stonecutter": (2305, False),
+    "crafting": (2306, False),
+    "upgrades": (2307, False),
+    "smithing": (2308, False),
+    "compacting_filter": (2309, False),
+    "smelting": (2310, False),
+    "blasting": (2311, False),
+    "smoking": (2312, False),
+    "trash_bin": (2313, False),
+}
+
+# Unicode-Privatbereich-Zeichen für die Menü-Hintergrund-Glyphe (Font "ysbp_menu").
+GUI_BG_IMAGE_CHAR = ""   # zeichnet das Hintergrundbild
+GUI_BG_LEAD_CHAR = ""    # Negativ-Space vor dem Bild (nach links schieben)
+GUI_BG_TAIL_CHAR = ""    # Negativ-Space nach dem Bild (Cursor für Titel zurück)
+# Standard-Feinjustierung (im Pack fest, per '/oraxen reload' änderbar).
+GUI_BG_HEIGHT = 274
+GUI_BG_ASCENT = 13
+GUI_BG_LEAD = -48      # Bild-Startpunkt relativ zum Titel (nach links)
+GUI_BG_TAIL = -209     # Cursor nach dem Bild zurück zum Titeltext
 
 ALPHA = (0, 0, 0, 0)
 BLACK = (45, 29, 18, 255)
@@ -54,7 +88,9 @@ def ensure_dirs():
         TEXTURES / "placed/detail",
         TEXTURES / "upgrades",
         TEXTURES / "upgrades/functions",
+        TEXTURES / "gui",
         ORAXEN / "pack/models/ysbp/placed",
+        FONTS,
         ITEMS,
     ):
         path.mkdir(parents=True, exist_ok=True)
@@ -1052,14 +1088,92 @@ def write_function_yaml():
     (ITEMS / "yourshika_function_upgrades.yml").write_text("\n".join(lines), encoding="utf-8")
 
 
+def copy_gui_icons():
+    """Kopiert die vom Nutzer gelieferten 16x16-Control-Row-Icons ins Pack."""
+    for slug in GUI_ICONS:
+        src = GUI_SOURCE / f"{slug}.png"
+        if not src.exists():
+            raise FileNotFoundError(f"GUI-Icon fehlt: {src}")
+        img = Image.open(src).convert("RGBA")
+        if img.size != (16, 16):
+            img = img.resize((16, 16), Image.NEAREST)
+        img.save(TEXTURES / "gui" / f"{slug}.png", optimize=True)
+
+
+def write_gui_yaml():
+    """Oraxen-Item-Definitionen für die Backpack-Menü-Icons.
+
+    Diese Items dienen NUR als Textur-/Modell-Träger: das Plugin überlagert damit
+    die Control-Row-Buttons und zeigt sie ausschließlich im Backpack-Menü an.
+    """
+    lines = [
+        "# Backpack-Menue-Icons (Control-Row). Reine Textur-/Modell-Traeger -",
+        "# das Plugin bindet sie nur im Backpack-Menue ein (nicht als echte Items).",
+        "",
+    ]
+    for slug, (cmd, dyeable) in GUI_ICONS.items():
+        material = "LEATHER_HORSE_ARMOR" if dyeable else "PAPER"
+        entry = [
+            f"ysbp_gui_{slug}:",
+            f"  displayname: \"<gray>{slug.replace('_', ' ').title()}\"",
+            f"  material: {material}",
+        ]
+        if dyeable:
+            # Weisse Grundfarbe -> das Plugin faerbt sie zur Backpack-Hauptfarbe.
+            entry.append("  color: 255, 255, 255")
+        entry.extend([
+            "  Pack:",
+            "    generate_model: true",
+            "    parent_model: \"item/generated\"",
+            "    textures:",
+            f"      - ysbp/gui/{slug}.png",
+            f"    custom_model_data: {cmd}",
+            "",
+        ])
+        lines.extend(entry)
+    (ITEMS / "yourshika_gui_icons.yml").write_text("\n".join(lines), encoding="utf-8")
+
+
+def write_gui_background():
+    """Kopiert das Menue-Hintergrundbild und schreibt den zugehoerigen Font.
+
+    Das Bild wird ueber eine Bitmap-Glyphe im Inventar-Titel gezeichnet und ist
+    dadurch ausschliesslich im Backpack-Menue sichtbar. Die horizontale Lage
+    steuern zwei Negativ-Space-Zeichen; die vertikale der 'ascent'. Alle Werte
+    liegen fest im Pack – zum Feinjustieren hier aendern + '/oraxen reload'.
+    """
+    if not GUI_BACKGROUND_SOURCE.exists():
+        raise FileNotFoundError(f"GUI-Hintergrund fehlt: {GUI_BACKGROUND_SOURCE}")
+    img = Image.open(GUI_BACKGROUND_SOURCE).convert("RGBA")
+    img.save(TEXTURES / "gui" / "background.png", optimize=True)
+
+    font = {
+        "providers": [
+            {"type": "space", "advances": {
+                GUI_BG_LEAD_CHAR: GUI_BG_LEAD,
+                GUI_BG_TAIL_CHAR: GUI_BG_TAIL,
+            }},
+            {
+                "type": "bitmap",
+                "file": "minecraft:ysbp/gui/background.png",
+                "ascent": GUI_BG_ASCENT,
+                "height": GUI_BG_HEIGHT,
+                "chars": [GUI_BG_IMAGE_CHAR],
+            },
+        ]
+    }
+    (FONTS / "ysbp_menu.json").write_text(json.dumps(font, indent=2) + "\n", encoding="utf-8")
+
+
 def write_manifest():
     lines = [
         "# Generated by scripts/generate_oraxen_assets.py",
-        "asset-version=9",
+        "asset-version=10",
     ]
     paths = sorted((ORAXEN / "items").glob("*.yml"))
     paths += sorted((ORAXEN / "pack/textures").rglob("*.png"))
     paths += sorted((ORAXEN / "pack/models").rglob("*.json"))
+    paths += sorted((ORAXEN / "pack/font").rglob("*.json"))
     resource_root = ROOT / "src/main/resources"
     for path in paths:
         rel = path.relative_to(resource_root).as_posix()
@@ -1074,8 +1188,11 @@ def main():
     draw_upgrade_tiers()
     generate_functions()
     generate_placed_models()
+    copy_gui_icons()
+    write_gui_background()
     write_core_yaml()
     write_function_yaml()
+    write_gui_yaml()
     write_manifest()
 
 

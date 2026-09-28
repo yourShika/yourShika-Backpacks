@@ -1,0 +1,143 @@
+# Backpack-Menue-Icons (Control-Row). Reine Textur-/Modell-Traeger -
+# das Plugin bindet sie nur im Backpack-Menue ein (nicht als echte Items).
+
+ysbp_gui_backpack_info:
+  displayname: "<gray>Backpack Info"
+  material: LEATHER_HORSE_ARMOR
+  color: 255, 255, 255
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/backpack_info.png
+    custom_model_data: 2300
+
+ysbp_gui_arrow_left:
+  displayname: "<gray>Arrow Left"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/arrow_left.png
+    custom_model_data: 2301
+
+ysbp_gui_arrow_right:
+  displayname: "<gray>Arrow Right"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/arrow_right.png
+    custom_model_data: 2302
+
+ysbp_gui_enderchest:
+  displayname: "<gray>Enderchest"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/enderchest.png
+    custom_model_data: 2303
+
+ysbp_gui_xp_storage:
+  displayname: "<gray>Xp Storage"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/xp_storage.png
+    custom_model_data: 2304
+
+ysbp_gui_stonecutter:
+  displayname: "<gray>Stonecutter"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/stonecutter.png
+    custom_model_data: 2305
+
+ysbp_gui_crafting:
+  displayname: "<gray>Crafting"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/crafting.png
+    custom_model_data: 2306
+
+ysbp_gui_upgrades:
+  displayname: "<gray>Upgrades"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/upgrades.png
+    custom_model_data: 2307
+
+ysbp_gui_smithing:
+  displayname: "<gray>Smithing"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/smithing.png
+    custom_model_data: 2308
+
+ysbp_gui_compacting_filter:
+  displayname: "<gray>Compacting Filter"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/compacting_filter.png
+    custom_model_data: 2309
+
+ysbp_gui_smelting:
+  displayname: "<gray>Smelting"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/smelting.png
+    custom_model_data: 2310
+
+ysbp_gui_blasting:
+  displayname: "<gray>Blasting"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/blasting.png
+    custom_model_data: 2311
+
+ysbp_gui_smoking:
+  displayname: "<gray>Smoking"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/smoking.png
+    custom_model_data: 2312
+
+ysbp_gui_trash_bin:
+  displayname: "<gray>Trash Bin"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/trash_bin.png
+    custom_model_data: 2313
