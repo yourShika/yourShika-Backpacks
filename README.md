@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.5.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.6.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,31 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🎨 v1.6.0
+
+- 🎨 **Custom control-row icons for the backpack menu (Oraxen)** – the bottom control
+  row (page arrows, **Info**, **Upgrades** and every station button: crafting,
+  stonecutter, smithing, ender chest, furnace/blast/smoker, compacting filter, XP
+  storage, trash) now uses **hand-drawn 16×16 Oraxen textures** instead of the plain
+  vanilla items. They render **only inside the backpack menu** – the icons exist purely
+  as menu buttons and are never real, obtainable items. New Oraxen item ids
+  `ysbp_gui_*` (`yourshika_gui_icons.yml`, custom-model-data `2300–2313`).
+- 🌈 **Dyeable Info icon** – the **Backpack Info** icon is a grey/white texture on a
+  dyeable base and is **tinted to the backpack's main color**, so it matches each
+  backpack just like the item itself. Toggle the whole set with `gui.custom-icons`
+  (default **on**; automatically falls back to the vanilla item look when Oraxen is
+  absent or the module is off).
+- 🖼️ **Optional menu background image (opt-in)** – the *Rucksack GUI* artwork can be
+  drawn behind the menu via a resource-pack font glyph injected into the menu title, so
+  it too shows **only in the backpack menu**. Off by default (`gui.background.enabled`);
+  because the image is overlaid pixel-perfectly onto the chest GUI it may need a one-time
+  vertical nudge in the generated font `ysbp_menu.json` (then `/oraxen reload`). Needs
+  Oraxen. The plugin now also deploys `pack/font/` assets to Oraxen.
+- ⚙️ config-version **14** (adds `gui.custom-icons` and `gui.background.enabled`; your
+  existing settings are preserved by the config merge).
 
 ---
 

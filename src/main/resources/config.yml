@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 13
+config-version: 14
 
 # Sprache / Language: wählt messages_<language>.yml.
 # Mitgeliefert & automatisch als editierbare Datei angelegt: en, de, pl.
@@ -47,6 +47,22 @@ gui:
   # Nutzbare Lager-Slots pro Seite (1-45). Die unterste Reihe (9 Slots) bleibt
   # immer für Steuerung (Blättern, Info, Upgrade-Vorschau) reserviert.
   storage-slots-per-page: 45
+
+  # Eigene Steuer-Icons (Control-Row) im Backpack-Menü über Oraxen-Texturen
+  # (Pfeile, Info, Upgrades, Stationen). Nur wirksam, wenn Oraxen installiert
+  # und aktiv ist – sonst automatisch die normale Vanilla-Item-Optik. Die Icons
+  # erscheinen ausschließlich im Backpack-Menü (nicht als echte Items). Das
+  # Info-Icon ist grau/weiß und wird zur Backpack-Hauptfarbe eingefärbt.
+  custom-icons: true
+
+  # Optionales Hintergrundbild des Backpack-Menüs (Rucksack-GUI). Es wird als
+  # Font-Glyphe in den Menütitel gezeichnet und ist dadurch NUR im Backpack-Menü
+  # sichtbar. Benötigt Oraxen + einmal '/oraxen reload'. Standardmäßig AUS, weil
+  # das Bild pixelgenau über das Chest-GUI gelegt wird und je nach Auflösung eine
+  # einmalige Feinjustierung braucht (Werte im generierten Font 'ysbp_menu.json',
+  # danach '/oraxen reload').
+  background:
+    enabled: false
 
 # ---------------------------------------------------------------------------
 #  Öffnen

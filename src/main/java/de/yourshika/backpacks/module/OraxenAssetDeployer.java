@@ -34,6 +34,7 @@ public final class OraxenAssetDeployer {
     private static final String BUNDLE_PREFIX = "oraxen/";
     private static final String TEX_PREFIX = "oraxen/pack/textures/";
     private static final String MODEL_PREFIX = "oraxen/pack/models/";
+    private static final String FONT_PREFIX = "oraxen/pack/font/";
     private static final String ITEMS_PREFIX = "oraxen/items/";
     private static final String MANIFEST_ENTRY = "oraxen/asset-manifest.properties";
     private static final String STATE_FILE = ".oraxen-asset-state.properties";
@@ -66,6 +67,7 @@ public final class OraxenAssetDeployer {
             File oraxenItems = present ? new File(oraxen.getDataFolder(), "items") : null;
             File oraxenTextures = present ? new File(oraxen.getDataFolder(), "pack/textures") : null;
             File oraxenModels = present ? new File(oraxen.getDataFolder(), "pack/models") : null;
+            File oraxenFont = present ? new File(oraxen.getDataFolder(), "pack/font") : null;
             Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
@@ -79,6 +81,7 @@ public final class OraxenAssetDeployer {
                     if (name.startsWith(ITEMS_PREFIX)) target = new File(oraxenItems, name.substring(ITEMS_PREFIX.length()));
                     else if (name.startsWith(TEX_PREFIX)) target = new File(oraxenTextures, name.substring(TEX_PREFIX.length()));
                     else if (name.startsWith(MODEL_PREFIX)) target = new File(oraxenModels, name.substring(MODEL_PREFIX.length()));
+                    else if (name.startsWith(FONT_PREFIX)) target = new File(oraxenFont, name.substring(FONT_PREFIX.length()));
                     if (target != null && !target.exists()) missing++;
                 }
             }
@@ -94,10 +97,12 @@ public final class OraxenAssetDeployer {
 
         File texturesDir = new File(plugin.getDataFolder(), "Textures");
         File modelsDir = new File(plugin.getDataFolder(), "Models");
+        File fontDir = new File(plugin.getDataFolder(), "Font");
         File oraxenData = oraxen.getDataFolder();
         File oraxenItems = new File(oraxenData, "items");
         File oraxenTextures = new File(oraxenData, "pack/textures");
         File oraxenModels = new File(oraxenData, "pack/models");
+        File oraxenFont = new File(oraxenData, "pack/font");
         Path statePath = new File(plugin.getDataFolder(), STATE_FILE).toPath();
 
         int extracted = 0, models = 0, items = 0, copied = 0, preserved = 0, backedUp = 0;
@@ -141,6 +146,16 @@ public final class OraxenAssetDeployer {
 
                     File oraxenModel = new File(oraxenModels, rel);
                     if (copyAssetToOraxen(pluginModel.toPath(), oraxenModel.toPath())) copied++;
+                } else if (name.startsWith(FONT_PREFIX)) {
+                    String rel = name.substring(FONT_PREFIX.length());
+                    File pluginFont = new File(fontDir, rel);
+                    TextureResult result = deployPluginTexture(pluginFont.toPath(), name,
+                            bundledBytes, bundledHash, state);
+                    if (result.extracted) models++;
+                    if (result.preserved) preserved++;
+
+                    File oraxenFontFile = new File(oraxenFont, rel);
+                    if (copyAssetToOraxen(pluginFont.toPath(), oraxenFontFile.toPath())) copied++;
                 }
             }
             backedUp = backupRoot == null || !Files.exists(backupRoot) ? 0 : countFiles(backupRoot);

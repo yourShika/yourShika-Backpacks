@@ -8,6 +8,7 @@ import de.yourshika.backpacks.storage.BackpackStorage;
 import de.yourshika.backpacks.tier.BackpackTier;
 import de.yourshika.backpacks.tier.TierRegistry;
 import de.yourshika.backpacks.util.ColorUtil;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -15,11 +16,14 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -389,11 +393,11 @@ public final class BackpackManager {
         if (holder.hasPaging()) {
             if (holder.currentPage() > 0) {
                 inv.setItem(BackpackMenuHolder.PREV_SLOT,
-                        navButton(Material.ARROW, "<green>◀ Previous page", holder));
+                        navButton(Material.ARROW, "arrow_left", "<green>◀ Previous page", holder));
             }
             if (holder.currentPage() < holder.pageCount() - 1) {
                 inv.setItem(BackpackMenuHolder.NEXT_SLOT,
-                        navButton(Material.ARROW, "<green>Next page ▶", holder));
+                        navButton(Material.ARROW, "arrow_right", "<green>Next page ▶", holder));
             }
         }
 
@@ -562,7 +566,7 @@ public final class BackpackManager {
         TextColor accentColor = ColorUtil.toTextColor(accent, TextColor.color(0xFFFFFF));
         String pageSuffix = holder.hasPaging()
                 ? " <dark_gray>(Page " + (holder.currentPage() + 1) + "/" + holder.pageCount() + ")" : "";
-        return mini.deserialize(tier.displayName() + pageSuffix, TagResolver.resolver(
+        Component titleText = mini.deserialize(tier.displayName() + pageSuffix, TagResolver.resolver(
                 Placeholder.component("main_color", Component.text(ColorUtil.pretty(main)).color(mainColor)),
                 Placeholder.component("accent_color", Component.text(ColorUtil.pretty(accent)).color(accentColor)),
                 Placeholder.unparsed("storage", String.valueOf(tier.storageSlots())),
@@ -570,10 +574,91 @@ public final class BackpackManager {
                 Placeholder.unparsed("upgrades", String.valueOf(tier.upgradeSlots())),
                 Placeholder.unparsed("id", data.id().toString().substring(0, 8))
         )).decoration(TextDecoration.ITALIC, false);
+        return withMenuBackground(titleText);
+    }
+
+    // ------------------------------------------------------------------
+    //  Custom-GUI-Icons (Control-Row) über Oraxen. Sind sie aktiv, tragen die
+    //  Steuer-Buttons ein neutrales Oraxen-Item (PAPER bzw. färbbares
+    //  LEATHER_HORSE_ARMOR für das Info-Icon) und bekommen die Textur via
+    //  applyExternalModel. Ohne Oraxen/deaktiviert bleibt die Vanilla-Optik.
+    //  Die Icons existieren nur als Menü-Buttons – nie als echte Items.
+    // ------------------------------------------------------------------
+
+    private static final Key MENU_FONT = Key.key("minecraft", "ysbp_menu");
+    private static final String MENU_BG_GLYPH = ""; // lead + Bild + tail
+
+    /** Sind Custom-GUI-Icons aktiv (Config + Oraxen vorhanden/aktiv)? */
+    private boolean guiIconsActive() {
+        return plugin.pluginConfig().guiCustomIcons()
+                && plugin.moduleManager() != null
+                && plugin.moduleManager().isActive("oraxen");
+    }
+
+    /** Icon-Slug einer Station (oder null, wenn es dafür kein Custom-Icon gibt). */
+    private static String stationIconSlug(String station) {
+        return switch (station) {
+            case "crafting" -> "crafting";
+            case "stonecutter" -> "stonecutter";
+            case "smithing" -> "smithing";
+            case "ender_link" -> "enderchest";
+            case "smelting" -> "smelting";
+            case "blasting" -> "blasting";
+            case "smoking" -> "smoking";
+            case "compacting" -> "compacting_filter";
+            case "xp" -> "xp_storage";
+            case "trash" -> "trash_bin";
+            default -> null; // z.B. "pickup" – kein eigenes Icon, Vanilla bleibt
+        };
+    }
+
+    /**
+     * Basis-Item für einen Control-Row-Button. Mit aktiven Custom-Icons und
+     * vorhandenem {@code slug} ein neutrales Oraxen-Trägeritem, sonst das
+     * Vanilla-Material (Fallback-Optik).
+     */
+    private ItemStack guiBase(Material vanilla, String slug, boolean dyeable) {
+        if (slug == null || !guiIconsActive()) return new ItemStack(vanilla);
+        return new ItemStack(dyeable ? Material.LEATHER_HORSE_ARMOR : Material.PAPER);
+    }
+
+    /**
+     * Überlagert das Modell eines Control-Row-Buttons mit der Oraxen-GUI-Textur
+     * {@code ysbp_gui_<slug>}. Für das färbbare Info-Icon wird zusätzlich die
+     * Backpack-Hauptfarbe als Leder-Tönung gesetzt. Ohne aktive Icons unverändert.
+     */
+    private ItemStack applyGuiIcon(ItemStack item, String slug, String tintColor) {
+        if (slug == null || !guiIconsActive()) return item;
+        if (tintColor != null && item.getItemMeta() instanceof LeatherArmorMeta leather) {
+            leather.setColor(ColorUtil.toBukkitColor(tintColor, Color.WHITE));
+            leather.addItemFlags(ItemFlag.HIDE_DYE, ItemFlag.HIDE_ATTRIBUTES);
+            item.setItemMeta(leather);
+        }
+        plugin.moduleManager().applyExternalModel(item, "ysbp_gui_" + slug);
+        return item;
+    }
+
+    /**
+     * Prependet – nur wenn {@code gui.background.enabled} an und Oraxen aktiv ist –
+     * die Hintergrund-Glyphe an den Menütitel. Dadurch erscheint das Rucksack-GUI
+     * ausschließlich im Backpack-Menü. Die Glyphe stammt aus dem Oraxen-Pack-Font
+     * {@code ysbp_menu}; Feinjustierung erfolgt dort (dann {@code /oraxen reload}).
+     */
+    private Component withMenuBackground(Component titleText) {
+        if (!plugin.pluginConfig().guiBackground()
+                || plugin.moduleManager() == null
+                || !plugin.moduleManager().isActive("oraxen")) {
+            return titleText;
+        }
+        Component glyph = Component.text(MENU_BG_GLYPH)
+                .font(MENU_FONT)
+                .color(net.kyori.adventure.text.format.NamedTextColor.WHITE)
+                .decoration(TextDecoration.ITALIC, false);
+        return glyph.append(titleText);
     }
 
     private ItemStack infoItem(BackpackTier tier, BackpackMenuHolder holder) {
-        ItemStack item = new ItemStack(Material.NAME_TAG);
+        ItemStack item = guiBase(Material.NAME_TAG, "backpack_info", true);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(line("<gold><bold>Backpack Info</bold></gold>"));
         List<Component> lore = new ArrayList<>();
@@ -610,7 +695,7 @@ public final class BackpackManager {
         lore.add(line("<dark_gray><st>                    </st>"));
         meta.lore(lore);
         item.setItemMeta(meta);
-        return item;
+        return applyGuiIcon(item, "backpack_info", holder.mainColor());
     }
 
     private static String capitalizeTier(String key) {
@@ -636,7 +721,8 @@ public final class BackpackManager {
             case "trash" -> { material = Material.LAVA_BUCKET; name = "<#8B8B8B><bold>Trash</bold>"; desc = "Delete unwanted items."; }
             default -> { material = Material.BARRIER; name = "<gray>Station"; desc = ""; }
         }
-        ItemStack item = new ItemStack(material);
+        String slug = stationIconSlug(station);
+        ItemStack item = guiBase(material, slug, false);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(line(name));
         List<Component> lore = new ArrayList<>();
@@ -658,7 +744,7 @@ public final class BackpackManager {
         meta.lore(lore);
         meta.addItemFlags(org.bukkit.inventory.ItemFlag.values());
         item.setItemMeta(meta);
-        return item;
+        return applyGuiIcon(item, slug, null);
     }
 
     /** Furnace-Typ einer Schmelz-Station ("furnace"/"blast"/"smoker") oder null. */
@@ -809,7 +895,7 @@ public final class BackpackManager {
     }
 
     private ItemStack upgradeButton(BackpackTier tier) {
-        ItemStack item = new ItemStack(Material.ANVIL);
+        ItemStack item = guiBase(Material.ANVIL, "upgrades", false);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(line("<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient>"));
         List<Component> lore = new ArrayList<>();
@@ -818,11 +904,11 @@ public final class BackpackManager {
         lore.add(line("<yellow>▶ Click to open"));
         meta.lore(lore);
         item.setItemMeta(meta);
-        return item;
+        return applyGuiIcon(item, "upgrades", null);
     }
 
-    private ItemStack navButton(Material material, String name, BackpackMenuHolder holder) {
-        ItemStack item = new ItemStack(material);
+    private ItemStack navButton(Material material, String slug, String name, BackpackMenuHolder holder) {
+        ItemStack item = guiBase(material, slug, false);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(line(name));
         meta.lore(List.of(
@@ -830,7 +916,7 @@ public final class BackpackManager {
                 line("<dark_gray>Click: ±1 page"),
                 line("<dark_gray>Shift-Click: first/last page")));
         item.setItemMeta(meta);
-        return item;
+        return applyGuiIcon(item, slug, null);
     }
 
     private ItemStack lockedFiller() {

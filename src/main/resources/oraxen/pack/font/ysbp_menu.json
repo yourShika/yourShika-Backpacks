@@ -1,0 +1,20 @@
+{
+  "providers": [
+    {
+      "type": "space",
+      "advances": {
+        "\ue001": -48,
+        "\ue002": -209
+      }
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:ysbp/gui/background.png",
+      "ascent": 13,
+      "height": 274,
+      "chars": [
+        "\ue000"
+      ]
+    }
+  ]
+}
