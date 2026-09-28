@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.6.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.6.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,22 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🎨 v1.6.1
+
+- 🌈 **Info icon: gold accents stay gold while the body tints** – the dyeable Info icon
+  is now a **two-layer** model: a grey body (layer 0) tinted to the backpack's main color
+  plus a **fixed-gold overlay** (layer 1) for the ring buckle and the round **"i" badge**.
+  Previously the whole grey texture was tinted, turning the gold parts the backpack color
+  too. New generated overlay `ysbp/gui/backpack_info_gold.png`; the Oraxen item
+  `ysbp_gui_backpack_info` now carries both layers.
+- 🖼️ **Menu background now respects Oraxen's 256 px texture limit** – the artwork was
+  256×**274**; Oraxen/pack textures may not exceed 256 px per side, which stopped the whole
+  background font from loading (the title showed placeholder boxes). It's now scaled to
+  **239×256** and the horizontal centering recomputed. Still opt-in (`gui.background.enabled`);
+  fine-tune the vertical position via `ascent` in `pack/font/ysbp_menu.json` + `/oraxen reload`.
 
 ---
 

@@ -3,15 +3,15 @@
     {
       "type": "space",
       "advances": {
-        "\ue001": -48,
-        "\ue002": -209
+        "\ue001": -40,
+        "\ue002": -200
       }
     },
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/background.png",
       "ascent": 13,
-      "height": 274,
+      "height": 256,
       "chars": [
         "\ue000"
       ]
