@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.6.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.6.3-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,19 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🖼️ v1.6.3
+
+- 🖼️ **Menu background now keeps Minecraft's slot grid** – the 256×**274** artwork was
+  **scaled** down to fit Oraxen's 256 px limit, which squashed its ~18 px cell grid to
+  ~17 px so the painted cells drifted out of line with the real 18 px chest slots. It's
+  now **centre-cropped** to 256×256 instead of scaled, so the native grid pitch is
+  preserved and the cells line up with the slots. (Vanilla chests have a fixed 9-wide
+  grid and **no side slots**, so the frame's side-tabs stay decorative; control icons
+  live in the bottom row of the top grid.) Vertical fit is still tunable via `ascent` in
+  `pack/font/ysbp_menu.json` + `/oraxen reload`.
 
 ---
 
