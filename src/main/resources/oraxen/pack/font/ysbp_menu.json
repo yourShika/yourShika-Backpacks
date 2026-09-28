@@ -10,7 +10,7 @@
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/background.png",
-      "ascent": 13,
+      "ascent": 26,
       "height": 256,
       "chars": [
         "\ue000"
