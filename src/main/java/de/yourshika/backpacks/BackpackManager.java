@@ -654,7 +654,10 @@ public final class BackpackManager {
                 .font(MENU_FONT)
                 .color(net.kyori.adventure.text.format.NamedTextColor.WHITE)
                 .decoration(TextDecoration.ITALIC, false);
-        return glyph.append(titleText);
+        // WICHTIG: den Titeltext NICHT als Kind der Glyphe anhängen – sonst erbt er
+        // den Custom-Font (ysbp_menu) und rendert als Tofu-Kästchen. Beide als
+        // Geschwister unter einem leeren Wurzel-Component (Standard-Font).
+        return Component.text().append(glyph).append(titleText).build();
     }
 
     private ItemStack infoItem(BackpackTier tier, BackpackMenuHolder holder) {
