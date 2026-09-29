@@ -690,7 +690,12 @@ public final class BackpackManager {
                 .font(MENU_FONT)
                 .color(net.kyori.adventure.text.format.NamedTextColor.WHITE)
                 .decoration(TextDecoration.ITALIC, false);
-        return Component.text().append(g).append(title).build();
+        // Titel horizontal feinjustieren (Config, live): Leerzeichen im Standard-
+        // Font (~4px je Schritt) schieben den Titeltext nach rechts an den Rahmen.
+        var builder = Component.text().append(g);
+        int indent = plugin.pluginConfig().guiTitleIndent();
+        if (indent > 0) builder.append(Component.text(" ".repeat(indent)));
+        return builder.append(title).build();
     }
 
     /**

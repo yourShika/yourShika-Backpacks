@@ -21,6 +21,7 @@ public final class PluginConfig {
     private int storageSlotsPerPage;
     private boolean guiCustomIcons;
     private boolean guiBackground;
+    private int guiTitleIndent;
     private boolean recipesEnabled;
     private boolean placeableEnabled;
     private boolean allowNesting;
@@ -44,6 +45,7 @@ public final class PluginConfig {
         storageSlotsPerPage = Math.max(1, Math.min(45, c.getInt("gui.storage-slots-per-page", 45)));
         guiCustomIcons = c.getBoolean("gui.custom-icons", true);
         guiBackground = c.getBoolean("gui.background.enabled", false);
+        guiTitleIndent = Math.max(0, Math.min(40, c.getInt("gui.background.title-indent", 0)));
         recipesEnabled = c.getBoolean("crafting.enabled", true);
         placeableEnabled = c.getBoolean("placeable.enabled", false);
         allowNesting = c.getBoolean("security.allow-nesting", false);
@@ -81,6 +83,9 @@ public final class PluginConfig {
 
     /** Hintergrundbild (Font-Glyphe im Titel) für das Backpack-Menü? (Standard: nein) */
     public boolean guiBackground() { return guiBackground; }
+
+    /** Horizontale Titel-Einrückung (Leerzeichen) in Sub-Menüs mit Hintergrund. */
+    public int guiTitleIndent() { return guiTitleIndent; }
 
     public boolean recipesEnabled() { return recipesEnabled; }
     public boolean placeableEnabled() { return placeableEnabled; }
