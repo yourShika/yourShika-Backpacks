@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.7.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.7.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,19 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🖼️ v1.7.2
+
+- 🖼️ **Sub-menu backgrounds aligned via the images, not new font glyphs** – v1.7.1 added
+  dedicated origin shift glyphs (`E003/E004`) for the sub-menu backgrounds, but extra
+  `space`-provider chars didn't survive the Oraxen pack deploy, so they rendered as
+  placeholder boxes and pushed the frame and title to the right. Fixed by **pre-shifting
+  the background images** (+40 px right, +16 px down) so their origin-anchored content
+  lands at the GUI origin under the **proven main-menu glyph shift** (`E001/E002`,
+  `ascent 29`) — no new font characters, alignment now rides entirely on the textures
+  (verified against the vanilla slot coordinates). The title renders normally again.
 
 ---
 
