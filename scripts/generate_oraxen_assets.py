@@ -54,6 +54,27 @@ GUI_BG_TAIL_CHAR = ""    # Negativ-Space nach dem Bild (Cursor für Titel zur
 # +/-1 zum Feintunen je nach GUI-Skalierung.
 GUI_BG_ASCENT = 29
 
+# --- Sub-Menü-UI (Backpack_UI_Paket): Control-Icons + Hintergründe -----------
+MENU_ICON_SOURCE = ROOT / "GUI/Backpack_UI_Paket/icons_16x16"
+MENU_BG_SOURCE = ROOT / "GUI/Backpack_UI_Paket/gui"
+# Control-Icons der Sub-Menüs -> ysbp_menu_<name> (PAPER, ab CMD 2320).
+MENU_ICONS = [
+    "back", "blast_furnace", "clear_filter", "compactor_on", "compactor_off",
+    "furnace", "smelting_progress", "smoker", "trash_delete_all", "upgrades",
+    "xp_deposit_all", "xp_deposit_one", "xp_info", "xp_withdraw_all", "xp_withdraw_one",
+]
+# Sub-Menü-Hintergründe -> Font-Glyphe im Titel. (name, unicode-char). Gleiche
+# Ausrichtung wie das Hauptmenü (ascent 29, lead/tail aus Breite 256).
+MENU_BACKGROUNDS = [
+    ("upgrades", ""),
+    ("smelting", ""),
+    ("blasting", ""),
+    ("smoker", ""),
+    ("xp_storage", ""),
+    ("trash", ""),
+    ("compacting", ""),
+]
+
 ALPHA = (0, 0, 0, 0)
 BLACK = (45, 29, 18, 255)
 OUTLINE = (80, 49, 26, 255)
@@ -97,6 +118,8 @@ def ensure_dirs():
         TEXTURES / "upgrades",
         TEXTURES / "upgrades/functions",
         TEXTURES / "gui",
+        TEXTURES / "gui/menu",
+        TEXTURES / "gui/bg",
         ORAXEN / "pack/models/ysbp/placed",
         FONTS,
         ITEMS,
@@ -1213,6 +1236,59 @@ def write_gui_yaml():
     (ITEMS / "yourshika_gui_icons.yml").write_text("\n".join(lines), encoding="utf-8")
 
 
+def copy_menu_icons():
+    """Kopiert die Sub-Menü-Control-Icons (back, furnace, xp_*, …) ins Pack und
+    erzeugt ein vollständig transparentes 'blank' als Füll-Item (laesst den
+    Hintergrund durchscheinen)."""
+    for name in MENU_ICONS:
+        src = MENU_ICON_SOURCE / f"{name}.png"
+        if not src.exists():
+            raise FileNotFoundError(f"Menü-Icon fehlt: {src}")
+        img = Image.open(src).convert("RGBA")
+        if img.size != (16, 16):
+            img = img.resize((16, 16), Image.NEAREST)
+        img.save(TEXTURES / "gui/menu" / f"{name}.png", optimize=True)
+    # Transparentes Füll-Item.
+    Image.new("RGBA", (16, 16), (0, 0, 0, 0)).save(
+        TEXTURES / "gui/menu" / "blank.png", optimize=True)
+
+
+def copy_menu_backgrounds():
+    """Kopiert die 256x256-Sub-Menü-Hintergründe ins Pack (fuer die Font-Glyphen)."""
+    for name, _char in MENU_BACKGROUNDS:
+        src = MENU_BG_SOURCE / f"{name}.png"
+        if not src.exists():
+            raise FileNotFoundError(f"Menü-Hintergrund fehlt: {src}")
+        img = Image.open(src).convert("RGBA")
+        if img.width > 256 or img.height > 256:
+            img = img.crop((max(0, (img.width - 256) // 2), max(0, (img.height - 256) // 2),
+                            min(img.width, (img.width + 256) // 2), min(img.height, (img.height + 256) // 2)))
+        img.save(TEXTURES / "gui/bg" / f"{name}.png", optimize=True)
+
+
+def write_menu_icons_yaml():
+    """Oraxen-Items fuer die Sub-Menü-Control-Icons + das transparente Füll-Item."""
+    lines = [
+        "# Sub-Menue-Control-Icons (Ofen/XP/Trash/Compacting/Upgrades) + Fueller.",
+        "# Reine Textur-/Modell-Traeger; das Plugin bindet sie nur in den Menues ein.",
+        "",
+    ]
+    for i, name in enumerate(MENU_ICONS + ["blank"]):
+        lines.extend([
+            f"ysbp_menu_{name}:",
+            f"  displayname: \"<gray>{name.replace('_', ' ').title()}\"",
+            "  material: PAPER",
+            "  Pack:",
+            "    generate_model: true",
+            "    parent_model: \"item/generated\"",
+            "    textures:",
+            f"      - ysbp/gui/menu/{name}.png",
+            f"    custom_model_data: {2320 + i}",
+            "",
+        ])
+    (ITEMS / "yourshika_menu_icons.yml").write_text("\n".join(lines), encoding="utf-8")
+
+
 def write_gui_background():
     """Kopiert das Menue-Hintergrundbild und schreibt den zugehoerigen Font.
 
@@ -1242,28 +1318,36 @@ def write_gui_background():
     lead = round(80 - w / 2)          # image_left(=88-w/2) - title_origin(=8)
     tail = round(-81 - w / 2)         # title_origin(=8) - cursor_after(=89+w/2)
 
-    font = {
-        "providers": [
-            {"type": "space", "advances": {
-                GUI_BG_LEAD_CHAR: lead,
-                GUI_BG_TAIL_CHAR: tail,
-            }},
-            {
-                "type": "bitmap",
-                "file": "minecraft:ysbp/gui/background.png",
-                "ascent": GUI_BG_ASCENT,
-                "height": img.height,
-                "chars": [GUI_BG_IMAGE_CHAR],
-            },
-        ]
-    }
-    (FONTS / "ysbp_menu.json").write_text(json.dumps(font, indent=2) + "\n", encoding="utf-8")
+    providers = [
+        {"type": "space", "advances": {
+            GUI_BG_LEAD_CHAR: lead,
+            GUI_BG_TAIL_CHAR: tail,
+        }},
+        {
+            "type": "bitmap",
+            "file": "minecraft:ysbp/gui/background.png",
+            "ascent": GUI_BG_ASCENT,
+            "height": img.height,
+            "chars": [GUI_BG_IMAGE_CHAR],
+        },
+    ]
+    # Sub-Menü-Hintergründe als zusätzliche Glyphen (gleiche Ausrichtung).
+    for name, char in MENU_BACKGROUNDS:
+        providers.append({
+            "type": "bitmap",
+            "file": f"minecraft:ysbp/gui/bg/{name}.png",
+            "ascent": GUI_BG_ASCENT,
+            "height": 256,
+            "chars": [char],
+        })
+    (FONTS / "ysbp_menu.json").write_text(
+        json.dumps({"providers": providers}, indent=2) + "\n", encoding="utf-8")
 
 
 def write_manifest():
     lines = [
         "# Generated by scripts/generate_oraxen_assets.py",
-        "asset-version=16",
+        "asset-version=17",
     ]
     paths = sorted((ORAXEN / "items").glob("*.yml"))
     paths += sorted((ORAXEN / "pack/textures").rglob("*.png"))
@@ -1285,10 +1369,13 @@ def main():
     copy_upgrade_icons()
     generate_placed_models()
     copy_gui_icons()
+    copy_menu_icons()
+    copy_menu_backgrounds()
     write_gui_background()
     write_core_yaml()
     write_function_yaml()
     write_gui_yaml()
+    write_menu_icons_yaml()
     write_manifest()
 
 
