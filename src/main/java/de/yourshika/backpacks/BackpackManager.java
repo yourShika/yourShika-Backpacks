@@ -680,10 +680,11 @@ public final class BackpackManager {
                 && plugin.moduleManager().isActive("oraxen");
     }
 
-    /** Prependet die Hintergrund-Glyphe eines Sub-Menüs (Lead+Bild+Tail) an den Titel. */
+    /** Prependet die Hintergrund-Glyphe eines Sub-Menüs (Lead+Bild+Tail) an den Titel.
+     *  Sub-Menüs sind am Ursprung ausgerichtet -> eigene Shift-Zeichen E003/E004. */
     private Component withMenuBg(Component title, String glyphChar) {
         if (glyphChar == null || glyphChar.isEmpty() || !menuBgActive()) return title;
-        Component g = Component.text("" + glyphChar + "")
+        Component g = Component.text("" + glyphChar + "")
                 .font(MENU_FONT)
                 .color(net.kyori.adventure.text.format.NamedTextColor.WHITE)
                 .decoration(TextDecoration.ITALIC, false);
