@@ -4,9 +4,7 @@
       "type": "space",
       "advances": {
         "\ue001": -48,
-        "\ue002": -209,
-        "\ue003": -8,
-        "\ue004": -249
+        "\ue002": -209
       }
     },
     {
@@ -21,7 +19,7 @@
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/bg/upgrades.png",
-      "ascent": 15,
+      "ascent": 29,
       "height": 256,
       "chars": [
         "\ue010"
@@ -30,7 +28,7 @@
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/bg/smelting.png",
-      "ascent": 15,
+      "ascent": 29,
       "height": 256,
       "chars": [
         "\ue011"
@@ -39,7 +37,7 @@
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/bg/blasting.png",
-      "ascent": 15,
+      "ascent": 29,
       "height": 256,
       "chars": [
         "\ue012"
@@ -48,7 +46,7 @@
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/bg/smoker.png",
-      "ascent": 15,
+      "ascent": 29,
       "height": 256,
       "chars": [
         "\ue013"
@@ -57,7 +55,7 @@
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/bg/xp_storage.png",
-      "ascent": 15,
+      "ascent": 29,
       "height": 256,
       "chars": [
         "\ue014"
@@ -66,7 +64,7 @@
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/bg/trash.png",
-      "ascent": 15,
+      "ascent": 29,
       "height": 256,
       "chars": [
         "\ue015"
@@ -75,7 +73,7 @@
     {
       "type": "bitmap",
       "file": "minecraft:ysbp/gui/bg/compacting.png",
-      "ascent": 15,
+      "ascent": 29,
       "height": 256,
       "chars": [
         "\ue016"

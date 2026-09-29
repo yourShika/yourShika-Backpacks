@@ -681,10 +681,12 @@ public final class BackpackManager {
     }
 
     /** Prependet die Hintergrund-Glyphe eines Sub-Menüs (Lead+Bild+Tail) an den Titel.
-     *  Sub-Menüs sind am Ursprung ausgerichtet -> eigene Shift-Zeichen E003/E004. */
+     *  Nutzt bewusst die bewaehrten Haupt-Shift-Zeichen E001/E002 (die im Pack
+     *  sicher funktionieren); die Sub-Hintergrund-PNGs sind dafuer so verschoben,
+     *  dass ihr Inhalt mit diesem Shift am GUI-Ursprung landet (siehe Generator). */
     private Component withMenuBg(Component title, String glyphChar) {
         if (glyphChar == null || glyphChar.isEmpty() || !menuBgActive()) return title;
-        Component g = Component.text("" + glyphChar + "")
+        Component g = Component.text("" + glyphChar + "")
                 .font(MENU_FONT)
                 .color(net.kyori.adventure.text.format.NamedTextColor.WHITE)
                 .decoration(TextDecoration.ITALIC, false);
