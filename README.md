@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.7.2-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.7.3-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,16 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🎛️ v1.7.3
+
+- 🎛️ **Live-tunable sub-menu title position** – Minecraft always draws the inventory title
+  at a fixed left position, which can sit a little off against a custom sub-menu frame.
+  New config `gui.background.title-indent` shifts the sub-menu title right in ~4 px steps
+  (0 = vanilla) and is applied live on `/bp reload` (no rebuild or `/oraxen reload`), so you
+  can nudge the title onto the frame exactly. config-version 15.
 
 ---
 

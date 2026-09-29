@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 14
+config-version: 15
 
 # Sprache / Language: wählt messages_<language>.yml.
 # Mitgeliefert & automatisch als editierbare Datei angelegt: en, de, pl.
@@ -63,6 +63,12 @@ gui:
   # danach '/oraxen reload').
   background:
     enabled: false
+    # Horizontale Feinjustierung des Titeltextes in den SUB-Menüs (Ofen/XP/Trash/
+    # Compacting/Upgrades), wenn ein Hintergrund aktiv ist. Minecraft zeichnet den
+    # Titel an fester Position links; hiermit schiebst du ihn nach rechts, damit er
+    # zum Rahmen passt. Einheit: Leerzeichen (~4 Pixel je Schritt). Live per
+    # '/bp reload' anpassbar – kein Neustart/Oraxen-Reload nötig. 0 = wie Vanilla.
+    title-indent: 0
 
 # ---------------------------------------------------------------------------
 #  Öffnen
