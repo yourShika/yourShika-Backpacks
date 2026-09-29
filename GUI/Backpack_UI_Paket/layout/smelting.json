@@ -1,0 +1,83 @@
+{
+  "texture_size": [
+    256,
+    256
+  ],
+  "panel_size": [
+    176,
+    168
+  ],
+  "top_slot_border_origin": [
+    7,
+    17
+  ],
+  "item_origin": [
+    8,
+    18
+  ],
+  "slot_pitch": 18,
+  "top_rows": 3,
+  "active_top_indices": [
+    4,
+    11,
+    13,
+    15,
+    20,
+    22
+  ],
+  "inactive_top_indices": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    12,
+    14,
+    16,
+    17,
+    18,
+    19,
+    21,
+    23,
+    24,
+    25,
+    26
+  ],
+  "buttons": {
+    "13": "smelting_progress",
+    "22": "back"
+  },
+  "inventory_border_origin": [
+    7,
+    85
+  ],
+  "hotbar_border_origin": [
+    7,
+    143
+  ],
+  "right_tabs": [
+    {
+      "x": 174,
+      "y": 18,
+      "width": 18,
+      "height": 12
+    },
+    {
+      "x": 174,
+      "y": 32,
+      "width": 18,
+      "height": 12
+    },
+    {
+      "x": 174,
+      "y": 46,
+      "width": 18,
+      "height": 12
+    }
+  ]
+}

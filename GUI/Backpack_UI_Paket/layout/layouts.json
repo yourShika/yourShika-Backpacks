@@ -1,0 +1,412 @@
+{
+  "upgrades": {
+    "texture_size": [
+      256,
+      256
+    ],
+    "panel_size": [
+      176,
+      132
+    ],
+    "top_slot_border_origin": [
+      7,
+      17
+    ],
+    "item_origin": [
+      8,
+      18
+    ],
+    "slot_pitch": 18,
+    "top_rows": 1,
+    "active_top_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "inactive_top_indices": [],
+    "buttons": {
+      "8": "back"
+    },
+    "inventory_border_origin": [
+      7,
+      49
+    ],
+    "hotbar_border_origin": [
+      7,
+      107
+    ],
+    "right_tabs": [
+      {
+        "x": 174,
+        "y": 18,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 32,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 46,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 60,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 74,
+        "width": 18,
+        "height": 12
+      }
+    ]
+  },
+  "smelting": {
+    "texture_size": [
+      256,
+      256
+    ],
+    "panel_size": [
+      176,
+      168
+    ],
+    "top_slot_border_origin": [
+      7,
+      17
+    ],
+    "item_origin": [
+      8,
+      18
+    ],
+    "slot_pitch": 18,
+    "top_rows": 3,
+    "active_top_indices": [
+      4,
+      11,
+      13,
+      15,
+      20,
+      22
+    ],
+    "inactive_top_indices": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      14,
+      16,
+      17,
+      18,
+      19,
+      21,
+      23,
+      24,
+      25,
+      26
+    ],
+    "buttons": {
+      "13": "smelting_progress",
+      "22": "back"
+    },
+    "inventory_border_origin": [
+      7,
+      85
+    ],
+    "hotbar_border_origin": [
+      7,
+      143
+    ],
+    "right_tabs": [
+      {
+        "x": 174,
+        "y": 18,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 32,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 46,
+        "width": 18,
+        "height": 12
+      }
+    ]
+  },
+  "xp_storage": {
+    "texture_size": [
+      256,
+      256
+    ],
+    "panel_size": [
+      176,
+      168
+    ],
+    "top_slot_border_origin": [
+      7,
+      17
+    ],
+    "item_origin": [
+      8,
+      18
+    ],
+    "slot_pitch": 18,
+    "top_rows": 3,
+    "active_top_indices": [
+      10,
+      11,
+      13,
+      15,
+      16,
+      22
+    ],
+    "inactive_top_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      12,
+      14,
+      17,
+      18,
+      19,
+      20,
+      21,
+      23,
+      24,
+      25,
+      26
+    ],
+    "buttons": {
+      "10": "xp_deposit_one",
+      "11": "xp_deposit_all",
+      "13": "xp_info",
+      "15": "xp_withdraw_one",
+      "16": "xp_withdraw_all",
+      "22": "back"
+    },
+    "inventory_border_origin": [
+      7,
+      85
+    ],
+    "hotbar_border_origin": [
+      7,
+      143
+    ],
+    "right_tabs": [
+      {
+        "x": 174,
+        "y": 18,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 32,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 46,
+        "width": 18,
+        "height": 12
+      }
+    ]
+  },
+  "trash": {
+    "texture_size": [
+      256,
+      256
+    ],
+    "panel_size": [
+      176,
+      168
+    ],
+    "top_slot_border_origin": [
+      7,
+      17
+    ],
+    "item_origin": [
+      8,
+      18
+    ],
+    "slot_pitch": 18,
+    "top_rows": 3,
+    "active_top_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ],
+    "inactive_top_indices": [],
+    "buttons": {
+      "26": "trash_delete_all"
+    },
+    "inventory_border_origin": [
+      7,
+      85
+    ],
+    "hotbar_border_origin": [
+      7,
+      143
+    ],
+    "right_tabs": [
+      {
+        "x": 174,
+        "y": 18,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 32,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 46,
+        "width": 18,
+        "height": 12
+      }
+    ]
+  },
+  "compacting": {
+    "texture_size": [
+      256,
+      256
+    ],
+    "panel_size": [
+      176,
+      168
+    ],
+    "top_slot_border_origin": [
+      7,
+      17
+    ],
+    "item_origin": [
+      8,
+      18
+    ],
+    "slot_pitch": 18,
+    "top_rows": 3,
+    "active_top_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      26
+    ],
+    "inactive_top_indices": [
+      17,
+      25
+    ],
+    "buttons": {
+      "23": "clear_filter",
+      "24": "compactor_on",
+      "26": "back"
+    },
+    "inventory_border_origin": [
+      7,
+      85
+    ],
+    "hotbar_border_origin": [
+      7,
+      143
+    ],
+    "right_tabs": [
+      {
+        "x": 174,
+        "y": 18,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 32,
+        "width": 18,
+        "height": 12
+      },
+      {
+        "x": 174,
+        "y": 46,
+        "width": 18,
+        "height": 12
+      }
+    ]
+  }
+}

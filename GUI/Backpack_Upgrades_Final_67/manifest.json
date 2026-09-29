@@ -1,0 +1,1141 @@
+[
+  {
+    "name": "base",
+    "file": "icons_16x16/base.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 159,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      0
+    ]
+  },
+  {
+    "name": "copper",
+    "file": "icons_16x16/copper.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 172,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      0
+    ]
+  },
+  {
+    "name": "iron",
+    "file": "icons_16x16/iron.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 152,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      32,
+      0
+    ]
+  },
+  {
+    "name": "gold",
+    "file": "icons_16x16/gold.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 156,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      48,
+      0
+    ]
+  },
+  {
+    "name": "diamond",
+    "file": "icons_16x16/diamond.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 155,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      64,
+      0
+    ]
+  },
+  {
+    "name": "emerald",
+    "file": "icons_16x16/emerald.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 156,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      80,
+      0
+    ]
+  },
+  {
+    "name": "netherite",
+    "file": "icons_16x16/netherite.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 170,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      96,
+      0
+    ]
+  },
+  {
+    "name": "dragon",
+    "file": "icons_16x16/dragon.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 169,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      112,
+      0
+    ]
+  },
+  {
+    "name": "dragon_core",
+    "file": "icons_16x16/dragon_core.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 145,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      16
+    ]
+  },
+  {
+    "name": "advanced_alchemy",
+    "file": "icons_16x16/advanced_alchemy.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 94,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      32
+    ]
+  },
+  {
+    "name": "advanced_compacting",
+    "file": "icons_16x16/advanced_compacting.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 159,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      32
+    ]
+  },
+  {
+    "name": "advanced_deposit",
+    "file": "icons_16x16/advanced_deposit.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 134,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      32,
+      32
+    ]
+  },
+  {
+    "name": "advanced_feeding",
+    "file": "icons_16x16/advanced_feeding.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 128,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      48,
+      32
+    ]
+  },
+  {
+    "name": "advanced_filter",
+    "file": "icons_16x16/advanced_filter.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 109,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      64,
+      32
+    ]
+  },
+  {
+    "name": "advanced_jukebox",
+    "file": "icons_16x16/advanced_jukebox.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 150,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      80,
+      32
+    ]
+  },
+  {
+    "name": "advanced_magnet",
+    "file": "icons_16x16/advanced_magnet.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 139,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      96,
+      32
+    ]
+  },
+  {
+    "name": "advanced_pickup",
+    "file": "icons_16x16/advanced_pickup.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 140,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      112,
+      32
+    ]
+  },
+  {
+    "name": "advanced_pump",
+    "file": "icons_16x16/advanced_pump.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 140,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      48
+    ]
+  },
+  {
+    "name": "advanced_refill",
+    "file": "icons_16x16/advanced_refill.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 98,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      48
+    ]
+  },
+  {
+    "name": "advanced_restock",
+    "file": "icons_16x16/advanced_restock.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 159,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      32,
+      48
+    ]
+  },
+  {
+    "name": "advanced_tool_swapper",
+    "file": "icons_16x16/advanced_tool_swapper.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 126,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      48,
+      48
+    ]
+  },
+  {
+    "name": "advanced_void",
+    "file": "icons_16x16/advanced_void.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 146,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      64,
+      48
+    ]
+  },
+  {
+    "name": "alchemy",
+    "file": "icons_16x16/alchemy.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 100,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      80,
+      48
+    ]
+  },
+  {
+    "name": "anvil",
+    "file": "icons_16x16/anvil.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 136,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      96,
+      48
+    ]
+  },
+  {
+    "name": "auto_blasting",
+    "file": "icons_16x16/auto_blasting.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 151,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      112,
+      48
+    ]
+  },
+  {
+    "name": "auto_smelting",
+    "file": "icons_16x16/auto_smelting.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 147,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      64
+    ]
+  },
+  {
+    "name": "auto_smoking",
+    "file": "icons_16x16/auto_smoking.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 152,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      64
+    ]
+  },
+  {
+    "name": "battery",
+    "file": "icons_16x16/battery.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 114,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      32,
+      64
+    ]
+  },
+  {
+    "name": "blasting",
+    "file": "icons_16x16/blasting.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 153,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      48,
+      64
+    ]
+  },
+  {
+    "name": "compacting",
+    "file": "icons_16x16/compacting.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 135,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      64,
+      64
+    ]
+  },
+  {
+    "name": "crafting",
+    "file": "icons_16x16/crafting.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 148,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      80,
+      64
+    ]
+  },
+  {
+    "name": "deposit",
+    "file": "icons_16x16/deposit.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 124,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      96,
+      64
+    ]
+  },
+  {
+    "name": "ender_link",
+    "file": "icons_16x16/ender_link.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 123,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      112,
+      64
+    ]
+  },
+  {
+    "name": "everlasting",
+    "file": "icons_16x16/everlasting.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 110,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      80
+    ]
+  },
+  {
+    "name": "feeding",
+    "file": "icons_16x16/feeding.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 140,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      80
+    ]
+  },
+  {
+    "name": "filter",
+    "file": "icons_16x16/filter.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 118,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      32,
+      80
+    ]
+  },
+  {
+    "name": "inception",
+    "file": "icons_16x16/inception.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 142,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      48,
+      80
+    ]
+  },
+  {
+    "name": "infinity_admin",
+    "file": "icons_16x16/infinity_admin.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 105,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      64,
+      80
+    ]
+  },
+  {
+    "name": "jukebox",
+    "file": "icons_16x16/jukebox.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 134,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      80,
+      80
+    ]
+  },
+  {
+    "name": "magnet",
+    "file": "icons_16x16/magnet.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 144,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      96,
+      80
+    ]
+  },
+  {
+    "name": "pet_booster",
+    "file": "icons_16x16/pet_booster.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 105,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      112,
+      80
+    ]
+  },
+  {
+    "name": "pickup",
+    "file": "icons_16x16/pickup.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 138,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      96
+    ]
+  },
+  {
+    "name": "pump",
+    "file": "icons_16x16/pump.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 137,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      96
+    ]
+  },
+  {
+    "name": "recall",
+    "file": "icons_16x16/recall.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 127,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      32,
+      96
+    ]
+  },
+  {
+    "name": "refill",
+    "file": "icons_16x16/refill.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 100,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      48,
+      96
+    ]
+  },
+  {
+    "name": "restock",
+    "file": "icons_16x16/restock.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 158,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      64,
+      96
+    ]
+  },
+  {
+    "name": "smelting",
+    "file": "icons_16x16/smelting.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 173,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      80,
+      96
+    ]
+  },
+  {
+    "name": "smithing",
+    "file": "icons_16x16/smithing.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 83,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      96,
+      96
+    ]
+  },
+  {
+    "name": "smoking",
+    "file": "icons_16x16/smoking.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 129,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      112,
+      96
+    ]
+  },
+  {
+    "name": "soulbound",
+    "file": "icons_16x16/soulbound.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 116,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      112
+    ]
+  },
+  {
+    "name": "stack_downgrade_1",
+    "file": "icons_16x16/stack_downgrade_1.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 99,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      112
+    ]
+  },
+  {
+    "name": "stack_downgrade_2",
+    "file": "icons_16x16/stack_downgrade_2.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 115,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      32,
+      112
+    ]
+  },
+  {
+    "name": "stack_downgrade_3",
+    "file": "icons_16x16/stack_downgrade_3.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 118,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      48,
+      112
+    ]
+  },
+  {
+    "name": "stack_omega",
+    "file": "icons_16x16/stack_omega.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 140,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      64,
+      112
+    ]
+  },
+  {
+    "name": "stack_starter",
+    "file": "icons_16x16/stack_starter.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 146,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      80,
+      112
+    ]
+  },
+  {
+    "name": "stack_tier_1",
+    "file": "icons_16x16/stack_tier_1.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 132,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      96,
+      112
+    ]
+  },
+  {
+    "name": "stack_tier_2",
+    "file": "icons_16x16/stack_tier_2.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 135,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      112,
+      112
+    ]
+  },
+  {
+    "name": "stack_tier_3",
+    "file": "icons_16x16/stack_tier_3.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 138,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      128
+    ]
+  },
+  {
+    "name": "stack_tier_4",
+    "file": "icons_16x16/stack_tier_4.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 141,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      128
+    ]
+  },
+  {
+    "name": "stonecutter",
+    "file": "icons_16x16/stonecutter.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 123,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      32,
+      128
+    ]
+  },
+  {
+    "name": "survival_infinity",
+    "file": "icons_16x16/survival_infinity.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 120,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      48,
+      128
+    ]
+  },
+  {
+    "name": "tank",
+    "file": "icons_16x16/tank.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 129,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      64,
+      128
+    ]
+  },
+  {
+    "name": "tool_swapper",
+    "file": "icons_16x16/tool_swapper.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 114,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      80,
+      128
+    ]
+  },
+  {
+    "name": "trash",
+    "file": "icons_16x16/trash.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 132,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      96,
+      128
+    ]
+  },
+  {
+    "name": "void",
+    "file": "icons_16x16/void.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 140,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      112,
+      128
+    ]
+  },
+  {
+    "name": "xp",
+    "file": "icons_16x16/xp.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 89,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      0,
+      144
+    ]
+  },
+  {
+    "name": "xp_pump",
+    "file": "icons_16x16/xp_pump.png",
+    "size": [
+      16,
+      16
+    ],
+    "opaque_pixels": 124,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "atlas_xy": [
+      16,
+      144
+    ]
+  }
+]

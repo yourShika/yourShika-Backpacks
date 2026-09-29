@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.6.6-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.6.7-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,18 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🎨 v1.6.7
+
+- 🎨 **All 67 upgrade textures redrawn in vanilla item style** – the tier upgrades
+  (base…dragon_core) and every functional upgrade now use hand-polished 16×16 pixel-art
+  with proper depth, a top-left light source, dark outlines and a cohesive palette,
+  replacing the older procedurally-drawn icons. The generator now **copies** these
+  finished icons (`GUI/Backpack_Upgrades_Final_67/icons_16x16/`) instead of drawing them;
+  the Oraxen item ids and models are unchanged, so existing upgrades just look better.
+  asset-manifest → v16.
 
 ---
 
