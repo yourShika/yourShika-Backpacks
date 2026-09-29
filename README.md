@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.6.7-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.7.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,26 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 🖼️ v1.7.0
+
+- 🖼️ **Custom UI for every sub-menu (Oraxen)** – the Upgrades, portable Furnace/Blast/Smoker,
+  XP Storage, Trash and Compacting-filter menus now get the same treatment as the main
+  backpack menu: **custom control icons** (back, furnace/blast/smoker, smelting progress,
+  clear-filter, compactor on/off, trash, XP deposit/withdraw one/all, XP info) and an
+  optional **framed background** drawn as a title font glyph, so each menu matches the
+  backpack look. Icons follow `gui.custom-icons`, backgrounds follow `gui.background.enabled`
+  (both only when Oraxen is active; otherwise the previous vanilla-item look is kept).
+- 🫥 **Filler panes go transparent under a background** – when a sub-menu background is on,
+  the grey/black filler panes become a fully-transparent item so the framed artwork shows
+  through; without a background they stay as before.
+- 🎛️ New Oraxen items `ysbp_menu_*` (`yourshika_menu_icons.yml`, custom-model-data 2320+),
+  16×16 menu icons under `ysbp/gui/menu/`, seven 256×256 backgrounds under `ysbp/gui/bg/`,
+  and seven extra glyphs in the `ysbp_menu` font (same 18 px-grid alignment, `ascent` 29).
+  asset-manifest → v17. Fine-tune a menu's vertical fit with its glyph `ascent` in
+  `pack/font/ysbp_menu.json` + `/oraxen reload`.
 
 ---
 

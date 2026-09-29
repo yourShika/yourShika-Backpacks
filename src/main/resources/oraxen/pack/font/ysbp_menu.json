@@ -15,6 +15,69 @@
       "chars": [
         "\ue000"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:ysbp/gui/bg/upgrades.png",
+      "ascent": 29,
+      "height": 256,
+      "chars": [
+        "\ue010"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:ysbp/gui/bg/smelting.png",
+      "ascent": 29,
+      "height": 256,
+      "chars": [
+        "\ue011"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:ysbp/gui/bg/blasting.png",
+      "ascent": 29,
+      "height": 256,
+      "chars": [
+        "\ue012"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:ysbp/gui/bg/smoker.png",
+      "ascent": 29,
+      "height": 256,
+      "chars": [
+        "\ue013"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:ysbp/gui/bg/xp_storage.png",
+      "ascent": 29,
+      "height": 256,
+      "chars": [
+        "\ue014"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:ysbp/gui/bg/trash.png",
+      "ascent": 29,
+      "height": 256,
+      "chars": [
+        "\ue015"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:ysbp/gui/bg/compacting.png",
+      "ascent": 29,
+      "height": 256,
+      "chars": [
+        "\ue016"
+      ]
     }
   ]
 }

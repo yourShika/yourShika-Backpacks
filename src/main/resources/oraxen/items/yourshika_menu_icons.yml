@@ -1,0 +1,162 @@
+# Sub-Menue-Control-Icons (Ofen/XP/Trash/Compacting/Upgrades) + Fueller.
+# Reine Textur-/Modell-Traeger; das Plugin bindet sie nur in den Menues ein.
+
+ysbp_menu_back:
+  displayname: "<gray>Back"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/back.png
+    custom_model_data: 2320
+
+ysbp_menu_blast_furnace:
+  displayname: "<gray>Blast Furnace"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/blast_furnace.png
+    custom_model_data: 2321
+
+ysbp_menu_clear_filter:
+  displayname: "<gray>Clear Filter"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/clear_filter.png
+    custom_model_data: 2322
+
+ysbp_menu_compactor_on:
+  displayname: "<gray>Compactor On"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/compactor_on.png
+    custom_model_data: 2323
+
+ysbp_menu_compactor_off:
+  displayname: "<gray>Compactor Off"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/compactor_off.png
+    custom_model_data: 2324
+
+ysbp_menu_furnace:
+  displayname: "<gray>Furnace"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/furnace.png
+    custom_model_data: 2325
+
+ysbp_menu_smelting_progress:
+  displayname: "<gray>Smelting Progress"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/smelting_progress.png
+    custom_model_data: 2326
+
+ysbp_menu_smoker:
+  displayname: "<gray>Smoker"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/smoker.png
+    custom_model_data: 2327
+
+ysbp_menu_trash_delete_all:
+  displayname: "<gray>Trash Delete All"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/trash_delete_all.png
+    custom_model_data: 2328
+
+ysbp_menu_upgrades:
+  displayname: "<gray>Upgrades"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/upgrades.png
+    custom_model_data: 2329
+
+ysbp_menu_xp_deposit_all:
+  displayname: "<gray>Xp Deposit All"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/xp_deposit_all.png
+    custom_model_data: 2330
+
+ysbp_menu_xp_deposit_one:
+  displayname: "<gray>Xp Deposit One"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/xp_deposit_one.png
+    custom_model_data: 2331
+
+ysbp_menu_xp_info:
+  displayname: "<gray>Xp Info"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/xp_info.png
+    custom_model_data: 2332
+
+ysbp_menu_xp_withdraw_all:
+  displayname: "<gray>Xp Withdraw All"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/xp_withdraw_all.png
+    custom_model_data: 2333
+
+ysbp_menu_xp_withdraw_one:
+  displayname: "<gray>Xp Withdraw One"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/xp_withdraw_one.png
+    custom_model_data: 2334
+
+ysbp_menu_blank:
+  displayname: "<gray>Blank"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ysbp/gui/menu/blank.png
+    custom_model_data: 2335

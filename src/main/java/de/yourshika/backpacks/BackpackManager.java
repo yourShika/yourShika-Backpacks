@@ -660,6 +660,71 @@ public final class BackpackManager {
         return Component.text().append(glyph).append(titleText).build();
     }
 
+    // ------------------------------------------------------------------
+    //  Sub-Menü-UI (Ofen / XP / Trash / Compacting / Upgrades): eigene
+    //  Control-Icons (ysbp_menu_<name>) + Hintergrund-Glyphen (E010–E016),
+    //  gleiche Ausrichtung wie das Hauptmenü. Alles gated auf Oraxen + Config.
+    // ------------------------------------------------------------------
+    private static final String MENU_BG_UPGRADES = "";
+    private static final String MENU_BG_SMELTING = "";
+    private static final String MENU_BG_BLASTING = "";
+    private static final String MENU_BG_SMOKER = "";
+    private static final String MENU_BG_XP = "";
+    private static final String MENU_BG_TRASH = "";
+    private static final String MENU_BG_COMPACTING = "";
+
+    /** True, wenn Sub-Menü-Hintergründe aktiv sind (Config + Oraxen). */
+    private boolean menuBgActive() {
+        return plugin.pluginConfig().guiBackground()
+                && plugin.moduleManager() != null
+                && plugin.moduleManager().isActive("oraxen");
+    }
+
+    /** Prependet die Hintergrund-Glyphe eines Sub-Menüs (Lead+Bild+Tail) an den Titel. */
+    private Component withMenuBg(Component title, String glyphChar) {
+        if (glyphChar == null || glyphChar.isEmpty() || !menuBgActive()) return title;
+        Component g = Component.text("" + glyphChar + "")
+                .font(MENU_FONT)
+                .color(net.kyori.adventure.text.format.NamedTextColor.WHITE)
+                .decoration(TextDecoration.ITALIC, false);
+        return Component.text().append(g).append(title).build();
+    }
+
+    /**
+     * Überlagert einen Sub-Menü-Button mit der Oraxen-Textur {@code ysbp_menu_<name>}.
+     * Baut das Item dafuer auf PAPER neu auf (Name/Lore bleiben), damit das
+     * CustomModelData/item_model zum Traeger-Material passt. Ohne aktive Icons
+     * bleibt das uebergebene Item unveraendert.
+     */
+    private ItemStack applyMenuIcon(ItemStack item, String name) {
+        if (!guiIconsActive()) return item;
+        ItemStack out = new ItemStack(Material.PAPER);
+        ItemMeta src = item.getItemMeta();
+        ItemMeta dst = out.getItemMeta();
+        if (src != null) {
+            dst.displayName(src.displayName());
+            dst.lore(src.lore());
+        }
+        out.setItemMeta(dst);
+        plugin.moduleManager().applyExternalModel(out, "ysbp_menu_" + name);
+        return out;
+    }
+
+    /**
+     * Füll-Item eines Sub-Menüs. Ist ein Menü-Hintergrund aktiv, ein voll
+     * transparentes Item (der Hintergrund scheint durch); sonst die uebergebene
+     * Glasscheibe (unveraenderte Vanilla-Optik).
+     */
+    private ItemStack menuFiller(ItemStack pane, boolean hasBackground) {
+        if (!hasBackground || !menuBgActive()) return pane;
+        ItemStack blank = new ItemStack(Material.PAPER);
+        ItemMeta m = blank.getItemMeta();
+        m.displayName(Component.text(" "));
+        blank.setItemMeta(m);
+        plugin.moduleManager().applyExternalModel(blank, "ysbp_menu_blank");
+        return blank;
+    }
+
     private ItemStack infoItem(BackpackTier tier, BackpackMenuHolder holder) {
         ItemStack item = guiBase(Material.NAME_TAG, "backpack_info", true);
         ItemMeta meta = item.getItemMeta();
@@ -846,12 +911,13 @@ public final class BackpackManager {
         boolean confirm = plugin.getConfig().getBoolean("trash.confirm", true);
         var holder = new de.yourshika.backpacks.gui.TrashMenuHolder(confirm);
         Inventory trash = Bukkit.createInventory(holder, de.yourshika.backpacks.gui.TrashMenuHolder.SIZE,
-                mini.deserialize("<dark_gray><bold>Trash</bold> <gray>"
+                withMenuBg(mini.deserialize("<dark_gray><bold>Trash</bold> <gray>"
                                 + (confirm ? "(confirm to delete)" : "(items here are deleted)"))
-                        .decoration(TextDecoration.ITALIC, false));
+                        .decoration(TextDecoration.ITALIC, false), MENU_BG_TRASH));
         holder.setInventory(trash);
         if (confirm) {
-            trash.setItem(de.yourshika.backpacks.gui.TrashMenuHolder.CONFIRM_SLOT, trashConfirmButton());
+            trash.setItem(de.yourshika.backpacks.gui.TrashMenuHolder.CONFIRM_SLOT,
+                    applyMenuIcon(trashConfirmButton(), "trash_delete_all"));
         }
         player.openInventory(trash);
     }
@@ -1034,7 +1100,8 @@ public final class BackpackManager {
         String title = pickup ? "<#5BE85B><bold>Pickup Filter</bold>" : "<#D2B48C><bold>Compacting Filter</bold>";
         Inventory inv = Bukkit.createInventory(holder,
                 de.yourshika.backpacks.gui.FilterMenuHolder.SIZE,
-                mini.deserialize(title).decoration(TextDecoration.ITALIC, false));
+                withMenuBg(mini.deserialize(title).decoration(TextDecoration.ITALIC, false),
+                        pickup ? null : MENU_BG_COMPACTING));
         holder.setInventory(inv);
 
         BackpackData data = storage.load(backpackId);
@@ -1044,12 +1111,12 @@ public final class BackpackManager {
                 inv.setItem(i, filter[i]);
             }
         }
-        ItemStack pane = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
+        ItemStack pane = menuFiller(pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" ")), !pickup);
         for (int i = de.yourshika.backpacks.gui.FilterMenuHolder.FILTER_SLOTS; i < holder.getInventory().getSize(); i++) {
             inv.setItem(i, pane);
         }
         inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.INFO_SLOT, filterInfo(pickup));
-        inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.BACK_SLOT, backButton());
+        inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.BACK_SLOT, applyMenuIcon(backButton(), "back"));
 
         if (!pickup) {
             // Compacting-Presets (#20) – für Pickup nicht sinnvoll (NBT-genau).
@@ -1059,13 +1126,14 @@ public final class BackpackManager {
             inv.setItem(ps[2], presetButton(Material.REDSTONE, "Redstone preset", "Redstone & lapis"));
             inv.setItem(ps[3], presetButton(Material.NETHERITE_INGOT, "Misc preset", "All compactable items"));
         }
-        inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.CLEAR_SLOT,
-                presetButton(Material.BARRIER, "Clear filter", "Remove all filter entries"));
+        inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.CLEAR_SLOT, applyMenuIcon(
+                presetButton(Material.BARRIER, "Clear filter", "Remove all filter entries"), "clear_filter"));
 
         if (!pickup) {
             // An/Aus-Schalter für das Compacting-Upgrade dieses Backpacks.
             boolean enabled = data == null || data.compactEnabled();
-            inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.TOGGLE_SLOT, compactToggleButton(enabled));
+            inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.TOGGLE_SLOT,
+                    applyMenuIcon(compactToggleButton(enabled), enabled ? "compactor_on" : "compactor_off"));
         }
 
         player.openInventory(inv);
@@ -1108,7 +1176,8 @@ public final class BackpackManager {
         // Knopf in der offenen GUI aktualisieren.
         Inventory inv = holder.getInventory();
         if (inv != null) {
-            inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.TOGGLE_SLOT, compactToggleButton(now));
+            inv.setItem(de.yourshika.backpacks.gui.FilterMenuHolder.TOGGLE_SLOT,
+                    applyMenuIcon(compactToggleButton(now), now ? "compactor_on" : "compactor_off"));
         }
     }
 
@@ -1422,9 +1491,14 @@ public final class BackpackManager {
             case "smoker" -> "<#FFD27F><bold>Portable Smoker</bold>";
             default -> "<#FF8C42><bold>Portable Furnace</bold>";
         };
+        String bgChar = switch (type) {
+            case "blast" -> MENU_BG_BLASTING;
+            case "smoker" -> MENU_BG_SMOKER;
+            default -> MENU_BG_SMELTING;
+        };
         Inventory inv = Bukkit.createInventory(holder,
                 de.yourshika.backpacks.gui.FurnaceMenuHolder.SIZE,
-                mini.deserialize(title).decoration(TextDecoration.ITALIC, false));
+                withMenuBg(mini.deserialize(title).decoration(TextDecoration.ITALIC, false), bgChar));
         holder.setInventory(inv);
 
         // Persistenten Zustand des Backpacks in die GUI laden.
@@ -1472,14 +1546,22 @@ public final class BackpackManager {
     public void renderFurnace(de.yourshika.backpacks.gui.FurnaceMenuHolder holder) {
         Inventory inv = holder.getInventory();
         if (inv == null) return;
-        ItemStack filler = pane(Material.BLACK_STAINED_GLASS_PANE, Component.text(" "));
+        ItemStack filler = menuFiller(pane(Material.BLACK_STAINED_GLASS_PANE, Component.text(" ")), true);
         for (int i = 0; i < de.yourshika.backpacks.gui.FurnaceMenuHolder.SIZE; i++) {
             if (holder.isInteractable(i)) continue;
             inv.setItem(i, filler);
         }
-        inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.ARROW_SLOT, arrowItem(holder));
-        inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.INFO_SLOT, furnaceInfo(holder));
-        inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.BACK_SLOT, backButton());
+        String furnaceIcon = switch (holder.type()) {
+            case "blast" -> "blast_furnace";
+            case "smoker" -> "smoker";
+            default -> "furnace";
+        };
+        inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.ARROW_SLOT,
+                applyMenuIcon(arrowItem(holder), "smelting_progress"));
+        inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.INFO_SLOT,
+                applyMenuIcon(furnaceInfo(holder), furnaceIcon));
+        inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.BACK_SLOT,
+                applyMenuIcon(backButton(), "back"));
     }
 
     private ItemStack arrowItem(de.yourshika.backpacks.gui.FurnaceMenuHolder holder) {
@@ -1537,7 +1619,8 @@ public final class BackpackManager {
         if (result == null || !canOutput) {
             // Nichts zu schmelzen -> Fortschritt zurücksetzen (Brennstoff bleibt geladen).
             if (holder.cook() != 0) holder.cook(0);
-            inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.ARROW_SLOT, arrowItem(holder));
+            inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.ARROW_SLOT,
+                    applyMenuIcon(arrowItem(holder), "smelting_progress"));
             return;
         }
 
@@ -1546,7 +1629,8 @@ public final class BackpackManager {
             int lit = consumeFuel(inv);
             if (lit <= 0) {
                 if (holder.cook() != 0) holder.cook(0);
-                inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.ARROW_SLOT, arrowItem(holder));
+                inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.ARROW_SLOT,
+                    applyMenuIcon(arrowItem(holder), "smelting_progress"));
                 return;
             }
             holder.burn(lit);
@@ -1570,7 +1654,8 @@ public final class BackpackManager {
             }
             saveFurnace(holder); // jeder fertige Schmelzvorgang ist ein Checkpoint
         }
-        inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.ARROW_SLOT, arrowItem(holder));
+        inv.setItem(de.yourshika.backpacks.gui.FurnaceMenuHolder.ARROW_SLOT,
+                applyMenuIcon(arrowItem(holder), "smelting_progress"));
         // Zusätzlich alle ~3s sichern, damit ein Crash mitten im Vorgang minimal kostet.
         if (holder.incTicks() % 30 == 0) saveFurnace(holder);
     }
@@ -1720,7 +1805,8 @@ public final class BackpackManager {
         de.yourshika.backpacks.gui.XpMenuHolder holder =
                 new de.yourshika.backpacks.gui.XpMenuHolder(backpackId, tierKey);
         Inventory inv = Bukkit.createInventory(holder, de.yourshika.backpacks.gui.XpMenuHolder.SIZE,
-                mini.deserialize("<#7CFF6B><bold>XP Storage</bold>").decoration(TextDecoration.ITALIC, false));
+                withMenuBg(mini.deserialize("<#7CFF6B><bold>XP Storage</bold>")
+                        .decoration(TextDecoration.ITALIC, false), MENU_BG_XP));
         holder.setInventory(inv);
         renderXp(holder, player);
         player.openInventory(inv);
@@ -1730,7 +1816,7 @@ public final class BackpackManager {
     public void renderXp(de.yourshika.backpacks.gui.XpMenuHolder holder, Player player) {
         Inventory inv = holder.getInventory();
         if (inv == null) return;
-        ItemStack filler = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
+        ItemStack filler = menuFiller(pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" ")), true);
         for (int i = 0; i < de.yourshika.backpacks.gui.XpMenuHolder.SIZE; i++) inv.setItem(i, filler);
 
         BackpackData data = storage.load(holder.backpackId());
@@ -1747,17 +1833,17 @@ public final class BackpackManager {
                 line("<dark_gray><st>                    </st>")
         ));
         info.setItemMeta(im);
-        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.INFO_SLOT, info);
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.INFO_SLOT, applyMenuIcon(info, "xp_info"));
 
-        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.DEPOSIT_LEVEL,
-                xpButton(Material.LIME_DYE, "<green>Deposit 1 level", "Store one level of XP."));
-        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.DEPOSIT_ALL,
-                xpButton(Material.LIME_CONCRETE, "<green><bold>Deposit all</bold>", "Store all your XP."));
-        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.WITHDRAW_LEVEL,
-                xpButton(Material.YELLOW_DYE, "<yellow>Withdraw 1 level", "Take one level back."));
-        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.WITHDRAW_ALL,
-                xpButton(Material.YELLOW_CONCRETE, "<yellow><bold>Withdraw all</bold>", "Take all stored XP back."));
-        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.BACK_SLOT, backButton());
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.DEPOSIT_LEVEL, applyMenuIcon(
+                xpButton(Material.LIME_DYE, "<green>Deposit 1 level", "Store one level of XP."), "xp_deposit_one"));
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.DEPOSIT_ALL, applyMenuIcon(
+                xpButton(Material.LIME_CONCRETE, "<green><bold>Deposit all</bold>", "Store all your XP."), "xp_deposit_all"));
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.WITHDRAW_LEVEL, applyMenuIcon(
+                xpButton(Material.YELLOW_DYE, "<yellow>Withdraw 1 level", "Take one level back."), "xp_withdraw_one"));
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.WITHDRAW_ALL, applyMenuIcon(
+                xpButton(Material.YELLOW_CONCRETE, "<yellow><bold>Withdraw all</bold>", "Take all stored XP back."), "xp_withdraw_all"));
+        inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.BACK_SLOT, applyMenuIcon(backButton(), "back"));
     }
 
     private ItemStack xpButton(Material material, String name, String desc) {
@@ -1877,8 +1963,8 @@ public final class BackpackManager {
         }
         UpgradeMenuHolder holder = new UpgradeMenuHolder(backpackId, tierKey, tier.upgradeSlots(), buffer);
         Inventory inv = Bukkit.createInventory(holder, holder.size(),
-                mini.deserialize("<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>("
-                        + tier.key() + ")").decoration(TextDecoration.ITALIC, false));
+                withMenuBg(mini.deserialize("<gradient:#6E5BC8:#5BE8D4><bold>Upgrades</bold></gradient> <dark_gray>("
+                        + tier.key() + ")").decoration(TextDecoration.ITALIC, false), MENU_BG_UPGRADES));
         holder.setInventory(inv);
         renderUpgrades(holder);
         player.openInventory(inv);
@@ -1891,11 +1977,11 @@ public final class BackpackManager {
         for (int i = 0; i < holder.upgradeSlots(); i++) {
             inv.setItem(i, i < buffer.length ? buffer[i] : null);
         }
-        ItemStack filler = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
+        ItemStack filler = menuFiller(pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" ")), true);
         for (int i = holder.upgradeSlots(); i < holder.size(); i++) {
             inv.setItem(i, filler);
         }
-        inv.setItem(holder.backButtonSlot(), backButton());
+        inv.setItem(holder.backButtonSlot(), applyMenuIcon(backButton(), "back"));
     }
 
     /** Speichert die Upgrade-Items eines Backpacks aus der Upgrade-GUI. */
