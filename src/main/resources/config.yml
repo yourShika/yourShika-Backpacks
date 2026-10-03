@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 16
+config-version: 17
 
 # Sprache / Language: wählt messages_<language>.yml.
 # Mitgeliefert & automatisch als editierbare Datei angelegt: en, de, pl.
@@ -504,6 +504,20 @@ upgrades:
   # for Oraxen/Resourcepacks via custom-model-data / provider-id.
   functions:
     enabled: true
+    # Over-Stacking (Stack-Upgrades): hebt die Stapelgröße eines Backpacks weit
+    # über 64. NUR verfügbar, wenn das Plugin "PacketEvents" installiert ist.
+    # Standardmäßig AUS, weil es tiefgreifend ist – bitte erst auf einem
+    # Testserver verifizieren (dass nichts verloren geht), dann live aktivieren.
+    stacking:
+      enabled: false
+      # Multiplikatoren je Stufe: effektive Stapelgröße = Basisgröße × Faktor.
+      # Omega hebt das Limit immer auf das technische Maximum (2.147.483.647).
+      multipliers:
+        stack_starter: 1.5
+        stack_tier_1: 2
+        stack_tier_2: 4
+        stack_tier_3: 8
+        stack_tier_4: 16
     models:
       pickup:          { custom-model-data: 2100, item-model: "", provider-id: "ysbp_upgrade_pickup" }
       advanced_pickup: { custom-model-data: 2101, item-model: "", provider-id: "ysbp_upgrade_advanced_pickup" }
@@ -526,6 +540,12 @@ upgrades:
       restock:         { custom-model-data: 2110, item-model: "", provider-id: "ysbp_upgrade_restock" }
       feeding:         { custom-model-data: 2137, item-model: "", provider-id: "ysbp_upgrade_feeding" }
       pet_booster:     { custom-model-data: 2157, item-model: "", provider-id: "ysbp_upgrade_pet_booster" }
+      stack_starter:   { custom-model-data: 2128, item-model: "", provider-id: "ysbp_upgrade_stack_starter" }
+      stack_tier_1:    { custom-model-data: 2129, item-model: "", provider-id: "ysbp_upgrade_stack_tier_1" }
+      stack_tier_2:    { custom-model-data: 2130, item-model: "", provider-id: "ysbp_upgrade_stack_tier_2" }
+      stack_tier_3:    { custom-model-data: 2131, item-model: "", provider-id: "ysbp_upgrade_stack_tier_3" }
+      stack_tier_4:    { custom-model-data: 2132, item-model: "", provider-id: "ysbp_upgrade_stack_tier_4" }
+      stack_omega:     { custom-model-data: 2133, item-model: "", provider-id: "ysbp_upgrade_stack_omega" }
     # Crafting-Rezepte der Funktions-Upgrades – frei konfigurierbar.
     # 'U' = Upgrade-Leder (Pflicht), 'X' = das vorausgesetzte Basis-Upgrade
     # (z.B. braucht Advanced Pickup zuerst ein Pickup Upgrade). Alle anderen

@@ -45,6 +45,12 @@ public final class FunctionUpgradeManager {
         for (FunctionUpgrade up : FunctionUpgrade.values()) {
             // BetterPets-abhängige Upgrades nur registrieren, wenn das Plugin da ist.
             if (up.requiresBetterPets() && !de.yourshika.backpacks.hook.BetterPetsHook.isAvailable()) continue;
+            // Over-Stacking-Upgrades nur, wenn aktiviert (config) UND PacketEvents da ist.
+            if (up.requiresPacketEvents()
+                    && (!plugin.getConfig().getBoolean("upgrades.functions.stacking.enabled", false)
+                        || !de.yourshika.backpacks.hook.PacketEventsHook.isAvailable())) continue;
+            // Omega: nur per Command erhältlich -> nie ein Rezept.
+            if (up.isCommandOnly()) continue;
             NamespacedKey key = new NamespacedKey(plugin, "func_" + up.id());
             if (Bukkit.getRecipe(key) != null) {           // idempotent (kein removeRecipe!)
                 if (!registered.contains(key)) registered.add(key);

@@ -173,6 +173,47 @@ public enum FunctionUpgrade {
                     "<dark_gray>Toggle with /bp booster."),
             List.of(" E ", "BUB", " E "),
             Map.of('E', Material.EXPERIENCE_BOTTLE, 'B', Material.BONE),
+            0, null),
+
+    // --- Over-Stacking (nur verfügbar, wenn PacketEvents installiert ist) ----
+    // Erhöhen die Stapelgröße eines Backpacks weit über 64 (Multiplikatoren in
+    // der config überschreibbar). Jede Stufe setzt die vorige voraus. Omega ist
+    // nur per Command erhältlich (kein Rezept) und hebt das Limit auf das Maximum.
+    STACK_STARTER("stack_starter", "<#D9C99A><bold>Stack Upgrade: Starter</bold>", 2128,
+            List.of("<gray>Items in the backpack stack up to <white>1.5×</white> (96).",
+                    "<dark_gray>Requires PacketEvents."),
+            List.of("CCC", "CUC", "CCC"),
+            Map.of('C', Material.CHEST),
+            0, null),
+    STACK_TIER_1("stack_tier_1", "<#D9C99A><bold>Stack Upgrade: Tier 1</bold>", 2129,
+            List.of("<gray>Items stack up to <white>2×</white> (128).",
+                    "<dark_gray>Requires a Starter Stack Upgrade + PacketEvents."),
+            List.of("III", "IXI", "III"),
+            Map.of('I', Material.IRON_BLOCK),
+            0, "stack_starter"),
+    STACK_TIER_2("stack_tier_2", "<#D9C99A><bold>Stack Upgrade: Tier 2</bold>", 2130,
+            List.of("<gray>Items stack up to <white>4×</white> (256).",
+                    "<dark_gray>Requires a Tier 1 Stack Upgrade + PacketEvents."),
+            List.of("GGG", "GXG", "GGG"),
+            Map.of('G', Material.GOLD_BLOCK),
+            0, "stack_tier_1"),
+    STACK_TIER_3("stack_tier_3", "<#D9C99A><bold>Stack Upgrade: Tier 3</bold>", 2131,
+            List.of("<gray>Items stack up to <white>8×</white> (512).",
+                    "<dark_gray>Requires a Tier 2 Stack Upgrade + PacketEvents."),
+            List.of("DDD", "DXD", "DDD"),
+            Map.of('D', Material.DIAMOND_BLOCK),
+            0, "stack_tier_2"),
+    STACK_TIER_4("stack_tier_4", "<#D9C99A><bold>Stack Upgrade: Tier 4</bold>", 2132,
+            List.of("<gray>Items stack up to <white>16×</white> (1024).",
+                    "<dark_gray>Requires a Tier 3 Stack Upgrade + PacketEvents."),
+            List.of("NNN", "NXN", "NNN"),
+            Map.of('N', Material.NETHERITE_BLOCK),
+            0, "stack_tier_3"),
+    STACK_OMEGA("stack_omega", "<#D06CF5><bold>Stack Upgrade: Omega</bold>", 2133,
+            List.of("<gray>Raises the stack limit to the <white>maximum possible</white>.",
+                    "<dark_gray>Admin only – not craftable. Requires PacketEvents."),
+            List.of("   ", "   ", "   "),
+            Map.of(),
             0, null);
 
     private final String id;
@@ -219,6 +260,34 @@ public enum FunctionUpgrade {
     /** Braucht dieses Upgrade das externe BetterPets-Plugin? */
     public boolean requiresBetterPets() {
         return id.equals("pet_booster");
+    }
+
+    /** Over-Stacking-Upgrade (stack_*)? Nur verfügbar mit PacketEvents. */
+    public boolean isStackUpgrade() {
+        return id.startsWith("stack_");
+    }
+
+    /** Braucht dieses Upgrade PacketEvents? (aktuell die Stack-Upgrades) */
+    public boolean requiresPacketEvents() {
+        return isStackUpgrade();
+    }
+
+    /** Nur per Command erhältlich (kein Rezept)? */
+    public boolean isCommandOnly() {
+        return id.equals("stack_omega");
+    }
+
+    /** Standard-Stapelmultiplikator (per config überschreibbar). Omega -> MAX. */
+    public double stackMultiplier() {
+        return switch (id) {
+            case "stack_starter" -> 1.5;
+            case "stack_tier_1" -> 2.0;
+            case "stack_tier_2" -> 4.0;
+            case "stack_tier_3" -> 8.0;
+            case "stack_tier_4" -> 16.0;
+            case "stack_omega" -> Double.MAX_VALUE;
+            default -> 1.0;
+        };
     }
 
     /** Schmelz-Upgrade (portable Furnace/Smoker/Blast Furnace)? Nur eines pro Rucksack. */

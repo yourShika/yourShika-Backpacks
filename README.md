@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.8.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.9.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,22 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## 📦 v1.9.0
+
+- 📦 **Over-Stacking upgrades – foundation** (gated, **off by default**). Six new stack
+  upgrades are now defined: `stack_starter` (×1.5), `stack_tier_1` (×2), `stack_tier_2`
+  (×4), `stack_tier_3` (×8), `stack_tier_4` (×16) — each needing the previous tier and a
+  progressively expensive recipe — plus `stack_omega` (raises the limit to the maximum,
+  **admin command only**, not craftable). They are only offered when **PacketEvents** is
+  installed **and** `upgrades.functions.stacking.enabled` is `true` (default `false`),
+  so without both they stay hidden and the plugin plays exactly as before.
+  Multipliers are config-driven; new `hook/PacketEventsHook` detection; config-version 17.
+- ⚙️ *The actual over-stacking runtime (virtual counts + packet display + dupe-safe click
+  handling) is the next step — keep `stacking.enabled` off until it ships and you've tested
+  it on a non-production world.*
 
 ---
 
