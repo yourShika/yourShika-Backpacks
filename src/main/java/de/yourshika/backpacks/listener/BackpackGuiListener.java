@@ -359,6 +359,13 @@ public final class BackpackGuiListener implements Listener {
             plugin.getServer().getScheduler().runTask(plugin, () -> manager.openById(player, id));
             return;
         }
+        if (raw == XpMenuHolder.REPAIR_SLOT
+                && manager.functionUpgradesOf(holder.backpackId()).contains("advanced_xp")) {
+            UUID id = holder.backpackId();
+            String tier = holder.tierKey();
+            plugin.getServer().getScheduler().runTask(plugin, () -> manager.openXpRepair(player, id, tier));
+            return;
+        }
         String action = switch (raw) {
             case XpMenuHolder.DEPOSIT_LEVEL -> "deposit_level";
             case XpMenuHolder.DEPOSIT_ALL -> "deposit_all";
@@ -377,6 +384,41 @@ public final class BackpackGuiListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onXpDrag(InventoryDragEvent event) {
         if (event.getView().getTopInventory().getHolder() instanceof XpMenuHolder) {
+            event.setCancelled(true);
+        }
+    }
+
+    // Advanced-XP-Reparatur-GUI: reine Button-/Anzeige-GUI. Items bleiben im
+    // Spieler-Inventar, hier wird nichts bewegt – nur Reparatur ausgelöst.
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onXpRepairClick(InventoryClickEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof de.yourshika.backpacks.gui.XpRepairMenuHolder holder)) return;
+        event.setCancelled(true);
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (event.getClickedInventory() == null
+                || !(event.getClickedInventory().getHolder() instanceof de.yourshika.backpacks.gui.XpRepairMenuHolder)) {
+            return; // Klick im Spieler-Inventar – nichts tun.
+        }
+        int raw = event.getRawSlot();
+        if (raw == de.yourshika.backpacks.gui.XpRepairMenuHolder.BACK_SLOT) {
+            UUID id = holder.backpackId();
+            String tier = holder.tierKey();
+            plugin.getServer().getScheduler().runTask(plugin, () -> manager.openXp(player, id, tier));
+            return;
+        }
+        if (raw == de.yourshika.backpacks.gui.XpRepairMenuHolder.REPAIR_ALL_SLOT) {
+            manager.repairAll(holder, player);
+            return;
+        }
+        if (raw >= 0 && raw < de.yourshika.backpacks.gui.XpRepairMenuHolder.ITEM_SLOTS) {
+            manager.repairItemAt(holder, player, raw);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onXpRepairDrag(InventoryDragEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof de.yourshika.backpacks.gui.XpRepairMenuHolder) {
             event.setCancelled(true);
         }
     }

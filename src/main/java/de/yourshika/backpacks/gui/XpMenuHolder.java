@@ -17,6 +17,7 @@ public final class XpMenuHolder implements InventoryHolder {
     public static final int DEPOSIT_ALL = 11;
     public static final int WITHDRAW_LEVEL = 15;
     public static final int WITHDRAW_ALL = 16;
+    public static final int REPAIR_SLOT = 4;   // nur mit Advanced-XP-Upgrade sichtbar
     public static final int BACK_SLOT = 22;
 
     private final UUID backpackId;

@@ -341,35 +341,15 @@ ysbp_upgrade_stack_omega:
       - ysbp/upgrades/functions/stack_omega.png
     custom_model_data: 2133
 
-ysbp_upgrade_stack_downgrade_1:
-  displayname: "<#d94343><bold>Stack Downgrade Tier 1</bold>"
+ysbp_upgrade_advanced_xp:
+  displayname: "<#7cff6b><bold>Advanced XP Upgrade</bold>"
   material: PAPER
   Pack:
     generate_model: true
     parent_model: "item/generated"
     textures:
-      - ysbp/upgrades/functions/stack_downgrade_1.png
-    custom_model_data: 2134
-
-ysbp_upgrade_stack_downgrade_2:
-  displayname: "<#d94343><bold>Stack Downgrade Tier 2</bold>"
-  material: PAPER
-  Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - ysbp/upgrades/functions/stack_downgrade_2.png
-    custom_model_data: 2135
-
-ysbp_upgrade_stack_downgrade_3:
-  displayname: "<#d94343><bold>Stack Downgrade Tier 3</bold>"
-  material: PAPER
-  Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - ysbp/upgrades/functions/stack_downgrade_3.png
-    custom_model_data: 2136
+      - ysbp/upgrades/functions/advanced_xp.png
+    custom_model_data: 2158
 
 ysbp_upgrade_feeding:
   displayname: "<#e0a843><bold>Feeding Upgrade</bold>"
