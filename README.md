@@ -7,7 +7,7 @@
 > A standalone, **fully server-side** backpack system for **Paper/Spigot**.
 > Players need **no client mod**.
 
-[![Version](https://img.shields.io/badge/version-1.9.0-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
+[![Version](https://img.shields.io/badge/version-1.9.1-6E5BC8)](https://github.com/yourShika/yourShika-Backpacks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Paper%2026.1.2%20%E2%80%93%2026.2-5BE8D4)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-25-orange)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
@@ -25,6 +25,15 @@ The plugin is **inspired by [Sophisticated Backpacks](https://modrinth.com/mod/s
 **completely standalone re-implementation**. **No code, no asset and no texture**
 was taken from the mod. **This is not a Forge/Fabric/NeoForge mod, but a
 Paper/Spigot plugin.**
+
+---
+
+## ⚖️ v1.9.1
+
+- ⚖️ **Cheaper top-tier stack recipes** – Stack Tier 3 and Tier 4 now use **8 Diamonds**
+  and **8 Netherite Ingots** instead of diamond/netherite **blocks** (9× cheaper). The
+  tier chain (each needs the previous) keeps them endgame-expensive but fair. Only affects
+  the stack upgrades (still off by default).
 
 ---
 
