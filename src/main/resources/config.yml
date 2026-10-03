@@ -8,7 +8,7 @@
 # Interne Konfigurations-Version. NICHT von Hand ändern – das Plugin nutzt sie,
 # um bei strukturellen Änderungen die config.yml automatisch zu aktualisieren
 # (die alte Datei wird dabei gesichert).
-config-version: 15
+config-version: 16
 
 # Sprache / Language: wählt messages_<language>.yml.
 # Mitgeliefert & automatisch als editierbare Datei angelegt: en, de, pl.
@@ -520,6 +520,7 @@ upgrades:
       recall:          { custom-model-data: 2151, item-model: "", provider-id: "ysbp_upgrade_recall" }
       trash:           { custom-model-data: 2152, item-model: "", provider-id: "ysbp_upgrade_trash" }
       xp:              { custom-model-data: 2155, item-model: "", provider-id: "ysbp_upgrade_xp" }
+      advanced_xp:     { custom-model-data: 2158, item-model: "", provider-id: "ysbp_upgrade_advanced_xp" }
       everlasting:     { custom-model-data: 2144, item-model: "", provider-id: "ysbp_upgrade_everlasting" }
       soulbound:       { custom-model-data: 2156, item-model: "", provider-id: "ysbp_upgrade_soulbound" }
       restock:         { custom-model-data: 2110, item-model: "", provider-id: "ysbp_upgrade_restock" }
@@ -543,6 +544,11 @@ upgrades:
       advanced_magnet:
         shape: [" D ", "DXD", " D "]
         ingredients: { D: DIAMOND }
+      # Advanced XP: repariert Mending-Items mit gespeichertem Backpack-XP.
+      # Teuer: 4 Goldblöcke + Amboss + 2 Smaragde (X = XP Storage Upgrade).
+      advanced_xp:
+        shape: ["GAG", "EXE", "GUG"]
+        ingredients: { G: GOLD_BLOCK, A: ANVIL, E: EMERALD }
       crafting:
         shape: ["PPP", "PUP", "PPP"]
         ingredients: { P: OAK_PLANKS }

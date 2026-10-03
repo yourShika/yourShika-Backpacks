@@ -121,6 +121,17 @@ public enum FunctionUpgrade {
             Map.of('E', Material.EMERALD, 'B', Material.EXPERIENCE_BOTTLE),
             0, null),
 
+    // Erweitert das XP-Storage: repariert Mending-Items mit dem im Backpack
+    // gespeicherten XP (Auswahl aus den eigenen beschädigten Mending-Items).
+    ADVANCED_XP("advanced_xp", "<#AEFF9B><bold>Advanced XP Upgrade</bold></#AEFF9B>", 2158,
+            List.of("<gray>Repair <white>Mending</white> items using the experience",
+                    "<gray>stored in the backpack – <white>pick what to fix</white>.",
+                    "<dark_gray>Opens from the XP Storage menu.",
+                    "<dark_gray>Requires an XP Storage Upgrade."),
+            List.of("GAG", "EXE", "GUG"),
+            Map.of('G', Material.GOLD_BLOCK, 'A', Material.ANVIL, 'E', Material.EMERALD),
+            0, "xp"),
+
     EVERLASTING("everlasting", "<#B388FF><bold>Everlasting Upgrade</bold></#B388FF>", 2144,
             List.of("<gray>The dropped backpack is immune to fire, lava,",
                     "<gray>explosions and <white>never despawns</white>.",

@@ -1851,7 +1851,217 @@ public final class BackpackManager {
                 xpButton(Material.YELLOW_DYE, "<yellow>Withdraw 1 level", "Take one level back."), "xp_withdraw_one"));
         inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.WITHDRAW_ALL, applyMenuIcon(
                 xpButton(Material.YELLOW_CONCRETE, "<yellow><bold>Withdraw all</bold>", "Take all stored XP back."), "xp_withdraw_all"));
+        // Advanced-XP: Reparatur-Button (nur wenn das Upgrade verbaut ist).
+        if (functionUpgradesOf(holder.backpackId()).contains("advanced_xp")) {
+            inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.REPAIR_SLOT, xpRepairButton());
+        }
         inv.setItem(de.yourshika.backpacks.gui.XpMenuHolder.BACK_SLOT, applyMenuIcon(backButton(), "back"));
+    }
+
+    private ItemStack xpRepairButton() {
+        ItemStack item = new ItemStack(Material.ANVIL);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line("<#AEFF9B><bold>Repair with XP</bold>"));
+        meta.lore(List.of(
+                line("<gray>Repair your <white>Mending</white> items using the"),
+                line("<gray>experience stored in this backpack."),
+                Component.empty(),
+                line("<yellow>▶ Click to open")));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    // ------------------------------------------------------------------
+    //  Advanced-XP: Mending-Items mit gespeichertem Backpack-XP reparieren.
+    //  Auswahl-Liste der eigenen beschädigten Mending-Items. Dupe-sicher:
+    //  die Items bleiben im Spieler-Inventar, nur die Haltbarkeit ändert sich;
+    //  die GUI-Buttons sind reine Anzeige-Kopien.
+    // ------------------------------------------------------------------
+    private static final org.bukkit.enchantments.Enchantment MENDING = resolveMending();
+
+    private static org.bukkit.enchantments.Enchantment resolveMending() {
+        try {
+            return org.bukkit.Registry.ENCHANTMENT.get(org.bukkit.NamespacedKey.minecraft("mending"));
+        } catch (Throwable t) {
+            try { return org.bukkit.enchantments.Enchantment.MENDING; } catch (Throwable t2) { return null; }
+        }
+    }
+
+    /** Öffnet das Advanced-XP-Reparatur-Menü eines Backpacks. */
+    public void openXpRepair(Player player, UUID backpackId, String tierKey) {
+        de.yourshika.backpacks.gui.XpRepairMenuHolder holder =
+                new de.yourshika.backpacks.gui.XpRepairMenuHolder(backpackId, tierKey);
+        Inventory inv = Bukkit.createInventory(holder,
+                de.yourshika.backpacks.gui.XpRepairMenuHolder.SIZE,
+                mini.deserialize("<#AEFF9B><bold>Repair with XP</bold>").decoration(TextDecoration.ITALIC, false));
+        holder.setInventory(inv);
+        renderXpRepair(holder, player);
+        player.openInventory(inv);
+    }
+
+    /** Baut die Liste der beschädigten Mending-Items + Steuer-Buttons neu auf. */
+    public void renderXpRepair(de.yourshika.backpacks.gui.XpRepairMenuHolder holder, Player player) {
+        Inventory inv = holder.getInventory();
+        if (inv == null) return;
+        holder.clearMapping();
+        ItemStack filler = pane(Material.GRAY_STAINED_GLASS_PANE, Component.text(" "));
+        for (int i = 0; i < de.yourshika.backpacks.gui.XpRepairMenuHolder.SIZE; i++) inv.setItem(i, filler);
+
+        int stored = storedXpOf(holder.backpackId());
+        ItemStack[] contents = player.getInventory().getContents(); // 0..40 (inkl. Rüstung/Nebenhand)
+        int guiSlot = 0;
+        for (int idx = 0; idx < contents.length
+                && guiSlot < de.yourshika.backpacks.gui.XpRepairMenuHolder.ITEM_SLOTS; idx++) {
+            if (!isRepairable(contents[idx])) continue;
+            inv.setItem(guiSlot, repairEntry(contents[idx], stored));
+            holder.map(guiSlot, idx);
+            guiSlot++;
+        }
+        if (guiSlot == 0) {
+            ItemStack hint = new ItemStack(Material.BARRIER);
+            ItemMeta hm = hint.getItemMeta();
+            hm.displayName(line("<gray>No damaged Mending items found"));
+            hm.lore(List.of(line("<dark_gray>Only your own damaged items with"),
+                    line("<dark_gray>the Mending enchantment show here.")));
+            hint.setItemMeta(hm);
+            inv.setItem(13, hint);
+        }
+        inv.setItem(de.yourshika.backpacks.gui.XpRepairMenuHolder.INFO_SLOT, repairInfoItem(stored));
+        inv.setItem(de.yourshika.backpacks.gui.XpRepairMenuHolder.REPAIR_ALL_SLOT, repairAllButton());
+        inv.setItem(de.yourshika.backpacks.gui.XpRepairMenuHolder.BACK_SLOT, backButton());
+    }
+
+    /** Repariert das Item, das zum angeklickten GUI-Slot gehört (neu validiert). */
+    public void repairItemAt(de.yourshika.backpacks.gui.XpRepairMenuHolder holder, Player player, int guiSlot) {
+        int idx = holder.invIndexAt(guiSlot);
+        if (idx >= 0) {
+            ItemStack it = player.getInventory().getItem(idx);
+            if (isRepairable(it)) {
+                int stored = storedXpOf(holder.backpackId());
+                int[] plan = repairPlan(it, stored);
+                if (plan[0] > 0) {
+                    applyRepair(it, plan[0]);
+                    player.getInventory().setItem(idx, it);
+                    setStoredXp(holder.backpackId(), stored - plan[1]);
+                    player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_ANVIL_USE, 0.6f, 1.4f);
+                } else {
+                    player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 0.6f, 1f);
+                }
+            }
+        }
+        renderXpRepair(holder, player);
+    }
+
+    /** Repariert alle gelisteten Items mit dem verfügbaren gespeicherten XP. */
+    public void repairAll(de.yourshika.backpacks.gui.XpRepairMenuHolder holder, Player player) {
+        int stored = storedXpOf(holder.backpackId());
+        int used = 0;
+        ItemStack[] contents = player.getInventory().getContents();
+        for (int idx = 0; idx < contents.length; idx++) {
+            if (stored - used <= 0) break;
+            ItemStack it = contents[idx];
+            if (!isRepairable(it)) continue;
+            int[] plan = repairPlan(it, stored - used);
+            if (plan[0] <= 0) continue;
+            applyRepair(it, plan[0]);
+            player.getInventory().setItem(idx, it);
+            used += plan[1];
+        }
+        if (used > 0) {
+            setStoredXp(holder.backpackId(), stored - used);
+            player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_ANVIL_USE, 0.7f, 1.2f);
+        } else {
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 0.6f, 1f);
+        }
+        renderXpRepair(holder, player);
+    }
+
+    /** Ist das Item ein beschädigtes Item mit Mending (reparierbar)? */
+    private boolean isRepairable(ItemStack it) {
+        if (it == null || it.getType().isAir() || it.getType().getMaxDurability() <= 0) return false;
+        if (MENDING == null) return false;
+        ItemMeta m = it.getItemMeta();
+        if (!(m instanceof org.bukkit.inventory.meta.Damageable d)) return false;
+        return d.getDamage() > 0 && m.hasEnchant(MENDING);
+    }
+
+    /** {durability-reparierbar, xp-kosten} für das Item bei verfügbarem XP (2 Dura/XP). */
+    private int[] repairPlan(ItemStack item, int availableXp) {
+        ItemMeta m = item.getItemMeta();
+        if (!(m instanceof org.bukkit.inventory.meta.Damageable d)) return new int[]{0, 0};
+        int damage = d.getDamage();
+        if (damage <= 0 || availableXp <= 0) return new int[]{0, 0};
+        int repairable = Math.min(damage, availableXp * 2);
+        int xpUsed = (repairable + 1) / 2;
+        return new int[]{repairable, xpUsed};
+    }
+
+    private void applyRepair(ItemStack it, int durability) {
+        ItemMeta m = it.getItemMeta();
+        if (m instanceof org.bukkit.inventory.meta.Damageable d) {
+            d.setDamage(Math.max(0, d.getDamage() - durability));
+            it.setItemMeta(m);
+        }
+    }
+
+    private ItemStack repairEntry(ItemStack real, int storedXp) {
+        ItemStack disp = real.clone();
+        ItemMeta meta = disp.getItemMeta();
+        java.util.List<Component> lore = meta.lore() != null
+                ? new ArrayList<>(meta.lore()) : new ArrayList<>();
+        lore.add(Component.empty());
+        int max = real.getType().getMaxDurability();
+        int dur = max - ((org.bukkit.inventory.meta.Damageable) meta).getDamage();
+        lore.add(line("<gray>Durability: <white>" + dur + "<gray>/<white>" + max));
+        int[] plan = repairPlan(real, storedXp);
+        if (plan[0] > 0) {
+            lore.add(line("<green>Repairs <white>" + plan[0] + "</white> dura for <white>" + plan[1] + "</white> XP"));
+            lore.add(line("<yellow>▶ Click to repair"));
+        } else {
+            lore.add(line("<red>Not enough stored XP"));
+        }
+        meta.lore(lore);
+        disp.setItemMeta(meta);
+        return disp;
+    }
+
+    private ItemStack repairInfoItem(int stored) {
+        ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line("<#AEFF9B><bold>Advanced XP Repair</bold>"));
+        meta.lore(List.of(
+                line("<gray>Stored: <white>" + stored + " XP"),
+                line("<gray>Rate: <white>2 durability <gray>per <white>1 XP"),
+                Component.empty(),
+                line("<dark_gray>Click a Mending item to repair it,"),
+                line("<dark_gray>or Repair All below.")));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private ItemStack repairAllButton() {
+        ItemStack item = new ItemStack(Material.ANVIL);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(line("<green><bold>Repair All</bold>"));
+        meta.lore(List.of(
+                line("<gray>Repair all listed items with the"),
+                line("<gray>available stored XP."),
+                Component.empty(),
+                line("<yellow>▶ Click")));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private int storedXpOf(UUID backpackId) {
+        BackpackData d = storage.load(backpackId);
+        return d == null ? 0 : d.storedXp();
+    }
+
+    private void setStoredXp(UUID backpackId, int xp) {
+        BackpackData d = storage.load(backpackId);
+        if (d == null) return;
+        d.storedXp(Math.max(0, xp));
+        storage.save(d);
     }
 
     private ItemStack xpButton(Material material, String name, String desc) {
